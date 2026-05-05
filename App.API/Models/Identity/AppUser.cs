@@ -44,7 +44,7 @@ namespace App.API.Models.Identity
         /// This property is required.
         /// </remarks>
         /// </summary>
-        public required string AppUserUsername { get; set; }
+        // public required string AppUserUsername { get; set; }
 
         /// <summary>
         /// Property <c>AppUserPassword</c> represents the password for a given user.
@@ -52,7 +52,7 @@ namespace App.API.Models.Identity
         /// This property is required.
         /// </remarks>
         /// </summary>
-        public required string AppUserPassword { get; set; }
+        // public required string AppUserPassword { get; set; }
 
         /// <summary>
         /// Property <c>AppUserEmail</c> represents the email for a given user.
