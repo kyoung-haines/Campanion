@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Data
 {
-    public class AppContext : DbContext
+    public class CampanionDbContext : DbContext
     {
-        public AppContext(DbContextOptions<AppContext> options) : base(options) { }
+        public CampanionDbContext(DbContextOptions<CampanionDbContext> options) : base(options) { }
 
         public DbSet<Campground> Campgrounds { get; set; }
         public DbSet<AppUserFavouriteCampground> AppUserFavouriteCampgrounds { get; set; }
         public DbSet<AppUser> AppUsers { get; set; }
-        public DbSet<Profile> Profile { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
         public DbSet<Trip> Trips { get; set; }
