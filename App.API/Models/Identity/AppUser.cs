@@ -124,6 +124,11 @@ namespace App.API.Models.AppUser
         public List<Campground>? AppUserFavouriteCampgrounds { get; set; }
 
         /// <summary>
+        /// Property <c>AppUserProfileId</c> represents the unique ID for the given user's profile object.
+        /// </summary>
+        public int AppUserProfileId { get; set; }
+
+        /// <summary>
         /// Property <c>AppUserProfile</c> represents the profile object that is associated with a given user. 
         /// <remarks>
         /// This property is required.
