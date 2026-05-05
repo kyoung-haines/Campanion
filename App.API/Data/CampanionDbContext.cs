@@ -2,11 +2,12 @@
 using App.API.Models.Identity;
 using App.API.Models.Social;
 using App.API.Models.Trips;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Data
 {
-    public class CampanionDbContext : DbContext
+    public class CampanionDbContext : IdentityDbContext<AppUser>
     {
         public CampanionDbContext(DbContextOptions<CampanionDbContext> options) : base(options) { }
 
