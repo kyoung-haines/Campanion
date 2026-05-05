@@ -1,5 +1,6 @@
 ﻿using App.API.Enums;
 using App.API.Models.Campgrounds;
+using Microsoft.AspNetCore.Identity;
 
 namespace App.API.Models.Identity
 {
@@ -17,7 +18,7 @@ namespace App.API.Models.Identity
     /// </remarks>
     /// <returns>No return value.</returns>
     /// </summary>
-    public class AppUser
+    public class AppUser : IdentityUser
     {
         /// <summary>
         /// Property <c>AppUserId</c> represents the unique integer ID for a given user.
