@@ -1,4 +1,4 @@
-﻿namespace App.API.Models.AppUser
+﻿namespace App.API.Models.Identity
 {
     /// <summary>
     /// Class <c>Profile</c> represents the public-facing representation of a given user.

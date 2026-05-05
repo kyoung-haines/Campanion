@@ -1,7 +1,7 @@
 ﻿using App.API.Enums;
 using App.API.Models.Campgrounds;
 
-namespace App.API.Models.AppUser
+namespace App.API.Models.Identity.AppUser
 {
     /// <summary>
     /// Class <c>AppUser</c> represents a user of the application.
