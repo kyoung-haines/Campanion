@@ -4,7 +4,7 @@ namespace App.API.Models.Campgrounds
 {
     public class Campground
     {
-        // TODO: DOC COMMENTS
+        // TODO: DOC COMMENTS AGAIN
         public int CampgroundId { get; set; }
         public required string CampgroundName { get; set; }
         public required string CamproundImagePath { get; set; } = "images/campgrounds/placeholder-campground.png";
