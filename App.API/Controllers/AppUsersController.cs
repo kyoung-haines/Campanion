@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App.API.Controllers
@@ -7,5 +8,6 @@ namespace App.API.Controllers
     [ApiController]
     public class AppUsersController : ControllerBase
     {
+       
     }
 }

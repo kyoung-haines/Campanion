@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using App.API.Data;
 using App.API.Models;
 using App.API.Models.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace App.API
 {
