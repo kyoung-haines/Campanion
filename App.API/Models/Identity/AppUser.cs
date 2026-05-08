@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Identity;
 namespace App.API.Models.Identity
 {
     /// <summary>
-    /// Class <c>AppUser</c> represents a user of the application.
+    /// Class <c>AppUser</c> extends <c>IdentityUser</c> and represents a user of the application.
+    /// <br />
+    /// The class also adds a number of customer properties
     /// <remarks>
     /// There are two types of users: <i>regular users</i> and <i>administrators.</i>
     /// <br />
@@ -14,7 +16,6 @@ namespace App.API.Models.Identity
     /// <br />
     /// The AppUserType property is not a selectable option. Instead, this will default to <see cref="AppUserType.REGULAR_USER">REGULAR_USER</see>
     /// <br />
-    /// AppUser identity is handled by the ASP.NET Core Identity framework for safe storage and retrieval of user details.
     /// </remarks>
     /// <returns>No return value.</returns>
     /// </summary>
