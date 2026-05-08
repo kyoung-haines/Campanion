@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using App.API.Data;
 using App.API.Models;
 using App.API.Models.Identity;
@@ -23,8 +24,18 @@ namespace App.API
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
 
             // Adding Identity related config
-            builder.Services.AddIdentity<AppUser, IdentityRole>()
+            // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
+            // see AddAuthorization() middleware 
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CampanionDbContext>();
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
             var app = builder.Build();
 
@@ -51,6 +62,8 @@ namespace App.API
 
             app.UseHttpsRedirection();
 
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
