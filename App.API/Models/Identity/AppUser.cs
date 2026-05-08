@@ -23,7 +23,7 @@ namespace App.API.Models.Identity
         /// <summary>
         /// Property <c>AppUserId</c> represents the unique integer ID for a given user.
         /// </summary>
-        public int AppUserId { get; set; }
+        // public int AppUserId { get; set; }
 
         /// <summary>
         /// Property <c>AppUserType</c> represents the type of account a given user holds.
@@ -60,7 +60,7 @@ namespace App.API.Models.Identity
         /// This property is required.
         /// </remarks>
         /// </summary>
-        public required string AppUserEmail { get; set; }
+        //public required string AppUserEmail { get; set; }
 
         /// <summary>
         /// Property <c>AppUserPhone</c> represents the phone number of a given user.
@@ -68,7 +68,7 @@ namespace App.API.Models.Identity
         /// This field is required.
         /// </remarks>
         /// </summary>
-        public required string AppUserPhone { get; set; }
+        //public required string AppUserPhone { get; set; }
 
         /// <summary>
         /// Property <c>AppUserFirstName</c> represents the First Name of a given user.
