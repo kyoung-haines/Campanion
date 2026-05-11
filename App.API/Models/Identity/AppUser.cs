@@ -103,7 +103,7 @@ namespace App.API.Models.Identity
         /// This property is required.
         /// </remarks>
         /// </summary>
-        public required int AppUserProvince { get; set; }
+        public required string AppUserProvince { get; set; }
 
         /// <summary>
         /// Property <c>AppUserCountry</c> represents the country portion of a given user's address.
@@ -133,12 +133,10 @@ namespace App.API.Models.Identity
         /// <summary>
         /// Property <c>AppUserProfile</c> represents the profile object that is associated with a given user. 
         /// <remarks>
-        /// This property is required.
-        /// <br />
-        /// However, it should be noted that a user profile is automatically created for every user at their time of registration,
+        /// It should be noted that a user profile is automatically created for every user at their time of registration,
         /// so this should always be satisfied.
         /// </remarks>
         /// </summary>
-        public required Profile AppUserProfile { get; set; }
+        public Profile AppUserProfile { get; set; }
     }
 }
