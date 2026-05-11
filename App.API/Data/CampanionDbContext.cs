@@ -20,5 +20,36 @@ namespace App.API.Data
         public DbSet<Trip> Trips { get; set; }
         public DbSet<AppUserTrip> AppUserTrips { get; set; }
         public DbSet<TripCampground> TripCampgrounds { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+            => optionsBuilder
+                .UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=CampanionDB;Trusted_Connection=True;MultipleActiveResultSets=true;")
+                .UseSeeding((context, _) =>
+                {
+                    var testAppUser = new AppUser 
+                    {
+                        AppUserCountry = "Canada",
+                        AppUserProvince = "Ontario",
+                        AppUserFirstName = "Test",
+                        AppUserLastName = "Tester"
+                    };
+
+                    context.Set<AppUser>().Add(testAppUser);
+                    context.SaveChanges();
+                })
+                .UseAsyncSeeding(async (context, _, cancellationToken) =>
+                {
+                    var testAppUser = new AppUser
+                    {
+                        AppUserCountry = "Canada",
+                        AppUserProvince = "Ontario",
+                        AppUserFirstName = "Test",
+                        AppUserLastName = "Tester"
+                    };
+
+                    var tUser = await context.Set<AppUser>().AddAsync(testAppUser);
+                    await context.SaveChangesAsync(cancellationToken);
+
+                });   
     }
 }
