@@ -1,0 +1,14 @@
+﻿using App.API.Models;
+
+namespace App.API.Services
+{
+    public class RolesService
+    {
+        public async Task<ICollection<string>> GetAllRolesAsync()
+        {
+            var roles = new List<string> { "Admin", "User" };
+
+            return roles;
+        }
+    }
+}
