@@ -1,0 +1,28 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: build-and-test
+
+on:
+  push:
+    branches: [ "development"]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: "Build and Test"
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 9.x
+    - name: Restore dependencies
+      run: dotnet restore AnotherTestAPI/AnotherTestAPI.csproj
+    - name: Build
+      run: dotnet build AnotherTestAPI/AnotherTestAPI.csproj --no-restore
+    - name: Test
+      run: dotnet test AnotherTestAPI/AnotherTestAPI.csproj --no-build --verbosity normal
