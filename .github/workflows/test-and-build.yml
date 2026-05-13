@@ -21,8 +21,8 @@ jobs:
       with:
         dotnet-version: 9.x
     - name: Restore dependencies
-      run: dotnet restore AnotherTestAPI/AnotherTestAPI.csproj
+      run: dotnet restore App.API/App.API.csproj
     - name: Build
-      run: dotnet build AnotherTestAPI/AnotherTestAPI.csproj --no-restore
+      run: dotnet build App.API/App.API.csproj --no-restore
     - name: Test
-      run: dotnet test AnotherTestAPI/AnotherTestAPI.csproj --no-build --verbosity normal
+      run: dotnet test App.API/App.API.csproj --no-build --verbosity normal
