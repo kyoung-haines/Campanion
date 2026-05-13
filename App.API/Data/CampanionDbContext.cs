@@ -22,34 +22,39 @@ namespace App.API.Data
         public DbSet<TripCampground> TripCampgrounds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder
-                .UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=CampanionDB;Trusted_Connection=True;MultipleActiveResultSets=true;")
-                .UseSeeding((context, _) =>
-                {
-                    var testAppUser = new AppUser 
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder
+                    .UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=CampanionDB;Trusted_Connection=True;MultipleActiveResultSets=true;")
+                    .UseSeeding((context, _) =>
                     {
-                        AppUserCountry = "Canada",
-                        AppUserProvince = "Ontario",
-                        AppUserFirstName = "Test",
-                        AppUserLastName = "Tester"
-                    };
+                        var testAppUser = new AppUser
+                        {
+                            AppUserCountry = "Canada",
+                            AppUserProvince = "Ontario",
+                            AppUserFirstName = "Test",
+                            AppUserLastName = "Tester"
+                        };
 
-                    context.Set<AppUser>().Add(testAppUser);
-                    context.SaveChanges();
-                })
-                .UseAsyncSeeding(async (context, _, cancellationToken) =>
-                {
-                    var testAppUser = new AppUser
+                        context.Set<AppUser>().Add(testAppUser);
+                        context.SaveChanges();
+                    })
+                    .UseAsyncSeeding(async (context, _, cancellationToken) =>
                     {
-                        AppUserCountry = "Canada",
-                        AppUserProvince = "Ontario",
-                        AppUserFirstName = "Test",
-                        AppUserLastName = "Tester"
-                    };
+                        var testAppUser = new AppUser
+                        {
+                            AppUserCountry = "Canada",
+                            AppUserProvince = "Ontario",
+                            AppUserFirstName = "Test",
+                            AppUserLastName = "Tester"
+                        };
 
-                    var tUser = await context.Set<AppUser>().AddAsync(testAppUser);
-                    await context.SaveChangesAsync(cancellationToken);
+                        var tUser = await context.Set<AppUser>().AddAsync(testAppUser);
+                        await context.SaveChangesAsync(cancellationToken);
 
-                });   
+                    });
+            }
+        }
     }
 }
