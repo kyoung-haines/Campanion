@@ -4,10 +4,10 @@ namespace App.API.Services
 {
     public class RolesService
     {
-        public async Task<ICollection<string>> GetAllRolesAsync()
+        public async Task<List<string>> GetAllRolesAsync()
         {
             var roles = new List<string> { "Admin", "User" };
-
+            
             return roles;
         }
     }
