@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using App.API.Data;
+using App.API.Seeders;
 using App.API.Models;
 using App.API.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,8 +45,14 @@ namespace App.API
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                
+                using var scope = app.Services.CreateScope();
 
-                //using var scope = app.Services.CreateScope();
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+                await RoleSeeder.SeedRolesAsync(roleManager);
+                await UserSeeder.SeedUsersAsync(userManager);
 
                 //var dbContext = scope.ServiceProvider.GetRequiredService<CampanionDbContext>();
                 //dbContext.Database.Migrate();
