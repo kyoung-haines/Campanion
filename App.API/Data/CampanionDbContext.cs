@@ -2,6 +2,7 @@
 using App.API.Models.Identity;
 using App.API.Models.Social;
 using App.API.Models.Trips;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +38,7 @@ namespace App.API.Data
                             AppUserLastName = "Tester"
                         };
 
-                        context.Set<AppUser>().Add(testAppUser);
+                        context.AppUsers.Set<IdentityUser>().Add(testAppUser);
                         context.SaveChanges();
                     })
                     .UseAsyncSeeding(async (context, _, cancellationToken) =>
@@ -50,7 +51,7 @@ namespace App.API.Data
                             AppUserLastName = "Tester"
                         };
 
-                        var tUser = await context.Set<AppUser>().AddAsync(testAppUser);
+                        var tUser = await context.Set<IdentityUser>().AddAsync(testAppUser);
                         await context.SaveChangesAsync(cancellationToken);
 
                     });
