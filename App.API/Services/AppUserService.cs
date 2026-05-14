@@ -14,6 +14,21 @@ namespace App.API.Services
             _logger = logger;
             _userManager = userManager;
         }
+
+        public async Task<IList<AppUser>> GetAllAppUsersAsync()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("User");
+
+            return users;
+        }
+
+        public async Task<IList<AppUser>> GetAllAppAdminsAsync()
+        {
+            var users = await _userManager.GetUsersInRoleAsync("Admin");
+
+            return users;
+        }
+
         public async Task CreateAppUserAsync(AppUser user, string password)
         {
             _logger.LogInformation("Creating new user...");
@@ -50,6 +65,19 @@ namespace App.API.Services
             _logger.LogInformation($"User with ID: {id} found!");
 
             return user;
+        }
+
+        public async Task UpdateAppUserByIdAsync(int id)
+        {
+            var user = await _userManager.FindByIdAsync(Convert.ToString(id));
+
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task DeleteAppUser(int id)
+        {
+            var user = await _userManager.FindByIdAsync(Convert.ToString(id));
+            await _userManager.DeleteAsync(user);
         }
     }
 }
