@@ -25,7 +25,6 @@ namespace App.API
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
 
-            // Adding Identity related config
             // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
             // see AddAuthorization() middleware 
             builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -39,21 +38,23 @@ namespace App.API
                     .Build();
             });
 
+
             var app = builder.Build();
+
+            using var scope = app.Services.CreateScope();
+
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var logger = scope.ServiceProvider.GetService<ILogger<AppUser>>()!;
+
+            await RoleSeeder.SeedRolesAsync(roleManager);
+            await UserSeeder.SeedUsersAsync(userManager, logger);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
                 
-                using var scope = app.Services.CreateScope();
-
-                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-
-                await RoleSeeder.SeedRolesAsync(roleManager);
-                await UserSeeder.SeedUsersAsync(userManager);
-
                 //var dbContext = scope.ServiceProvider.GetRequiredService<CampanionDbContext>();
                 //dbContext.Database.Migrate();
 
