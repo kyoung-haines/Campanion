@@ -2,7 +2,7 @@
 
 namespace App.API.Services
 {
-    public class RolesService
+    public class RolesService : IRolesService
     {
         public async Task<List<string>> GetAllRolesAsync()
         {
