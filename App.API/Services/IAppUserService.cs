@@ -5,6 +5,6 @@ namespace App.API.Services
 {
     public interface IAppUserService
     {
-        Task CreateAppUserAsync(UserManager<AppUser> user);
+        Task CreateAppUserAsync(UserManager<AppUser> user, string password);
     }
 }
