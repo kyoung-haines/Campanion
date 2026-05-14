@@ -2,6 +2,6 @@
 {
     public interface IRolesService
     {
-        Task GetAllRolesAsync();
+        Task<List<string>> GetAllRolesAsync();
     }
 }
