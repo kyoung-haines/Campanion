@@ -6,34 +6,48 @@ namespace App.API.Services
 {
     public class AppUserService : IAppUserService
     {
+        private ILogger _logger;
         private UserManager<AppUser> _userManager;
 
-        public AppUserService(UserManager<AppUser> userManager)
+        public AppUserService(ILogger logger, UserManager<AppUser> userManager)
         {
+            _logger = logger;
             _userManager = userManager;
         }
         public async Task CreateAppUserAsync(AppUser user, string password)
         {
+            _logger.LogInformation("Creating new user...");
+
             string userPasswordPlain = password;
 
             if(user != null)
             {
-                await _userManager.CreateAsync(user, userPasswordPlain);
+                var result = await _userManager.CreateAsync(user, userPasswordPlain);
+                if(result.Succeeded)
+                {
+                    _logger.LogInformation("User successfully created...");
+                }
             }
             else
             {
+                _logger.LogError("User not created successfully. The AppUser object is null");
                 throw new Exception("Error creating user. Please try again.");
             }
         }
 
         public async Task<AppUser> GetAppUserByIdAsync(int id)
         {
+            _logger.LogInformation($"Looking for User with ID: {id}...");
+
             AppUser? user = await _userManager.FindByIdAsync(Convert.ToString(id));
 
             if(user == null)
             {
+                _logger.LogError("User is null. Check the ID value exists.");
                 throw new Exception($"User with ID: {id} does not exist. Please check the ID value.");
             }
+
+            _logger.LogInformation($"User with ID: {id} found!");
 
             return user;
         }
