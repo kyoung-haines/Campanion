@@ -1,19 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using App.API.Services;
+using App.API.Models;
 namespace App.API.Seeders
 {
-    public class RoleSeeder
+    public static class RoleSeeder
     {
-        private readonly RolesService _roleService;
-
-        public RoleSeeder(RolesService roleService)
+        public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
         {
-            _roleService = roleService;
-        }
-
-        public async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)
-        {
-            List<string> roles = await _roleService.GetAllRolesAsync();
+            List<string> roles = Roles.AllRoles();
 
             foreach (var role in roles)
             {
