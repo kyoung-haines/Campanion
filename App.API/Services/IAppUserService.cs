@@ -10,6 +10,6 @@ namespace App.API.Services
         Task CreateAppUserAsync(AppUser user, string password);
         Task<AppUser> GetAppUserByIdAsync(int id);
         Task UpdateAppUserByIdAsync(int id);
-        void DeleteAppUser(int id);
+        Task DeleteAppUserAsync(int id);
     }
 }

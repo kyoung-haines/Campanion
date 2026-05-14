@@ -74,7 +74,7 @@ namespace App.API.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task DeleteAppUser(int id)
+        public async Task DeleteAppUserAsync(int id)
         {
             var user = await _userManager.FindByIdAsync(Convert.ToString(id));
             await _userManager.DeleteAsync(user);
