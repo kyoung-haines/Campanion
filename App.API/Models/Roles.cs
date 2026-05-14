@@ -7,7 +7,9 @@
 
         public static List<string> AllRoles()
         {
-            return new List<string> { "Admin", "User" };
+            var roles = new List<string> { "Admin", "User" };
+            
+            return roles;
         }
     }
 }
