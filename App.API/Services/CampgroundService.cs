@@ -1,5 +1,6 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Repositories;
+using System.Security.Cryptography.X509Certificates;
 
 namespace App.API.Services
 {
@@ -32,6 +33,29 @@ namespace App.API.Services
             {
                 _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
                 throw new Exception (e.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+        {
+            try
+            {
+                _logger.LogInformation("Service Layer: GetAllCampgroundsAsync called...");
+
+                var campgrounds = await _campgroundRepo.GetAllCampgroundsAsync();
+
+                if(campgrounds != null)
+                {
+                    _logger.LogInformation("Campgrounds retrieved successfully!");
+                    
+                }
+
+                return campgrounds;
+            }
+            catch (Exception e)
+            {
+                _logger.LogError("Error retrieving all campgrounds. See Exception.");
+                throw new Exception(e.Message);
             }
         }
 
