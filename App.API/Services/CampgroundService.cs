@@ -20,11 +20,17 @@ namespace App.API.Services
             {
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}");
 
-                var isExists = await CampgroundIdIsExists(id);
+                var isExists = await CampgroundIdIsExistsAsync(id);
+
+                if(isExists == true)
+                {
+                    await _campgroundRepo.DeleteCampground(id);
+                    _logger.LogInformation($"Campground deleted from the system. ID: {id}");
+                }
             }
             catch (Exception e)
             {
-
+                _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
                 throw new Exception (e.Message);
             }
         }
@@ -33,7 +39,7 @@ namespace App.API.Services
         // This will reference a given CampgroundId (ID of newly added campground)
         // against all campgrounds to ensure that it has been added to the system.
         // uses Repo layer FindCampgroundByIdAsync method
-        public async Task<bool> CampgroundIdIsExists(int newCampgroundId)
+        public async Task<bool> CampgroundIdIsExistsAsync(int newCampgroundId)
         {
             _logger.LogInformation("Verifying the ID is valid...");
             
@@ -52,7 +58,7 @@ namespace App.API.Services
             return isValidId;
         }
 
-        public async Task<bool> IsCampgroundUpdated(Campground originalCampground, Campground updatedCampground)
+        public async Task<bool> IsCampgroundUpdatedAsync(Campground originalCampground, Campground updatedCampground)
         {
             _logger.LogInformation("Checking if campground has been updated...");
 
@@ -65,6 +71,23 @@ namespace App.API.Services
             }
 
             _logger.LogInformation("Campground has been updated...");
+
+            return result;
+        }
+
+        public async Task<bool> IsCampgroundAddedAsync(int id)
+        {
+            _logger.LogInformation("Verifying campground has been added...");
+
+            var result = await CampgroundIdIsExistsAsync(id);
+
+            if(result != true)
+            {
+                _logger.LogError($"ID: {id} not in the system. Campground not added.");
+                throw new Exception("Campground not added to the system. Please try again.");
+            }
+
+            _logger.LogInformation($"ID: {id} - Campground Added!");
 
             return result;
         }
