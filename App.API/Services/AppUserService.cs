@@ -1,6 +1,5 @@
 ﻿using App.API.Models.Identity;
 using Microsoft.AspNetCore.Identity;
-using System.Configuration;
 
 namespace App.API.Services
 {
