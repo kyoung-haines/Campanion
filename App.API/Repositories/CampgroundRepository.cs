@@ -1,6 +1,7 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Data;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Repositories
 {
@@ -15,7 +16,7 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        async Task DeleteCampground(int id)
+        public async Task DeleteCampground(int id)
         {
             _logger.LogInformation($"Attempting to delete user with ID: {id}...");
             _logger.LogInformation($"Looking for campground in the system...");
@@ -34,8 +35,51 @@ namespace App.API.Repositories
 
             
         }
-        Task<IEnumerable<Campground>> GetAllCampgroundsAsync();
-        Task<Campground> GetCampgroundByIdAsync(int id);
-        Task UpdateCampgroundAsync(int id);
+        public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+        {
+            _logger.LogInformation("GetAllCampgroundsAsync method called...");
+            _logger.LogInformation("Retrieving all campgrounds...");
+
+            var campgrounds = await _context.Campgrounds.ToListAsync<Campground>();
+
+            if (campgrounds == null)
+            {
+                _logger.LogInformation("There are no campgrounds to retrieve...");
+                throw new Exception("There are no campgrounds to retrieve.");
+            }
+
+            return campgrounds;
+        }
+        public async Task<Campground> GetCampgroundByIdAsync(int id)
+        {
+            var campground = await _context.FindAsync<Campground>(id);
+
+            if(campground == null)
+            {
+                _logger.LogError("Campground is null...");
+                throw new Exception("Campground cannot be null.");
+            }
+
+            _logger.LogInformation($"Campground found. Returning campground with ID: {id}");
+
+            return campground;
+        }
+        public async Task UpdateCampgroundAsync(Campground campground)
+        {
+            if(campground == null)
+            {
+                _logger.LogError("Campground cannot be null...");
+                throw new Exception("Campground does not exist.");
+            }
+
+            var updatedCampground = _context.Update<Campground>(campground);
+
+            if(IsCampgroundUpdated(campground, updatedCampground) == false)
+            {
+                throw new Exception("Campground not successfully updated. Try again.");
+            }
+
+            _logger.LogInformation("Campground Successfully updated...");
+        }
     }
 }
