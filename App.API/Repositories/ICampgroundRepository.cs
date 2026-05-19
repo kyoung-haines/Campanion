@@ -8,5 +8,6 @@ namespace App.API.Repositories
         public Task<Campground> GetCampgroundByIdAsync(int id);
         public Task UpdateCampgroundAsync(Campground campground);
         public Task DeleteCampground(int id);
+        public Task AddCampgroundAsync(Campground newCampground);
     }
 }

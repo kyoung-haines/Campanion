@@ -76,5 +76,16 @@ namespace App.API.Repositories
 
             _logger.LogInformation("Campground Successfully updated...");
         }
+
+        public async Task AddCampgroundAsync(Campground newCampground)
+        {
+            if(newCampground == null)
+            {
+                _logger.LogError("Campground is currently null...");
+                throw new Exception("Campground not added. Try again.");
+            }
+
+            await _context.AddAsync<Campground>(newCampground);
+        }
     }
 }
