@@ -6,7 +6,7 @@ namespace App.API.Repositories
     {
         public Task<IEnumerable<Campground>> GetAllCampgroundsAsync();
         public Task<Campground> GetCampgroundByIdAsync(int id);
-        public Task UpdateCampgroundAsync(int id);
+        public Task UpdateCampgroundAsync(Campground campground);
         public Task DeleteCampground(int id);
     }
 }
