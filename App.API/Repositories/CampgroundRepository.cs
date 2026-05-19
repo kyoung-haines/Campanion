@@ -58,7 +58,7 @@ namespace App.API.Repositories
             if(campground == null)
             {
                 _logger.LogError("Campground is null...");
-                throw new Exception("Campground cannot be null.");
+                throw new Exception("Campground not found Please try again.");
             }
 
             _logger.LogInformation($"Campground found. Returning campground with ID: {id}");
@@ -71,7 +71,7 @@ namespace App.API.Repositories
             if(originalCampground == null)
             {
                 _logger.LogError("Campground cannot be null...");
-                throw new Exception("Campground does not exist.");
+                throw new Exception("Campground not updated. Try again.");
             }
 
             _logger.LogInformation("Campground Successfully updated...");
