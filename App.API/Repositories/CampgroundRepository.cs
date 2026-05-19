@@ -1,6 +1,7 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Data;
-using Microsoft.AspNetCore.Http.HttpResults;
+using App.API.Services;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Repositories
@@ -40,7 +41,7 @@ namespace App.API.Repositories
             _logger.LogInformation("GetAllCampgroundsAsync method called...");
             _logger.LogInformation("Retrieving all campgrounds...");
 
-            var campgrounds = await _context.Campgrounds.ToListAsync<Campground>();
+            var campgrounds = await _context.Campgrounds.ToListAsync();
 
             if (campgrounds == null)
             {
@@ -64,19 +65,13 @@ namespace App.API.Repositories
 
             return campground;
         }
-        public async Task UpdateCampgroundAsync(Campground campground)
+
+        public async Task UpdateCampgroundAsync(Campground originalCampground)
         {
-            if(campground == null)
+            if(originalCampground == null)
             {
                 _logger.LogError("Campground cannot be null...");
                 throw new Exception("Campground does not exist.");
-            }
-
-            var updatedCampground = _context.Update<Campground>(campground);
-
-            if(IsCampgroundUpdated(campground, updatedCampground) == false)
-            {
-                throw new Exception("Campground not successfully updated. Try again.");
             }
 
             _logger.LogInformation("Campground Successfully updated...");
