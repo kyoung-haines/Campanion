@@ -7,7 +7,7 @@ namespace App.API.Models.Campgrounds
         // TODO: DOC COMMENTS AGAIN
         public int CampgroundId { get; set; }
         public required string CampgroundName { get; set; }
-        public required string CamproundImagePath { get; set; } = "images/campgrounds/placeholder-campground.png";
+        public string CamproundImagePath { get; set; } = "images/campgrounds/placeholder-campground.png";
         public required string CampgroundStreetName { get; set; }
         public required string CampgroundCity { get; set; }
         public required string CampgroundProvince { get; set; }
