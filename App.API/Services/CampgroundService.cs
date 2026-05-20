@@ -59,6 +59,71 @@ namespace App.API.Services
             }
         }
 
+        public async Task<Campground> GetCampgroundByIdAsync(int id)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
+                var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
+
+                if(campground != null)
+                {
+                    _logger.LogInformation($"Campground found. Returning campground with ID: {id}...");
+                }
+
+                return campground;
+            }
+            catch(Exception e)
+            {
+                _logger.LogError($"Error retrieving campground with ID: {id}. See exception for details.");
+                throw new Exception(e.Message);
+            } 
+        }
+
+        public async Task UpdateCampgroundAsync(Campground originalCampground)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
+              
+                if(originalCampground != null)
+                {
+                   Campground updatedCampground =  await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
+
+                    if (await IsCampgroundUpdatedAsync(originalCampground, updatedCampground))
+                    {
+                        _logger.LogInformation("Campground has been updated...");
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Failed to update campground. See Exception");
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task AddCampgroundAsync(Campground newCampground)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to add new campground with ID: {newCampground.CampgroundId}...");
+                await _campgroundRepo.AddCampgroundAsync(newCampground);
+
+                var newCampgroundId = newCampground.CampgroundId;
+
+                if(await IsCampgroundAddedAsync(newCampgroundId) == true)
+                {
+                    _logger.LogInformation("Campground has been added to the system...");
+                }
+            }
+            catch(Exception e)
+            {
+                _logger.LogError("Error adding campground. See exception.");
+                throw new Exception(e.Message);
+            }
+        }
+
         // QUICK COMMENT - needs doc comments still
         // This will reference a given CampgroundId (ID of newly added campground)
         // against all campgrounds to ensure that it has been added to the system.
@@ -91,7 +156,7 @@ namespace App.API.Services
             if(result == true)
             {
                 _logger.LogError("Campground unsuccessfully updated...");
-                throw new Exception("Campground failed to update. Objects are the same.");
+                throw new Exception("Campground failed to update. No changes were recognized.");
             }
 
             _logger.LogInformation("Campground has been updated...");
