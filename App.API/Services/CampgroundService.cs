@@ -15,24 +15,27 @@ namespace App.API.Services
             _campgroundRepo = campgroundRepo;
         }
 
-        public async Task DeleteCampground(int id)
+        public async Task<Result<Campground>> DeleteCampground(int id)
         {
             try
             {
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}");
 
-                var isExists = await CampgroundIdIsExistsAsync(id);
+                var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                if(isExists == true)
+                await _campgroundRepo.DeleteCampgroundAsync(id);
+
+                if(campground == null)
                 {
-                    await _campgroundRepo.DeleteCampground(id);
-                    _logger.LogInformation($"Campground deleted from the system. ID: {id}");
+                    _logger.LogInformation($"Campground deleted from the system.");
                 }
+
+                return Result<Campground>.Success(campground);
             }
-            catch (RepositoryException e)
+            catch (RepositoryException ex)
             {
                 _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
-                throw;
+                return Result<Campground>.Failure("Failed to delete the campground from the database.");
             }
         }
 
