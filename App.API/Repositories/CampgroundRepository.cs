@@ -17,24 +17,29 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        public async Task<Result<Campground>> DeleteCampground(int id)
+        public async Task<Result<Campground>> DeleteCampgroundAsync(int id)
         {
-            _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
-            _logger.LogInformation($"Looking for campground in the system...");
-
-            var campground = await _context.FindAsync<Campground>(id);
-
-            if(campground == null)
+            try
             {
-                _logger.LogError("Campground not found. Check the ID value.");
-                throw new RepositoryException("Unable to delete campground. Campground not found.");
+                _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
+                _logger.LogInformation($"Looking for campground in the system...");
+
+                var campground = await _context.FindAsync<Campground>(id);
+
+                _logger.LogInformation("Campground found. Attempting to delete...");
+
+                _context.Remove<Campground>(campground);
+
+                await _context.SaveChangesAsync();
+
+                return Result<Campground>.Success(campground); // this should be null if successful
             }
-
-            _logger.LogInformation("Campground found. Attempting to delete...");
-
-            _context.Remove<Campground>(campground);
-
-            await _context.SaveChangesAsync();
+            catch(RepositoryException ex)
+            {
+                //throw new RepositoryException("Failed to delete the campground from the database.", ex); ;
+                _logger.LogError(ex, "Error deleting the campground from the database.");
+                return Result<Campground>.Failure("An error occured while deleting the campground from the database.");
+            }
         }
         public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
         {
