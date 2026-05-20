@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using App.API.Models.Campgrounds;
 using App.API.Enums;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace App.API.Tests.Services
 {
@@ -25,6 +26,7 @@ namespace App.API.Tests.Services
         public void TestInitialize()
         {
             _campRepo = new Mock<ICampgroundRepository>();
+
             _testCampground1 = new Campground
                 { 
                     CampgroundId = 1,
@@ -41,12 +43,30 @@ namespace App.API.Tests.Services
                     CampgroundHasActivities = false,
                     CampgroundHasFacilities = false
                 };
+
+            _testCampground2 = new Campground
+            {
+                CampgroundId = 2,
+                CampgroundName = "Test Campground 2",
+                CampgroundCity = "Guelph",
+                CampgroundCountry = "Canada",
+                CampgroundEmail = "testcampground2@test.ca",
+                CampgroundProvince = "ON",
+                CampgroundStreetName = "Test Road",
+                CampgroundPostalCode = "N1M1M1",
+                CampgroundPhone = "2222222222",
+                CampgroundType = CampgroundType.NATIONAL,
+                CampgroundIsOpenYearRound = true,
+                CampgroundHasActivities = false,
+                CampgroundHasFacilities = false
+            };
+
+            _testCampgrounds.AddRange(_testCampground1, _testCampground2);
         }
 
         [TestMethod]
-        public void DeleteCampgroundAsyncValidIdDeletesCampground()
+        public async Task DeleteCampgroundAsyncValidIdDeletesCampground()
         {
-
         }
     }
 }
