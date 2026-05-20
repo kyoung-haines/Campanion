@@ -74,6 +74,8 @@ namespace App.API.Repositories
                 throw new Exception("Campground not updated. Try again.");
             }
 
+            _context.Update<Campground>(originalCampground);
+
             _logger.LogInformation("Campground Successfully updated...");
         }
 
