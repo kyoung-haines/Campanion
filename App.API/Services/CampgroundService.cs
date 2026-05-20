@@ -1,6 +1,6 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Repositories;
-using System.Security.Cryptography.X509Certificates;
+using App.API.Exceptions;
 
 namespace App.API.Services
 {
@@ -29,10 +29,10 @@ namespace App.API.Services
                     _logger.LogInformation($"Campground deleted from the system. ID: {id}");
                 }
             }
-            catch (Exception e)
+            catch (RepositoryException e)
             {
                 _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
-                throw new Exception (e.Message);
+                throw;
             }
         }
 
