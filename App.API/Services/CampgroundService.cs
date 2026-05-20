@@ -83,28 +83,28 @@ namespace App.API.Services
             } 
         }
 
-        public async Task UpdateCampgroundAsync(Campground originalCampground)
-        {
-            try
-            {
-                _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
+        //public async Task UpdateCampgroundAsync(Campground originalCampground)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
               
-                if(originalCampground != null)
-                {
-                   Campground updatedCampground =  await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
+        //        if(originalCampground != null)
+        //        {
+        //           Campground updatedCampground =  await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
 
-                    if (await IsCampgroundUpdatedAsync(originalCampground, updatedCampground))
-                    {
-                        _logger.LogInformation("Campground has been updated...");
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                _logger.LogError("Failed to update campground. See Exception");
-                throw new Exception(e.Message);
-            }
-        }
+        //            if (await IsCampgroundUpdatedAsync(originalCampground, updatedCampground))
+        //            {
+        //                _logger.LogInformation("Campground has been updated...");
+        //            }
+        //        }
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        _logger.LogError("Failed to update campground. See Exception");
+        //        throw new Exception(e.Message);
+        //    }
+        //}
 
         public async Task AddCampgroundAsync(Campground newCampground)
         {
