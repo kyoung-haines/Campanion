@@ -66,7 +66,7 @@ namespace App.API.Repositories
             return campground;
         }
 
-        public async Task UpdateCampgroundAsync(Campground originalCampground)
+        public async Task<Campground> UpdateCampgroundAsync(Campground originalCampground)
         {
             if(originalCampground == null)
             {
@@ -74,9 +74,15 @@ namespace App.API.Repositories
                 throw new Exception("Campground not updated. Try again.");
             }
 
+            var originalCampgroundCopy = originalCampground;
+
             _context.Update<Campground>(originalCampground);
 
+            await _context.SaveChangesAsync();
+
             _logger.LogInformation("Campground Successfully updated...");
+
+            return originalCampground;
         }
 
         public async Task AddCampgroundAsync(Campground newCampground)
