@@ -1,6 +1,6 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Data;
-using App.API.Services;
+using App.API.Exceptions;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -17,9 +17,9 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        public async Task DeleteCampground(int id)
+        public async Task<Result<Campground>> DeleteCampground(int id)
         {
-            _logger.LogInformation($"Attempting to delete user with ID: {id}...");
+            _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
             _logger.LogInformation($"Looking for campground in the system...");
 
             var campground = await _context.FindAsync<Campground>(id);
@@ -27,14 +27,14 @@ namespace App.API.Repositories
             if(campground == null)
             {
                 _logger.LogError("Campground not found. Check the ID value.");
-                throw new Exception("Campground not found. Please try again.");
+                throw new RepositoryException("Unable to delete campground. Campground not found.");
             }
 
             _logger.LogInformation("Campground found. Attempting to delete...");
 
             _context.Remove<Campground>(campground);
 
-            
+            await _context.SaveChangesAsync();
         }
         public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
         {
