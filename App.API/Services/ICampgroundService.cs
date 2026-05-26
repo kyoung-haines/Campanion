@@ -4,7 +4,7 @@ namespace App.API.Services
 {
     public interface ICampgroundService
     {
-        public Task<Result<Campground>> DeleteCampground(int id);
+        public Task<Result<Campground>> DeleteCampgroundAsync(int id);
         public Task<IEnumerable<Campground>> GetAllCampgroundsAsync();
         public Task<Campground> GetCampgroundByIdAsync(int id);
         public Task<Campground> UpdateCampgroundAsync(int id);

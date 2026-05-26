@@ -15,7 +15,7 @@ namespace App.API.Services
             _campgroundRepo = campgroundRepo;
         }
 
-        public async Task<Result<Campground>> DeleteCampground(int id)
+        public async Task<Result<bool>> DeleteCampgroundAsync(int id)
         {
             try
             {
@@ -30,12 +30,12 @@ namespace App.API.Services
                     _logger.LogInformation($"Campground deleted from the system.");
                 }
 
-                return Result<Campground>.Success(campground);
+                return Result<bool>.Success(true);
             }
             catch (RepositoryException ex)
             {
                 _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
-                return Result<Campground>.Failure("Failed to delete the campground from the database.");
+                return Result<bool>.Failure("Failed to delete the campground from the database.");
             }
         }
 
