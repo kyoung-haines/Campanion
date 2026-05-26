@@ -74,6 +74,9 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task DeleteCampgroundAsyncValidIdDeleteReturnsSuccess()
         {
+            _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
+                .ReturnsAsync(Result<Campground>.Success(_testCampground1));
+
             _campRepo.Setup(repo => repo.DeleteCampgroundAsync(1))
                 .ReturnsAsync(Result<bool>.Success(true));
 
@@ -87,6 +90,9 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task DeleteCampgroundAsyncInvalidIdDeleteReturnsFailure()
         {
+            _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(3))
+                .ReturnsAsync(Result<Campground>.Failure("Failed to delete the campground from the database"));
+
             _campRepo.Setup(repo => repo.DeleteCampgroundAsync(3))
                 .ReturnsAsync(Result<bool>.Failure("Failed to delete the campground from the database."));
 
