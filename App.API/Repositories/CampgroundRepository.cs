@@ -38,7 +38,7 @@ namespace App.API.Repositories
             {
                 //throw new RepositoryException("Failed to delete the campground from the database.", ex); ;
                 _logger.LogError(ex, "Error deleting the campground from the database.");
-                return Result<Campground>.Failure("An error occured while deleting the campground from the database.");
+                return Result<bool>.Failure("An error occured while deleting the campground from the database.");
             }
         }
         public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
