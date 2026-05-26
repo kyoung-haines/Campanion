@@ -23,65 +23,69 @@ namespace App.API.Services
 
                 var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                await _campgroundRepo.DeleteCampgroundAsync(id);
-
-                if(campground == null)
+                if(!campground.Succeeded || campground.Data == null)
                 {
-                    _logger.LogInformation($"Campground deleted from the system.");
+                    _logger.LogWarning($"Campground with ID: {id} not found...");
+                    return Result<bool>.Failure("Campground not found...");
                 }
 
+                var result = await _campgroundRepo.DeleteCampgroundAsync(id);
+
+                if(!result.Succeeded)
+                {
+                    _logger.LogError($"Failed to delete campground with ID: {id}...");
+                    return Result<bool>.Failure(result.Error.ToString());
+                }
+
+                _logger.LogInformation($"Campground with ID: {id} deleted...");
                 return Result<bool>.Success(true);
             }
             catch (RepositoryException ex)
             {
-                _logger.LogError($"Error deleting the campground from the system. ID {id}. See Exception for details.");
+                _logger.LogError(ex, $"Error deleting the campground from the system. ID {id}. See Exception for details.");
                 return Result<bool>.Failure("Failed to delete the campground from the database.");
             }
         }
 
-        public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+        public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
         {
+            var campgroundsResult = new Result<List<Campground>>();
+
             try
             {
                 _logger.LogInformation("Service Layer: GetAllCampgroundsAsync called...");
 
-                var campgrounds = await _campgroundRepo.GetAllCampgroundsAsync();
+                campgroundsResult = await _campgroundRepo.GetAllCampgroundsAsync();
 
-                if(campgrounds != null)
-                {
-                    _logger.LogInformation("Campgrounds retrieved successfully!");
-                    
-                }
-
-                return campgrounds;
+                return campgroundsResult;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogError("Error retrieving all campgrounds. See Exception.");
-                throw new Exception(e.Message);
+                _logger.LogError(ex, "Error retrieving all campgrounds. See Exception.");
+                return campgroundsResult;
             }
         }
 
-        public async Task<Campground> GetCampgroundByIdAsync(int id)
-        {
-            try
-            {
-                _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
-                var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
+        //public async Task<Result<Campground>> GetCampgroundByIdAsync(int id)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
+        //        var campgroundResult = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                if(campground != null)
-                {
-                    _logger.LogInformation($"Campground found. Returning campground with ID: {id}...");
-                }
+        //        if (campgroundResult.Succeeded != true)
+        //        {
+        //            _logger.LogInformation($"Campground found. Returning campground with ID: {id}...");
+        //        }
 
-                return campground;
-            }
-            catch(Exception e)
-            {
-                _logger.LogError($"Error retrieving campground with ID: {id}. See exception for details.");
-                throw new Exception(e.Message);
-            } 
-        }
+        //        return campgroundResult;
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        _logger.LogError($"Error retrieving campground with ID: {id}. See exception for details.");
+                
+        //    } 
+        //}
 
         //public async Task UpdateCampgroundAsync(Campground originalCampground)
         //{

@@ -24,7 +24,6 @@ namespace App.API.Tests.Services
         private Campground _testCampground1;
         private Campground _testCampground2;
         private List<Campground> _testCampgrounds;
-        private Result<Campground> _result;
 
         [TestInitialize]
         public void TestInitialize()
@@ -32,7 +31,7 @@ namespace App.API.Tests.Services
             _campRepo = new Mock<ICampgroundRepository>();
             _logger = new Mock<ILogger<CampgroundService>>();
             _campService = new CampgroundService(_logger.Object, _campRepo.Object);
-            
+            _testCampgrounds = new List<Campground>();
 
             _testCampground1 = new Campground
                 { 
@@ -68,12 +67,12 @@ namespace App.API.Tests.Services
                 CampgroundHasFacilities = false
             };
 
-            _testCampgrounds.AddRange(_testCampground1, _testCampground2);
+            _testCampgrounds.AddRange<Campground>(_testCampground1, _testCampground2);
 
         }
 
         [TestMethod]
-        public async Task DeleteCampgroundAsyncValidIdDeletesCampground()
+        public async Task DeleteCampgroundAsyncValidIdDeleteReturnsSuccess()
         {
             _campRepo.Setup(repo => repo.DeleteCampgroundAsync(1))
                 .ReturnsAsync(Result<bool>.Success(true));
@@ -82,7 +81,39 @@ namespace App.API.Tests.Services
 
             var actualResult = await _campService.DeleteCampgroundAsync(1);
 
-            Assert.AreEqual<Result<bool>>(expectedResult, actualResult);
+            Assert.AreEqual(expectedResult.Succeeded, actualResult.Succeeded);
+        }
+
+        [TestMethod]
+        public async Task DeleteCampgroundAsyncInvalidIdDeleteReturnsFailure()
+        {
+            _campRepo.Setup(repo => repo.DeleteCampgroundAsync(3))
+                .ReturnsAsync(Result<bool>.Failure("Failed to delete the campground from the database."));
+
+            var expectedResult = new Result<bool>();
+            var expectedError = expectedResult.Error = "Failed to delete the campground from the database.";
+                
+            var actualResult = await _campService.DeleteCampgroundAsync(3);
+            var actualError = actualResult.Error;
+
+            Assert.AreEqual(expectedError, actualError);
+        }
+
+        [TestMethod]
+        public async Task GetAllCampgroundsAsyncReturnsAllCampgrounds()
+        {
+            var successResult = new Result<List<Campground>>();
+            successResult.Succeeded = true;
+            successResult.Data = _testCampgrounds;
+
+            _campRepo.Setup(repo => repo.GetAllCampgroundsAsync())
+                .ReturnsAsync(successResult);
+
+            var expectedResult = successResult;
+
+            var actualResult = await _campService.GetAllCampgroundsAsync();
+
+            Assert.AreEqual(expectedResult.Data, actualResult.Data);
         }
     }
 }

@@ -10,6 +10,6 @@
             new() { Succeeded = true, Data = data };
 
         public static Result<T> Failure(string error) =>
-            new() { Succeeded = true, Error = error };
+            new() { Succeeded = false, Error = error };
     }
 }

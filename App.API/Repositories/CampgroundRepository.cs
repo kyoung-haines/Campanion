@@ -17,6 +17,9 @@ namespace App.API.Repositories
             _context = context;
         }
 
+        // TO-DO: REFACTOR METHOD RETURN TYPES TO Result<T>
+        // NOTE: USE bool as the data type of the generic specification where applicable
+
         public async Task<Result<bool>> DeleteCampgroundAsync(int id)
         {
             try
@@ -32,43 +35,49 @@ namespace App.API.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return Result<bool>.Success(true); // this should be null if successful
+                return Result<bool>.Success(true);
             }
             catch(RepositoryException ex)
             {
                 //throw new RepositoryException("Failed to delete the campground from the database.", ex); ;
                 _logger.LogError(ex, "Error deleting the campground from the database.");
-                return Result<bool>.Failure("An error occured while deleting the campground from the database.");
+                return Result<bool>.Failure("Failed to delete the campground from the database.");
             }
         }
-        public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+        //public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+        public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
         {
-            _logger.LogInformation("GetAllCampgroundsAsync method called...");
-            _logger.LogInformation("Retrieving all campgrounds...");
-
-            var campgrounds = await _context.Campgrounds.ToListAsync();
-
-            if (campgrounds == null)
+            try
             {
-                _logger.LogInformation("There are no campgrounds to retrieve...");
-                throw new Exception("There are no campgrounds to retrieve.");
-            }
+                _logger.LogInformation("GetAllCampgroundsAsync method called...");
+                _logger.LogInformation("Retrieving all campgrounds...");
 
-            return campgrounds;
+                var campgrounds = await _context.Campgrounds.ToListAsync();
+
+                return Result<List<Campground>>.Success(campgrounds);
+            }
+            catch (Exception ex)
+            {
+
+                _logger.LogError(ex, "Error retrieving all Campgrounds from database...");
+                return Result<List<Campground>>.Failure("Error retrieving all campgrounds.");
+            }
         }
-        public async Task<Campground> GetCampgroundByIdAsync(int id)
+
+        public async Task<Result<Campground>> GetCampgroundByIdAsync(int id)
         {
-            var campground = await _context.FindAsync<Campground>(id);
-
-            if(campground == null)
+            try
             {
-                _logger.LogError("Campground is null...");
-                throw new Exception("Campground not found Please try again.");
+                _logger.LogInformation($"Attempting to retrieve campground ID: {id}...");
+                var campgroundResult = await _context.FindAsync<Campground>(id);
+
+                return Result<Campground>.Success(campgroundResult);
             }
-
-            _logger.LogInformation($"Campground found. Returning campground with ID: {id}");
-
-            return campground;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to retrieve campground with ID: {id}...");
+                return Result<Campground>.Failure("Failed to retrieve the campground from the database");
+            }
         }
 
         public async Task<Campground> UpdateCampgroundAsync(Campground originalCampground)
