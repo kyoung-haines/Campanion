@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using App.API.Models.Campgrounds;
 using App.API.Enums;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using App.API.Services;
 
 namespace App.API.Tests.Services
 {
@@ -18,14 +19,20 @@ namespace App.API.Tests.Services
     public class CampgroundServiceTests
     {
         private Mock<ICampgroundRepository> _campRepo;
+        private Mock<ILogger<CampgroundService>> _logger;
+        private CampgroundService _campService;
         private Campground _testCampground1;
         private Campground _testCampground2;
         private List<Campground> _testCampgrounds;
+        private Result<Campground> _result;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _campRepo = new Mock<ICampgroundRepository>();
+            _logger = new Mock<ILogger<CampgroundService>>();
+            _campService = new CampgroundService(_logger.Object, _campRepo.Object);
+            
 
             _testCampground1 = new Campground
                 { 
@@ -62,11 +69,20 @@ namespace App.API.Tests.Services
             };
 
             _testCampgrounds.AddRange(_testCampground1, _testCampground2);
+
         }
 
         [TestMethod]
         public async Task DeleteCampgroundAsyncValidIdDeletesCampground()
         {
+            _campRepo.Setup(repo => repo.DeleteCampgroundAsync(1))
+                .ReturnsAsync(Result<bool>.Success(true));
+
+            var expectedResult = Result<bool>.Success(true);
+
+            var actualResult = await _campService.DeleteCampgroundAsync(1);
+
+            Assert.AreEqual<Result<bool>>(expectedResult, actualResult);
         }
     }
 }
