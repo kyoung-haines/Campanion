@@ -17,7 +17,7 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        public async Task<Result<Campground>> DeleteCampgroundAsync(int id)
+        public async Task<Result<bool>> DeleteCampgroundAsync(int id)
         {
             try
             {
@@ -32,7 +32,7 @@ namespace App.API.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return Result<Campground>.Success(campground); // this should be null if successful
+                return Result<bool>.Success(true); // this should be null if successful
             }
             catch(RepositoryException ex)
             {
