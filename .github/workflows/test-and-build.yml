@@ -23,6 +23,6 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore App.API/App.API.csproj
     - name: Build
-      run: dotnet build App.API/App.API.csproj --no-restore
+      run: dotnet build App.API.Tests/App.API.Tests.csproj --configuration Debug
     - name: Test
       run: dotnet test App.API.Tests/App.API.Tests.csproj --no-build --verbosity normal
