@@ -6,11 +6,11 @@ namespace App.API.Services
     {
         public Task<Result<Campground>> DeleteCampgroundAsync(int id);
         public Task<Result<List<Campground>>> GetAllCampgroundsAsync();
-        public Task<Campground> GetCampgroundByIdAsync(int id);
-        public Task<Campground> UpdateCampgroundAsync(int id);
-        public Task AddCampgroundAsync(Campground campground);
-        public Task<bool> CampgroundIdIsExistsAsync(int newCampId);
-        public Task<bool> IsCampgroundUpdatedAsync(Campground originalCampground, Campground updatedCampground);
-        public Task<bool> IsCampgroundAddedAsync(int newCampgroundId);
+        public Task<Result<Campground>> GetCampgroundByIdAsync(int id);
+        public Task<Result<Campground>> UpdateCampgroundAsync(int id);
+        public Task<Result<Campground>> AddCampgroundAsync(Campground campground);
+        public Task<Result<bool>> CampgroundIdIsExistsAsync(int newCampId);
+        public Task<Result<bool>> IsCampgroundUpdatedAsync(Campground originalCampground, Campground updatedCampground);
+        public Task<Result<bool>> IsCampgroundAddedAsync(int newCampgroundId);
     }
 }
