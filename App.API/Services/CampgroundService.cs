@@ -199,9 +199,11 @@ namespace App.API.Services
 
         public async Task<bool> IsCampgroundAddedAsync(int id)
         {
+            var result = new Result<bool>();
+
             try
             {
-                var result = await CampgroundIdIsExistsAsync(id);
+                result = await CampgroundIdIsExistsAsync(id);
 
                 if(result.Succeeded == true)
                 {
@@ -213,7 +215,7 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Campground with ID: {id} has not been added to the system...");
-                return Result.Failure("Campground not added to the system.");
+                return result.Succeeded;
             }
         }
     }
