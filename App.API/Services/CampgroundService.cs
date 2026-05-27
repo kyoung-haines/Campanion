@@ -172,7 +172,7 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Campground with ID: {newCampgroundId} does not exist...");
-                return Result<bool>.Failure($"Campground with ID: {newCampgroundId} does not exists.");
+                return Result<bool>.Failure($"Campground with ID: {newCampgroundId} does not exist.");
             }
         }
 
