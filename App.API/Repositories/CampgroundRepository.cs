@@ -39,12 +39,11 @@ namespace App.API.Repositories
             }
             catch(RepositoryException ex)
             {
-                //throw new RepositoryException("Failed to delete the campground from the database.", ex); ;
                 _logger.LogError(ex, "Error deleting the campground from the database.");
                 return Result<bool>.Failure("Failed to delete the campground from the database.");
             }
         }
-        //public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
+
         public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
         {
             try
@@ -80,34 +79,38 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<Campground> UpdateCampgroundAsync(Campground originalCampground)
+        public async Task<Result<Campground>> UpdateCampgroundAsync(Campground originalCampground)
         {
-            if(originalCampground == null)
+            try
             {
-                _logger.LogError("Campground cannot be null...");
-                throw new Exception("Campground not updated. Try again.");
+                _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
+                _context.Update(originalCampground);
+                _context.SaveChangesAsync();
+                _logger.LogInformation($"Campground with ID: {originalCampground.CampgroundId} successfully updated...");
+                return Result<Campground>.Success(originalCampground);
             }
-
-            var originalCampgroundCopy = originalCampground;
-
-            _context.Update<Campground>(originalCampground);
-
-            await _context.SaveChangesAsync();
-
-            _logger.LogInformation("Campground Successfully updated...");
-
-            return originalCampground;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Campground failed to update. See stack trace for details...");
+                return Result<Campground>.Failure("Failed to update the campground in the database.");
+            }
         }
 
-        public async Task AddCampgroundAsync(Campground newCampground)
+        public async Task<Result<Campground>> AddCampgroundAsync(Campground newCampground)
         {
-            if(newCampground == null)
+            try
             {
-                _logger.LogError("Campground is currently null...");
-                throw new Exception("Campground not added. Try again.");
+                _logger.LogInformation($"Attempting to add new campgroundwith ID: {newCampground.CampgroundId}...");
+                _context.Add<Campground>(newCampground);
+                _context.SaveChangesAsync();
+                _logger.LogInformation($"Campground successfully added...");
+                return Result<Campground>.Success(newCampground);
             }
-
-            await _context.AddAsync<Campground>(newCampground);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to add the campground to the database. See stack trace for details...");
+                return Result<Campground>.Failure("Failed to add the campground to the database");
+            }
         }
     }
 }
