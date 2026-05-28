@@ -1,8 +1,8 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Data;
-using App.API.Exceptions;
 
 using Microsoft.EntityFrameworkCore;
+using App.API.Exceptions.RepositoryExceptions;
 
 namespace App.API.Repositories
 {
