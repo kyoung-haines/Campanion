@@ -1,9 +1,11 @@
 ﻿using App.API.Enums;
+using App.API.Exceptions.AppUserExceptions;
 using App.API.Models.Campgrounds;
 using App.API.Models.Identity;
 using App.API.Repositories;
 using App.API.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -75,6 +77,54 @@ namespace App.API.Tests.Services
             var actualResult = await _service.DeleteFavouriteCampgroundAsync(_favCampground);
 
             Assert.AreEqual(expectedResult.Succeeded, actualResult.Succeeded);
+        }
+
+        [TestMethod]
+        public async Task DeleteFavouriteCampgroundAsyncReturnsFailure()
+        {
+            _repo.Setup(repo => repo.DeleteFavouriteCampgroundAsync(_favCampground))
+                .ReturnsAsync(Result<bool>.Failure("Failed to delete favourite."));
+
+            var expectedError = "Failed to delete favourite.";
+
+            var actualResult = await _service.DeleteFavouriteCampgroundAsync(_favCampground);
+            var actualError = actualResult.Error;
+            Assert.AreEqual(expectedError, actualError);
+        }
+
+        [TestMethod]
+        public async Task GetAllFavouriteCampgroundsAsyncValidIdReturnSuccess()
+        {
+            _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync(1))
+                .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Success(_favCampgrounds));
+
+            var expectedResult = Result<List<AppUserFavouriteCampground>>.Success(_favCampgrounds);
+
+            var actualResult = await _service.GetAllFavouriteCampgroundsAsync(1);
+
+            Assert.AreEqual(expectedResult.Data, actualResult.Data);
+        }
+
+        [TestMethod]
+        public async Task GetAllFavouriteCampgroundsAsyncInvalidIdReturnsFailure()
+        {
+            var appUserId = 99; //invalid ID
+
+            _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync(appUserId))
+                .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Failure($"Invalid UserID. Verify that ID: {appUserId} exists."));
+
+            var expectedResult = Result<List<AppUserFavouriteCampground>>.Failure($"Invalid UserID. Verify that ID: {appUserId} exists.");
+
+            var actualResult = await _service.GetAllFavouriteCampgroundsAsync(appUserId);
+
+            Assert.AreEqual(expectedResult.Error.ToString(), actualResult.Error.ToString());
+    
+        }
+
+        [TestMethod]
+        public async Task GetAllFavouriteCampgroundsAsyncNoFavouritesReturnsEmptySuccess()
+        {
+
         }
     }
 }
