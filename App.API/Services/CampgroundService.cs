@@ -1,6 +1,6 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Repositories;
-using App.API.Exceptions;
+using App.API.Exceptions.RepositoryExceptions;
 
 namespace App.API.Services
 {
