@@ -64,5 +64,38 @@ namespace App.API.Repositories
                 return Result<List<AppUser>>.Failure("Failed to retrieve administrator users from the database.");
             }
         }
+
+        async Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync()
+        {
+            try
+            {
+                _logger.LogInformation("AppUserRepository method called: GetAllRegularAppUsersAsync...");
+                _logger.LogInformation("Attempting to retrieve all regular app users...");
+
+                var regularUsers = await _context.AppUsers.Where(user => user.AppUserType == Enums.AppUserType.REGULAR_USER).ToListAsync();
+            
+                if(regularUsers.Count() == 0)
+                {
+                    _logger.LogWarning("There are no regular users to retrieve. If you are seeing this warning, and you unsure why," + 
+                        "it is probably not a good thing. If you know there are registered regular users, and you are seeing this warning, " +
+                        "that is also probably not a good thing - both of these will likely indicate a backend issue..."); 
+                }
+                else if(regularUsers == null)
+                {
+                    _logger.LogError("The returned List<AppUser>() object is null. This should never be null. It can be empty, but it shouldn't be null. " +
+                        "This indicates that the operation to retrieve the regular users from the database completely failed.");
+                    throw new NullReferenceException("The list of regular users cannot be null. This indicates a backend issue. Please contact support.");
+                }
+                else
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve regular users from the database...");
+                return Result<List<AppUser>>.Failure("Failed to retrieve regulare users from the datbase. Please try again.");
+            }
+        }
     }
 }
