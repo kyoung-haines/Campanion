@@ -3,6 +3,7 @@ using App.API.Data;
 
 using Microsoft.EntityFrameworkCore;
 using App.API.Exceptions.RepositoryExceptions;
+using App.API.Exceptions.AppUserExceptions;
 
 namespace App.API.Repositories
 {
@@ -24,16 +25,32 @@ namespace App.API.Repositories
         {
             try
             {
+                _logger.LogInformation($"Service Method Called: DeleteCampgroundAsync()...");
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
-                _logger.LogInformation($"Looking for campground in the system...");
 
                 var campground = await _context.FindAsync<Campground>(id);
 
+                if(campground == null)
+                {
+                    _logger.LogWarning($"Campground with ID: {id} is not in the system...");
+                    throw new InvalidUserIdException($"The CampgroundId: {id} does not exist. No Campground found.");
+                }
+
                 _logger.LogInformation("Campground found. Attempting to delete...");
 
-                _context.Remove<Campground>(campground);
+                var deleteResult = _context.Remove<Campground>(campground);
 
-                await _context.SaveChangesAsync();
+                var saveResult = await _context.SaveChangesAsync();
+                
+                if (saveResult > 0)
+                {
+                    _logger.LogInformation($"Campground with ID: {id} successfully deleted!");
+                }
+
+                else
+                {
+                    throw new RepositoryException("Campground failed to delete from the system. Please try again.");
+                }
 
                 return Result<bool>.Success(true);
             }
