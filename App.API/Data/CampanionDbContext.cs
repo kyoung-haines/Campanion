@@ -14,7 +14,7 @@ namespace App.API.Data
 
         public DbSet<Campground> Campgrounds { get; set; }
         public DbSet<AppUserFavouriteCampground> AppUserFavouriteCampgrounds { get; set; }
-        public DbSet<AppUser> AppUsers { get; set; }
+        // public DbSet<AppUser> AppUsers { get; set; } // removed when Identity framework was added - handled by UserManager<AppUser>
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<FriendRequest> FriendRequests { get; set; }
