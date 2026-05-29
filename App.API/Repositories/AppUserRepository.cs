@@ -40,9 +40,29 @@ namespace App.API.Repositories
 
         public async Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync()
         {
-            var admins = await _context.AppUsers.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToListAsync();
+            try
+            {
+                _logger.LogInformation("AppUserRepository method called: GetAllAdminAppUsersAsync...");
+                _logger.LogInformation("Attempting to retrieve all admininstrator users...");
+                var admins = await _context.AppUsers.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToListAsync();
+                
+                if(admins.Count() !> 0)
+                {
+                    _logger.LogWarning("Critical Warning: No Administrator users found. This should only be true in deliberate situations. " +
+                        "If you see this warning and you're unsure why, it's a problem.");
+                }
+                else
+                {
+                    _logger.LogInformation("Successfully retrieved administrator users...");
+                }
 
-            return Result<List<AppUser>>.Success(admins);
+                return Result<List<AppUser>>.Success(admins);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve administrator users from the database...");
+                return Result<List<AppUser>>.Failure("Failed to retrieve administrator users from the database.");
+            }
         }
     }
 }
