@@ -25,7 +25,7 @@ namespace App.API.Repositories
         {
             try
             {
-                _logger.LogInformation($"Service Method Called: DeleteCampgroundAsync()...");
+                _logger.LogInformation($"Repository Method Called: DeleteCampgroundAsync()...");
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
 
                 var campground = await _context.FindAsync<Campground>(id);
@@ -65,10 +65,15 @@ namespace App.API.Repositories
         {
             try
             {
-                _logger.LogInformation("GetAllCampgroundsAsync method called...");
-                _logger.LogInformation("Retrieving all campgrounds...");
+                _logger.LogInformation("Repository Method called: GetAllCampgroundsAsync()...");
+                _logger.LogInformation("Attempting to retrieve all campgrounds...");
 
                 var campgrounds = await _context.Campgrounds.ToListAsync();
+
+                if(campgrounds.Count() > 0)
+                {
+                    _logger.LogInformation("Campgrounds successfully retrieved...");
+                }
 
                 return Result<List<Campground>>.Success(campgrounds);
             }
