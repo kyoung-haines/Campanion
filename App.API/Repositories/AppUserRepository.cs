@@ -37,5 +37,12 @@ namespace App.API.Repositories
                 return Result<List<AppUser>>.Failure($"Failed to retrieve users from the database.");
             }
         }
+
+        public async Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync()
+        {
+            var admins = await _context.AppUsers.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToListAsync();
+
+            return Result<List<AppUser>>.Success(admins);
+        }
     }
 }
