@@ -1,6 +1,6 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Data;
-
+using App.API.Exceptions.CampgroundExceptions;
 using Microsoft.EntityFrameworkCore;
 using App.API.Exceptions.RepositoryExceptions;
 using App.API.Exceptions.AppUserExceptions;
@@ -89,14 +89,22 @@ namespace App.API.Repositories
         {
             try
             {
-                _logger.LogInformation($"Attempting to retrieve campground ID: {id}...");
+                _logger.LogInformation("CampgroundRepository method called: GetCampgroundByIdAsync()...");
+                _logger.LogInformation($"Attempting to retrieve campground: {id}...");
+
                 var campgroundResult = await _context.FindAsync<Campground>(id);
+
+                if(campgroundResult == null)
+                {
+                    _logger.LogWarning($"Campground: {id} doesn't exist in the system...");
+                    throw new InvalidCampgroundIdException($"No campground with ID: {id} exists. Please check the value.");
+                }
 
                 return Result<Campground>.Success(campgroundResult);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to retrieve campground with ID: {id}...");
+                _logger.LogError(ex, $"Failed to retrieve campground with ID: {id}...See exception for details.");
                 return Result<Campground>.Failure("Failed to retrieve the campground from the database");
             }
         }
