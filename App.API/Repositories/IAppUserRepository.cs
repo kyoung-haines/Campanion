@@ -6,5 +6,6 @@ namespace App.API.Repositories
     {
         Task<Result<List<AppUser>>> GetAllAppUsersAsync();
         Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync();
+        Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync();
     }
 }
