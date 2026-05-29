@@ -97,5 +97,29 @@ namespace App.API.Repositories
                 return Result<List<AppUser>>.Failure("Failed to retrieve regulare users from the datbase. Please try again.");
             }
         }
+
+        public async Task<Result<AppUser>> GetAppUserByIdAsync(int appUserId)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserRepository method called: GetAppUserById...");
+                _logger.LogInformation($"Attempting to retrieve AppUser: {appUserId}");
+
+                var appUser = await _context.FindAsync<AppUser>(appUserId);
+
+                if(appUser == null)
+                {
+                    _logger.LogError($"AppUserId: {appUserId} is not in the system.");
+                    return Result<AppUser>.Failure("User not found.");
+                }
+
+                return Result<AppUser>.Success(appUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to retrieve user. AppUserID: {appUserId}...");
+                return Result<AppUser>.Failure("Failed to retrieve user.");
+            }
+        }
     }
 }
