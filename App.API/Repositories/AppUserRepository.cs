@@ -123,5 +123,18 @@ namespace App.API.Repositories
                 return Result<AppUser>.Failure("Failed to retrieve user.");
             }
         }
+
+        public async Task<Result<bool>> DeleteAppUserAsync(int appUserId)
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }
