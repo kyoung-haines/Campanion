@@ -4,9 +4,9 @@ namespace App.API.Repositories
 {
     public interface IAppUserRepository
     {
-        Task<Result<List<AppUser>>> GetAllAppUsersAsync();
-        Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync();
-        Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync();
-        Task<Result<AppUser>> GetAppUserByIdAsync();
+        public Task<Result<List<AppUser>>> GetAllAppUsersAsync();
+        public Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync();
+        public Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync();
+        public Task<Result<AppUser>> GetAppUserByIdAsync(int appUserId);
     }
 }
