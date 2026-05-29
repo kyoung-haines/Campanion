@@ -120,11 +120,5 @@ namespace App.API.Tests.Services
             Assert.AreEqual(expectedResult.Error.ToString(), actualResult.Error.ToString());
     
         }
-
-        [TestMethod]
-        public async Task GetAllFavouriteCampgroundsAsyncNoFavouritesReturnsEmptySuccess()
-        {
-
-        }
     }
 }
