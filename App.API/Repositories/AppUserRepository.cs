@@ -1,7 +1,7 @@
 ﻿using App.API.Data;
 using App.API.Models;
 using App.API.Models.Identity;
-using App.API.Services;
+using App.API.Exceptions.RepositoryExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace App.API.Repositories
@@ -128,12 +128,30 @@ namespace App.API.Repositories
         {
             try
             {
+                _logger.LogInformation("AppUserRepository method called: DeleteAppUserAsync...");
+                _logger.LogInformation($"Attempting to delete User: {appUserId}...");
 
+                var user = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
+
+                if(user == null)
+                {
+                    _logger.LogWarning($"User not found. Check user with ID: {appUserId} exists in the system");
+                    return Result<bool>.Failure("Failed to retrieve the User. User not deleted from the database.");
+                }
+
+                var deleteResult = await _userManager.DeleteAsync(user);
+
+                if(deleteResult.Succeeded != true)
+                {
+                    throw new RepositoryException("Failed to delete the user from the database. No changes made.");
+                }
+
+                return Result<bool>.Success(true);
             }
             catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, $"Failed to delete user ID: {appUserId}...");
+                return Result<bool>.Failure("Failed to delete user.");
             }
         }
     }
