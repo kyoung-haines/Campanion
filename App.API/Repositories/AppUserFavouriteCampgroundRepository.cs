@@ -2,6 +2,8 @@
 using App.API.Models.Campgrounds;
 using App.API.Exceptions.AppUserExceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using App.API.Models.Identity;
 
 namespace App.API.Repositories
 {
@@ -9,11 +11,13 @@ namespace App.API.Repositories
     {
         private readonly ILogger _logger;
         private readonly CampanionDbContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AppUserFavouriteCampgroundRepository(ILogger logger, CampanionDbContext context)
+        public AppUserFavouriteCampgroundRepository(ILogger logger, CampanionDbContext context, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
@@ -40,7 +44,8 @@ namespace App.API.Repositories
             {
                 var favCampgrounds = new List<AppUserFavouriteCampground>();
 
-                var appUser = await _context.AppUsers.FindAsync(appUserId);
+                //var appUser = await _context.AppUsers.FindAsync(appUserId);
+                var appUser = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
 
                 if(appUser != null)
                 {
