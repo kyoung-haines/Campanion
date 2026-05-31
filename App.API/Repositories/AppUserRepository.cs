@@ -2,6 +2,7 @@
 using App.API.Models;
 using App.API.Models.Identity;
 using App.API.Exceptions.RepositoryExceptions;
+using App.API.Exceptions.AppUserExceptions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 namespace App.API.Repositories
@@ -152,6 +153,42 @@ namespace App.API.Repositories
             {
                 _logger.LogError(ex, $"Failed to delete user ID: {appUserId}...");
                 return Result<bool>.Failure("Failed to delete user.");
+            }
+        }
+
+        public async Task<Result<AppUser>> UpdateAppUserAsync(int appUserId)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserRepository method called: UpdateAppUserAsync...");
+                _logger.LogInformation($"Attempting to retrieve user: {appUserId}");
+
+                var appUser = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
+
+                if(appUser == null)
+                {
+                    _logger.LogError($"AppUser is null. AppUser: {appUserId} doesn't exist...");
+                    throw new InvalidUserIdException($"Failed to retrieve user. ID: {appUserId} is invalid.");
+                }
+
+                var updatedResult = await _userManager.UpdateAsync(appUser);
+
+                if (updatedResult.Succeeded == true)
+                {
+                    _logger.LogInformation($"Successfully updated AppUser: {appUserId}...");
+                }
+                else
+                {
+                    _logger.LogInformation($"Failed to update AppUser: {appUserId}");
+                    throw new DbUpdateException("Failed to delete the user from the database. Please try again.");
+                }
+                
+                return Result<AppUser>.Success(appUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to update AppUser: {appUserId}...");
+                return Result<AppUser>.Failure("Failed to delete user from the database. Please try again.");
             }
         }
     }
