@@ -17,12 +17,12 @@ namespace App.API.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IEnumerable<AppUser>> GetAllAppUsers()
-        {
-            var allAppUsers = await _context.AppUsers.ToListAsync();
+    //    [HttpGet]
+    //    public async Task<IEnumerable<AppUser>> GetAllAppUsers()
+    //    {
+    //        var allAppUsers = await _context.AppUsers.ToListAsync();
 
-            return allAppUsers;
-        }
+    //        return allAppUsers;
+    //    }
     }
 }
