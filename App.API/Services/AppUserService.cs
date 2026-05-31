@@ -1,4 +1,5 @@
-﻿using App.API.Models.Identity;
+﻿using App.API.Models;
+using App.API.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace App.API.Services
@@ -16,7 +17,7 @@ namespace App.API.Services
 
         public async Task<IList<AppUser>> GetAllAppUsersAsync()
         {
-            var users = await _userManager.GetUsersInRoleAsync("User");
+            var users = await _userManager.GetUsersInRoleAsync(Roles.Member);
 
             return users;
         }
