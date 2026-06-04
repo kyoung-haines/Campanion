@@ -141,7 +141,7 @@ namespace App.API.Repositories
                 }
 
                 var deleteResult = await _userManager.DeleteAsync(user);
-
+                
                 if(deleteResult.Succeeded != true)
                 {
                     throw new RepositoryException("Failed to delete the user from the database. No changes made.");
@@ -189,6 +189,32 @@ namespace App.API.Repositories
             {
                 _logger.LogError(ex, $"Failed to update AppUser: {appUserId}...");
                 return Result<AppUser>.Failure("Failed to delete user from the database. Please try again.");
+            }
+        }
+    
+        public async IdentityResult CreateAppUserAsync(AppUser newUser)
+        {
+            try
+            {
+                _logger.LogInformation($"AppUserRepository method called: CreateAppUserAsync()...");
+                _logger.LogInformation($"Attempting to create user with ID: {newUser.AppUserProfileId}...");
+                var result = _userManager.CreateAsync(newUser);
+
+                if(result.IsCompletedSuccessfully == false)
+                {
+                    _logger.LogWarning("Failed to save the user to the database...");
+                }
+                else
+                {
+                    _logger.LogInformation($"Successfully saved user: {newUser.AppUserProfileId} to the database...");
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to save the user to the database...");
+                return Result<AppUser>.Failure($"Failed to save the new user in the database...\n{ex.Message}")
             }
         }
     }
