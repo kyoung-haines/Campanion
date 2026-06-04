@@ -1,5 +1,6 @@
 ﻿using App.API.Models;
 using App.API.Models.Identity;
+using App.API.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace App.API.Services
@@ -7,26 +8,43 @@ namespace App.API.Services
     public class AppUserService : IAppUserService
     {
         private ILogger _logger;
-        private UserManager<AppUser> _userManager;
+        private readonly IAppUserRepository _repository;
 
-        public AppUserService(ILogger logger, UserManager<AppUser> userManager)
+        public AppUserService(ILogger logger, IAppUserRepository repo)
         {
             _logger = logger;
-            _userManager = userManager;
+            _repository = repo;
         }
 
-        public async Task<IList<AppUser>> GetAllAppUsersAsync()
+        public async Task<Result<IEnumerable<AppUser>>> GetAllAppUsersAsync()
         {
-            var users = await _userManager.GetUsersInRoleAsync(Roles.Member);
+            try
+            {
+                var result = await _repository.GetAllAppUsersAsync();
 
-            return users;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Failed to retrieve users...", ex.Message);
+                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve all users...\n{ex.Message}");
+            }            
         }
 
-        public async Task<IList<AppUser>> GetAllAppAdminsAsync()
+        public async Task<Result<IEnumerable<AppUser>>> GetAllAppAdminsAsync()
         {
-            var users = await _userManager.GetUsersInRoleAsync("Admin");
+            try
+            {
+                _logger.LogInformation("AppUserServiceMethod called: GetAllAppAdminsAsync()...");
 
-            return users;
+                var result = await _repository.GetAllAdminAppUsersAsync();
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve admins list...\n{ex.Message}...");
+            }
         }
 
         public async Task CreateAppUserAsync(AppUser user, string password)
