@@ -8,9 +8,9 @@ namespace App.API.Services
         public Task<Result<IEnumerable<AppUser>>> GetAllAppUsersAsync();
         public Task<Result<IEnumerable<AppUser>>> GetAllAppAdminsAsync();
         public Task<Result<IEnumerable<AppUser>>> GetAllRegularAppUsersAsync();
-        public Task CreateAppUserAsync(AppUser user, IdentityResult result);
-        public Task<AppUser> GetAppUserByIdAsync(int id);
-        public Task UpdateAppUserByIdAsync(int id);
-        public Task DeleteAppUserAsync(int id);
+        public Task<IdentityResult> CreateAppUserAsync(AppUser user, IdentityResult result);
+        public Task<Result<AppUser>> GetAppUserByIdAsync(int id);
+        public Task<Result<AppUser>> UpdateAppUserByIdAsync(int id);
+        public Task<Result<bool>> DeleteAppUserAsync(int id);
     }
 }
