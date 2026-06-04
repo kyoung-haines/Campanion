@@ -47,55 +47,77 @@ namespace App.API.Services
             }
         }
 
-        public async Task CreateAppUserAsync(AppUser user, string password)
+        public async Task<Result<IEnumerable<AppUser>>> GetAllRegularAppUsersAsync()
         {
-            _logger.LogInformation("Creating new user...");
-
-            string userPasswordPlain = password;
-
-            if(user != null)
+            try
             {
-                var result = await _userManager.CreateAsync(user, userPasswordPlain);
-                if(result.Succeeded)
-                {
-                    _logger.LogInformation("User successfully created...");
-                }
+                _logger.LogInformation("AppUserService method called: GetAllRegularAppUsersAsync...");
+                var regularUsersResult = await _repository.GetAllRegularAppUsersAsync();
+                return regularUsersResult;
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogError("User not created successfully. The AppUser object is null");
-                throw new Exception("Error creating user. Please try again.");
+                _logger.LogError(ex.Message);
+                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve non-admin users list...\n{ex.Message}");
             }
         }
 
-        public async Task<AppUser> GetAppUserByIdAsync(int id)
+        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, IdentityResult result)
         {
-            _logger.LogInformation($"Looking for User with ID: {id}...");
-
-            AppUser? user = await _userManager.FindByIdAsync(Convert.ToString(id));
-
-            if(user == null)
+            var _result = result;
+            try
             {
-                _logger.LogError("User is null. Check the ID value exists.");
-                throw new Exception($"User with ID: {id} does not exist. Please check the ID value.");
+                _logger.LogInformation("AppUserService method called: CreateAppUserAsync...");
+                
+                _result = await _repository.CreateAppUserAsync(newUser, result);
+                return _result;
             }
-
-            _logger.LogInformation($"User with ID: {id} found!");
-
-            return user;
+            catch (Exception ex)
+            {
+                return _result;
+            }
         }
 
-        public async Task UpdateAppUserByIdAsync(int id)
+        public async Task<Result<AppUser>> GetAppUserByIdAsync(int id)
         {
-            var user = await _userManager.FindByIdAsync(Convert.ToString(id));
-
-            await _userManager.UpdateAsync(user);
+            try
+            {
+                _logger.LogInformation("AppUserService method called: GetAppUserByIdAsync...");
+                var result = await _repository.GetAppUserByIdAsync(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Result<AppUser>.Failure(ex.Message);
+            }
         }
 
-        public async Task DeleteAppUserAsync(int id)
+        public async Task<Result<AppUser>> UpdateAppUserByIdAsync(int id)
         {
-            var user = await _userManager.FindByIdAsync(Convert.ToString(id));
-            await _userManager.DeleteAsync(user);
+            try
+            {
+                _logger.LogInformation("AppUserService method called: UpdateAppUserByIdAsync...");
+                var result = await _repository.UpdateAppUserAsync(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Result<AppUser>.Failure(ex.Message);
+            }
+        }
+
+        public async Task<Result<bool>> DeleteAppUserAsync(int id)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserService method called: DeleteAppUserAsync...");
+                var result = await _repository.DeleteAppUserAsync(id);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return Result<bool>.Failure(ex.Message);
+            }
         }
     }
 }
