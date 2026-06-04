@@ -48,7 +48,7 @@ namespace App.API.Repositories
                 _logger.LogInformation("AppUserRepository method called: GetAllAdminAppUsersAsync...");
                 _logger.LogInformation("Attempting to retrieve all admininstrator users...");
 
-                var admins = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToIEnumerableAsync();
+                var admins = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToListAsync();
                 
                 if(admins.Count() !> 0)
                 {
@@ -76,7 +76,7 @@ namespace App.API.Repositories
                 _logger.LogInformation("AppUserRepository method called: GetAllRegularAppUsersAsync...");
                 _logger.LogInformation("Attempting to retrieve all regular app users...");
 
-                var regularUsers = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.REGULAR_USER).ToIEnumerableAsync();
+                var regularUsers = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.REGULAR_USER).ToListAsync();
             
                 if(regularUsers.Count() == 0)
                 {
