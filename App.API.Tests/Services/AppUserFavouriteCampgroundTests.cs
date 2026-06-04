@@ -111,13 +111,13 @@ namespace App.API.Tests.Services
             var appUserId = 99; //invalid ID
 
             _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync(appUserId))
-                .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Failure($"Invalid UserID. Verify that ID: {appUserId} exists."));
+                .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Success(new List<AppUserFavouriteCampground>()));
 
-            var expectedResult = Result<List<AppUserFavouriteCampground>>.Failure($"Invalid UserID. Verify that ID: {appUserId} exists.");
+            int expectedCount = 0;
+            var result = await _service.GetAllFavouriteCampgroundsAsync(appUserId);
+            //int actualCount = result.Data.Count();
 
-            var actualResult = await _service.GetAllFavouriteCampgroundsAsync(appUserId);
-
-            Assert.AreEqual(expectedResult.Error.ToString(), actualResult.Error.ToString());
+            Assert.HasCount<AppUserFavouriteCampground>(expectedCount, result.Data);
     
         }
     }
