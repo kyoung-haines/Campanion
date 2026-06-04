@@ -192,15 +192,17 @@ namespace App.API.Repositories
             }
         }
     
-        public async IdentityResult CreateAppUserAsync(AppUser newUser)
+        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, IdentityResult result)
         {
+            var _result = result; 
+
             try
             {
                 _logger.LogInformation($"AppUserRepository method called: CreateAppUserAsync()...");
                 _logger.LogInformation($"Attempting to create user with ID: {newUser.AppUserProfileId}...");
-                var result = _userManager.CreateAsync(newUser);
+                _result = await _userManager.CreateAsync(newUser);
 
-                if(result.IsCompletedSuccessfully == false)
+                if (result.Succeeded == false)
                 {
                     _logger.LogWarning("Failed to save the user to the database...");
                 }
@@ -209,12 +211,12 @@ namespace App.API.Repositories
                     _logger.LogInformation($"Successfully saved user: {newUser.AppUserProfileId} to the database...");
                 }
 
-                return result;
+                return _result;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to save the user to the database...");
-                return Result<AppUser>.Failure($"Failed to save the new user in the database...\n{ex.Message}")
+                return _result;
             }
         }
     }
