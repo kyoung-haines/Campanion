@@ -57,7 +57,13 @@ namespace App.API.Services
 
                 if(favCampgrounds.Succeeded == true)
                 {
-                    _logger.LogInformation($"Successfully retrieved user's favourite campgrounds...");
+                    _logger.LogInformation($"Successfully retrieved favourite campgrounds for user {appUserId}...");
+                }
+                
+                if(favCampgrounds.Succeeded == true && favCampgrounds.Data.Count() == 0)
+                {
+                    _logger.LogInformation($"Favourite campgrounds list is empty for user {appUserId}...");
+                    _logger.LogInformation("Returning the empty list...");
                 }
 
                 return Result<List<AppUserFavouriteCampground>>.Success(favCampgrounds.Data);
