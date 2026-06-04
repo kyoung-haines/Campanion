@@ -6,6 +6,7 @@ namespace App.API.Services
     {
         Task<IEnumerable<AppUser>> GetAllAppUsersAsync();
         Task<IEnumerable<AppUser>> GetAllAppAdminsAsync();
+        public Task<Result<IEnumerable<AppUser>>> GetAllRegularAppUsersAsync();
         Task CreateAppUserAsync(AppUser user, string password);
         Task<AppUser> GetAppUserByIdAsync(int id);
         Task UpdateAppUserByIdAsync(int id);
