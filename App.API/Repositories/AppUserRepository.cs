@@ -18,7 +18,7 @@ namespace App.API.Repositories
             _userManager = context;
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAppUsersAsync()
+        public async Task<Result<IEnumerable<AppUser>>> GetAllAppUsersAsync()
         {
             try
             {
@@ -29,26 +29,26 @@ namespace App.API.Repositories
 
                 if(appUsers.Count() <= 0)
                 {
-                    _logger.LogWarning("AppUsers list is empty. If there are registered users, an error has occurred...");
+                    _logger.LogWarning("Users IEnumerable is empty. If there are registered users, an error has occurred...");
                 }
 
-                return Result<List<AppUser>>.Success(appUsers);
+                return Result<IEnumerable<AppUser>>.Success(appUsers);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving users from the database...");
-                return Result<List<AppUser>>.Failure($"Failed to retrieve users from the database.");
+                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve users from the database.");
             }
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync()
+        public async Task<Result<IEnumerable<AppUser>>> GetAllAdminAppUsersAsync()
         {
             try
             {
                 _logger.LogInformation("AppUserRepository method called: GetAllAdminAppUsersAsync...");
                 _logger.LogInformation("Attempting to retrieve all admininstrator users...");
 
-                var admins = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToListAsync();
+                var admins = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.ADMINISTRATOR).ToIEnumerableAsync();
                 
                 if(admins.Count() !> 0)
                 {
@@ -60,23 +60,23 @@ namespace App.API.Repositories
                     _logger.LogInformation("Successfully retrieved administrator users...");
                 }
 
-                return Result<List<AppUser>>.Success(admins);
+                return Result<IEnumerable<AppUser>>.Success(admins);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve administrator users from the database...");
-                return Result<List<AppUser>>.Failure("Failed to retrieve administrator users from the database.");
+                return Result<IEnumerable<AppUser>>.Failure("Failed to retrieve administrator users from the database.");
             }
         }
 
-        public async Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync()
+        public async Task<Result<IEnumerable<AppUser>>> GetAllRegularAppUsersAsync()
         {
             try
             {
                 _logger.LogInformation("AppUserRepository method called: GetAllRegularAppUsersAsync...");
                 _logger.LogInformation("Attempting to retrieve all regular app users...");
 
-                var regularUsers = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.REGULAR_USER).ToListAsync();
+                var regularUsers = await _userManager.Users.Where(user => user.AppUserType == Enums.AppUserType.REGULAR_USER).ToIEnumerableAsync();
             
                 if(regularUsers.Count() == 0)
                 {
@@ -86,18 +86,18 @@ namespace App.API.Repositories
                 }
                 else if(regularUsers == null)
                 {
-                    _logger.LogError("The returned List<AppUser>() object is null. This should never be null. It can be empty, but it shouldn't be null. " +
+                    _logger.LogError("The returned IEnumerable<AppUser>() object is null. This should never be null. It can be empty, but it shouldn't be null. " +
                         "This indicates that the operation to retrieve the regular users from the database completely failed.");
-                    throw new NullReferenceException("The list of regular users cannot be null. This indicates a backend issue. Please contact support.");
+                    throw new NullReferenceException("The IEnumerable of regular users cannot be null. This indicates a backend issue. Please contact support.");
                 }
                 
-                return Result<List<AppUser>>.Success(regularUsers);
+                return Result<IEnumerable<AppUser>>.Success(regularUsers);
                
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve regular users from the database...");
-                return Result<List<AppUser>>.Failure("Failed to retrieve regulare users from the datbase. Please try again.");
+                return Result<IEnumerable<AppUser>>.Failure("Failed to retrieve regulare users from the datbase. Please try again.");
             }
         }
 
