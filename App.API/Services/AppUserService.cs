@@ -16,7 +16,7 @@ namespace App.API.Services
             _repository = repo;
         }
 
-        public async Task<Result<IEnumerable<AppUser>>> GetAllAppUsersAsync()
+        public async Task<Result<List<AppUser>>> GetAllAppUsersAsync()
         {
             try
             {
@@ -27,11 +27,11 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError("Failed to retrieve users...", ex.Message);
-                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve all users...\n{ex.Message}");
+                return Result<List<AppUser>>.Failure($"Failed to retrieve all users...\n{ex.Message}");
             }            
         }
 
-        public async Task<Result<IEnumerable<AppUser>>> GetAllAppAdminsAsync()
+        public async Task<Result<List<AppUser>>> GetAllAppAdminsAsync()
         {
             try
             {
@@ -43,11 +43,11 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve admins list...\n{ex.Message}...");
+                return Result<List<AppUser>>.Failure($"Failed to retrieve admins list...\n{ex.Message}...");
             }
         }
 
-        public async Task<Result<IEnumerable<AppUser>>> GetAllRegularAppUsersAsync()
+        public async Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return Result<IEnumerable<AppUser>>.Failure($"Failed to retrieve non-admin users list...\n{ex.Message}");
+                return Result<List<AppUser>>.Failure($"Failed to retrieve non-admin users list...\n{ex.Message}");
             }
         }
 
