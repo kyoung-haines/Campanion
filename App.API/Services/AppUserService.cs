@@ -74,6 +74,7 @@ namespace App.API.Services
             }
             catch (Exception ex)
             {
+                _logger.LogInformation(ex, "Failed to create user...");
                 return _result;
             }
         }
@@ -88,6 +89,7 @@ namespace App.API.Services
             }
             catch (Exception ex)
             {
+                _logger.LogInformation($"Failed to get user with ID: {id}...\n{ex.Message}");
                 return Result<AppUser>.Failure(ex.Message);
             }
         }
