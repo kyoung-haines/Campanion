@@ -45,10 +45,10 @@ namespace App.API.Tests.Services
             };
         }
 
-        [TestMethod]
-        public Task GetProfileByIdAsyncValidIdReturnsProfile()
-        {
+        //[TestMethod]
+        //public Task GetProfileByIdAsyncValidIdReturnsProfile()
+        //{
 
-        }
+        //}
     }
 }
