@@ -7,5 +7,6 @@ namespace App.API.Models.Trips
     {
         public int TripId { get; set; }
         public int CampgroundId { get; set; }
+        DateTime TripCampgroundAddedAt { get; set; }
     }
 }
