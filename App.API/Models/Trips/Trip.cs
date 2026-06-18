@@ -1,4 +1,5 @@
 ﻿using App.API.Enums;
+using App.API.Models.Identity;
 namespace App.API.Models.Trips
 {
     public class Trip
@@ -8,5 +9,6 @@ namespace App.API.Models.Trips
         public DateTime TripStartDate { get; set; }
         public DateTime TripEndDate { get; set; }
         public DateTime TripCreationDate { get; set; }
+        public List<AppUser> TripAttendees { get; set; } = new List<AppUser>();
     }
 }
