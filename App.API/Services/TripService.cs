@@ -37,5 +37,19 @@ namespace App.API.Services
                 return Result<List<Trip>>.Failure($"Failed to retrieve all trips. " + ex.Message);
             }
         }
+
+        public async Task<Result<bool>> DeleteTripAsync(int tripId)
+        {
+            return Result<bool>.Success(true);
+        }
+        public async Task<Result<Trip>> CreateTripAsync(Trip trip)
+        {
+            return Result<Trip>.Success(trip);
+        }
+        public async Task<Result<Trip>> UpdateTripAsync(int tripId)
+        {
+            var trip = new Trip();
+            return Result<Trip>.Success(trip);
+        }
     }
 }
