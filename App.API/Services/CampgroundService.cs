@@ -136,7 +136,9 @@ namespace App.API.Services
                     result = await _campgroundRepo.AddCampgroundAsync(newCampground);
                 }
 
-                if(await IsCampgroundAddedAsync(newCampground.CampgroundId) == true)
+                var isCampgroundAdded = await IsCampgroundAddedAsync(newCampground.CampgroundId);
+
+                if(isCampgroundAdded.Data == true)
                 {
                     _logger.LogInformation("Campground has been added to the system...");
                 }
@@ -197,7 +199,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<bool> IsCampgroundAddedAsync(int id)
+        public async Task<Result<bool>> IsCampgroundAddedAsync(int id)
         {
             var result = new Result<bool>();
 
@@ -210,12 +212,12 @@ namespace App.API.Services
                     _logger.LogInformation($"Campground with ID: {id} has been added to the system...");
                 }
 
-                return result.Succeeded;
+                return result;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Campground with ID: {id} has not been added to the system...");
-                return result.Succeeded;
+                return result;
             }
         }
     }
