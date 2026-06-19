@@ -65,6 +65,27 @@ namespace App.API.Repositories
             }
         }
 
-        // TO DO ADD MORE METHODS - TEST COMMENT FOR DIFF TESTING
+        public async Task<Result<bool>> DeleteTripAsync(int tripId)
+        {
+            try
+            {
+                _logger.LogInformation("TripRepository method called: DeleteTripAsync...");
+                _logger.LogInformation($"Attempting to retrieve trip with ID: {tripId}...");
+
+                var tripResult = await _context.FindAsync<Trip>(tripId);
+
+                if (tripResult == null)
+                {
+                    _logger.LogWarning($"No trip with ID: {tripId} found. Check ID value...");
+                }
+
+                return Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to delete trip with ID: {tripId}...");
+                return Result<bool>.Failure("Failed to delete the trip from the database." + ex.Message);
+            }
+        }
     }
 }
