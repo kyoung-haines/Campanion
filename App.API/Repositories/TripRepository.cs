@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Repositories
 {
-    public class TripRepository
+    public class TripRepository : ITripRepository
     {
         private ILogger<TripRepository> _logger;
         private CampanionDbContext _context;
@@ -85,6 +85,29 @@ namespace App.API.Repositories
             {
                 _logger.LogError(ex, $"Failed to delete trip with ID: {tripId}...");
                 return Result<bool>.Failure("Failed to delete the trip from the database." + ex.Message);
+            }
+        }
+
+        public async Task<Result<Trip>> CreateTripAsync(Trip trip)
+        {
+            try
+            {
+                _logger.LogInformation("TripRepository method called: CreateTripAsync...");
+                _logger.LogInformation($"Attempring to create a new trip with ID: {trip.TripId}");
+
+                if (trip == null)
+                {
+                    _logger.LogError("Failed to create the trip. The trip is empty...");
+                    return Result<Trip>.Failure("Failed to create the trip. Please try again.");
+
+                }
+
+                return Result<Trip>.Success(trip);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to create new trip with ID: {trip.TripId}...");
+                return Result<Trip>.Failure("Failed to create the trip: " + ex.Message);
             }
         }
     }
