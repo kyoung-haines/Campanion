@@ -5,6 +5,7 @@ namespace App.API.Models.Trips
     public class Trip
     {
         public int TripId { get; set; }
+        public string? TripName { get; set; } = $"Created: {DateTime.Now}";
         public TripStatus TripStatus { get; set; }
         public DateTime TripStartDate { get; set; }
         public DateTime TripEndDate { get; set; }
