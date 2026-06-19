@@ -4,7 +4,7 @@ using App.API.Exceptions.RepositoryExceptions;
 
 namespace App.API.Services
 {
-    public class CampgroundService
+    public class CampgroundService : ICampgroundService
     {
         private readonly ILogger<CampgroundService> _logger;
         private readonly ICampgroundRepository _campgroundRepo;

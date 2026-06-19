@@ -3,7 +3,7 @@ using App.API.Repositories;
 
 namespace App.API.Services
 {
-    public class ProfileService
+    public class ProfileService : IProfileService
     {
 		private ILogger<ProfileService> _logger;
 		private IProfileRepository _profileRepository;
