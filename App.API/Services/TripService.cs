@@ -56,7 +56,19 @@ namespace App.API.Services
         }
         public async Task<Result<Trip>> CreateTripAsync(Trip trip)
         {
-            return Result<Trip>.Success(trip);
+            try
+            {
+                _logger.LogInformation("TripService method called: CreateTripAsync...");
+
+                var createResult = await _tripRepository.CreateTripAsync(trip);
+
+                return Result<Trip>.Success(trip);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to create new trip with ID: {trip.TripId}..."); ;
+                return Result<Trip>.Failure("Failed to create the trip. Please try again.");
+            }
         }
         public async Task<Result<Trip>> UpdateTripAsync(int tripId)
         {
