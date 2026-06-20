@@ -110,5 +110,18 @@ namespace App.API.Repositories
                 return Result<Trip>.Failure("Failed to create the trip: " + ex.Message);
             }
         }
+
+        public async Task<Result<Trip>> GetTripByTripIdAsync(int tripId)
+        {
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

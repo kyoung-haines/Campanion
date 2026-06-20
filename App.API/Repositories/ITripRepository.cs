@@ -12,5 +12,6 @@ namespace App.API.Repositories
         //REMOVE - MOVE TO AppUserTrip repository layer when created
         //Task<Result<bool>> DeleteAllTripsByUserId(int userId);
         Task<Result<Trip>> CreateTripAsync(Trip trip);
+        Task<Result<Trip>> GetTripByTripIdAsync(int tripId);
     }
 }
