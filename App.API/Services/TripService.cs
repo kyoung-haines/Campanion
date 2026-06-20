@@ -19,7 +19,6 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("TripService method called: GetAllTripsAsync...");
-                _logger.LogInformation("Attempting to retrieve all trips for all users...");
 
                 var tripsResult = await _tripRepository.GetAllTripsAsync();
                 
@@ -40,7 +39,20 @@ namespace App.API.Services
 
         public async Task<Result<bool>> DeleteTripAsync(int tripId)
         {
-            return Result<bool>.Success(true);
+            try
+            {
+                _logger.LogInformation("TripService method called: DeleteTripAsync...");
+
+                var deleteResult = await _tripRepository.DeleteTripAsync(tripId);
+
+                return Result<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to delete trip with ID: {tripId}...");
+
+                return Result<bool>.Failure("Failed to delete the trip. Please try again.");
+            }
         }
         public async Task<Result<Trip>> CreateTripAsync(Trip trip)
         {
