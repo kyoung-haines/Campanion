@@ -25,28 +25,33 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: GetAllTripsAsync...");
 
                 var tripsResult = await _tripRepository.GetAllTripsAsync();
-
+                
                 if (tripsResult.Data == null || tripsResult.Data.Count() == 0)
                 {
                     _logger.LogWarning("There are no trips to return. The list is empty. If there are known trips saved, this is an error...");
                 }
 
-                foreach (var trip in tripsResult.Data)
+                if (tripsResult.Data.Count() > 0)
                 {
-                    tripDto.TripId = trip.TripId;
-                    tripDto.TripName = trip.TripName;
-                    tripDto.TripStatus = Convert.ToString(trip.TripStatus);
-                    tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
-                    tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
-                    tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
-
-                    foreach (var attendee in trip.TripAttendees)
+                    foreach (var trip in tripsResult.Data)
                     {
-                        var attendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
-                        tripDto.TripAttendees.Add(attendeeName);
+                        tripDto.TripId = trip.TripId;
+                        tripDto.TripName = trip.TripName;
+                        tripDto.TripStatus = Convert.ToString(trip.TripStatus);
+                        tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
+                        tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
+                        tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
+
+                        foreach (var attendee in trip.TripAttendees)
+                        {
+                            var attendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
+                            tripDto.TripAttendees.Add(attendeeName);
+                        }
+
+                        tripDtoList.Add(tripDto);
                     }
                 }
-                
+               
                 return Result<List<TripDto>>.Success(tripDtoList);
 
             }
