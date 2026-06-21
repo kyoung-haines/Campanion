@@ -92,7 +92,7 @@ namespace App.API.Services
                 return Result<TripDto>.Failure("Failed to create the trip. Please try again.");
             }
         }
-        public async Task<Result<TripDto>> UpdateTripAsync(int tripId)
+        public async Task<Result<Trip>> UpdateTripAsync(int tripId)
         {
             var trip = new Trip();
             return Result<Trip>.Success(trip);
