@@ -15,6 +15,8 @@ namespace App.API.Dtos.Trips.TripsDtos
         public string TripCreationDate { get; set; } = Convert.ToString(DateTime.Now);
         public List<string> TripAttendees { get; set; } = new List<string>();
 
+        public TripDto() { }
+
         public TripDto(Trip trip)
         {
             TripId = trip.TripId;
