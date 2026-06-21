@@ -47,14 +47,13 @@ namespace App.API.Services
                     }
                 }
                 
-
                 return Result<List<TripDto>>.Success(tripDtoList);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to retrieve all trips: {DateTime.Now}");
-                return Result<List<Trip>>.Failure($"Failed to retrieve all trips. " + ex.Message);
+                return Result<List<TripDto>>.Failure($"Failed to retrieve all trips. " + ex.Message);
             }
         }
 
