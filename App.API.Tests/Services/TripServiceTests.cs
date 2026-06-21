@@ -5,6 +5,7 @@ using App.API.Repositories;
 using App.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace App.API.Tests.Services
 
             _testTrip1.TripAttendees.AddRange<AppUser>(_testUser1, _testUser2);
 
-            _testTrip1 = new Trip
+            _testTrip2 = new Trip
             {
                 TripId = 2,
                 TripName = "TestTrip02",
@@ -74,16 +75,19 @@ namespace App.API.Tests.Services
                 TripAttendees = new List<AppUser>()
             };
 
-            _testTrip1.TripAttendees.AddRange<AppUser>(_testUser1, _testUser2);
+            _testTrip2.TripAttendees.AddRange<AppUser>(_testUser1, _testUser2);
+
+            _testTripList = new List<Trip> { _testTrip1, _testTrip2 };
         }
 
         [TestInitialize]
-        public void TestInitialize(Mock<ILogger> logger, Mock<ITripRepository> repo, ITripService tripService, TripDto tripDto)
+        public void TestInitialize()
         {
-            _mockLogger = logger;
-            _mockRepo = repo;
-            _tripService = tripService;
-            _testTripDto = tripDto;
+            _mockLogger = new Mock<ILogger>();
+            _mockRepo = new Mock<ITripRepository>();
+            _tripService = new TripService(_mockLogger.Object, _mockRepo.Object);
+            _testTripDto = new TripDto();
+            _testTripDtoList = new List<TripDto>();
         }
 
         [TestMethod]
@@ -99,6 +103,22 @@ namespace App.API.Tests.Services
             var actualDataCount = actualResult.Data.Count();
 
             Assert.AreEqual(expectedDataCount, actualDataCount);
+        }
+
+        [TestMethod]
+        public async Task GetAllTripsAsyncEmptyListReturnsNull()
+        {
+            _mockRepo.Setup(repo => repo.GetAllTripsAsync())
+                .ReturnsAsync(Result<List<Trip>>.Success(null));
+
+            var expectedResult = Result<List<Trip>>.Success(null);
+            var expectedData = expectedResult.Data;
+
+            var actualResult = await _tripService.GetAllTripsAsync();
+            var actualData = actualResult.Data;
+
+            Assert.IsTrue(expectedData.GetType() == null);
+            Assert.IsTrue(actualData.GetType() == null);
         }
     }
 }
