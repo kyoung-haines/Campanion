@@ -1,4 +1,5 @@
-﻿using App.API.Models.Trips;
+﻿using App.API.Dtos.Trips.TripsDtos;
+using App.API.Models.Trips;
 using App.API.Repositories;
 
 namespace App.API.Services
@@ -14,20 +15,40 @@ namespace App.API.Services
             _tripRepository = tripRepoository;
         }
 
-        public async Task<Result<List<Trip>>> GetAllTripsAsync()
+        public async Task<Result<List<TripDto>>> GetAllTripsAsync()
         {
+            TripDto tripDto = new TripDto();
+            List<TripDto> tripDtoList = new ();
+
             try
             {
                 _logger.LogInformation("TripService method called: GetAllTripsAsync...");
 
                 var tripsResult = await _tripRepository.GetAllTripsAsync();
-                
+
                 if (tripsResult.Data == null || tripsResult.Data.Count() == 0)
                 {
                     _logger.LogWarning("There are no trips to return. The list is empty. If there are known trips saved, this is an error...");
                 }
 
-                return Result<List<Trip>>.Success(tripsResult.Data);
+                foreach (var trip in tripsResult.Data)
+                {
+                    tripDto.TripId = trip.TripId;
+                    tripDto.TripName = trip.TripName;
+                    tripDto.TripStatus = Convert.ToString(trip.TripStatus);
+                    tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
+                    tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
+                    tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
+
+                    foreach (var attendee in trip.TripAttendees)
+                    {
+                        var attendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
+                        tripDto.TripAttendees.Add(attendeeName);
+                    }
+                }
+                
+
+                return Result<List<TripDto>>.Success(tripDtoList);
 
             }
             catch (Exception ex)
