@@ -55,6 +55,10 @@ namespace App.API.Repositories
                     _logger.LogWarning($"No trip with ID: {tripId} found. Check ID value...");
                 }
 
+                _context.Update<Trip>(trip);
+
+                await _context.SaveChangesAsync();
+
                 return Result<Trip>.Success(trip);
             }
             catch (Exception ex)
@@ -79,6 +83,10 @@ namespace App.API.Repositories
                     _logger.LogWarning($"No trip with ID: {tripId} found. Check ID value...");
                 }
 
+                _context.Remove<Trip>(tripResult);
+
+                await _context.SaveChangesAsync();
+
                 return Result<bool>.Success(true);
             }
             catch (Exception ex)
@@ -101,6 +109,10 @@ namespace App.API.Repositories
                     return Result<Trip>.Failure("Failed to create the trip. Please try again.");
 
                 }
+
+                var addResult = await _context.Trips.AddAsync(trip);
+
+                await _context.SaveChangesAsync();
 
                 return Result<Trip>.Success(trip);
             }
