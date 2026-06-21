@@ -92,10 +92,43 @@ namespace App.API.Services
                 return Result<TripDto>.Failure("Failed to create the trip. Please try again.");
             }
         }
-        public async Task<Result<Trip>> UpdateTripAsync(int tripId)
+        public async Task<Result<TripDto>> UpdateTripAsync(int tripId)
         {
-            var trip = new Trip();
-            return Result<Trip>.Success(trip);
+            try
+            {
+                _logger.LogInformation("TripService method called: UpdateTripAsync...");
+                _logger.LogInformation($"Attempting to update trip with ID: {tripId}...");
+
+                var tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
+                var trip = tripResult.Data;
+
+                var tripDto = new TripDto(trip);
+                return Result<TripDto>.Success(tripDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return Result<TripDto>.Failure("Failed to update the trip. Please try  again.");
+            }
+        }
+
+        public async Task<Result<TripDto>> GetTripByIdAsync(int tripId)
+        {
+            try
+            {
+                _logger.LogInformation("TripService method called: GetTripByIdAsync...");
+                _logger.LogInformation($"Attempting to retrieve trip with ID: {tripId}");
+
+                var tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
+                var tripDto = new TripDto(tripResult.Data);
+
+                return Result<TripDto>.Success(tripDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to retrieve trip with ID: {tripId}...");
+                return Result<TripDto>.Failure("Failed to retrieve the trip. Please try again.");
+            }
         }
     }
 }
