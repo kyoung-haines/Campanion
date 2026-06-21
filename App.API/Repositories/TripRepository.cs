@@ -115,12 +115,23 @@ namespace App.API.Repositories
         {
             try
             {
+                _logger.LogInformation("TripRepository method called: GetTripByIdAsync...");
+                _logger.LogInformation($"Attempting to retrieve trip with ID: {tripId}...");
 
+                var trip = await _context.FindAsync<Trip>(tripId);
+
+                if (trip == null)
+                {
+                    // change this to a custom InvalidTripId Exception
+                    throw new Exception("Invalid TripID value. Check the value and try again.");
+                }
+
+                return Result<Trip>.Success(trip);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError(ex, $"Failed to retrieve trip with ID: {tripId}...");
+                return Result<Trip>.Failure("Failed to retrieve trip.");
             }
         }
     }
