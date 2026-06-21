@@ -9,5 +9,6 @@ namespace App.API.Services
         Task<Result<bool>> DeleteTripAsync(int tripId);
         Task<Result<TripDto>> CreateTripAsync(Trip trip);
         Task<Result<TripDto>> UpdateTripAsync(int tripId);
+        Task<Result<TripDto>> GetTripByIdAsync(int tripId);
     }
 }
