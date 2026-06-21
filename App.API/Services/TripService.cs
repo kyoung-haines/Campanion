@@ -74,23 +74,25 @@ namespace App.API.Services
                 return Result<bool>.Failure("Failed to delete the trip. Please try again.");
             }
         }
-        public async Task<Result<Trip>> CreateTripAsync(Trip trip)
+        public async Task<Result<TripDto>> CreateTripAsync(Trip trip)
         {
+            TripDto tripDto = new TripDto(trip);
+
             try
             {
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
 
                 var createResult = await _tripRepository.CreateTripAsync(trip);
 
-                return Result<Trip>.Success(trip);
+                return Result<TripDto>.Success(tripDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to create new trip with ID: {trip.TripId}..."); ;
-                return Result<Trip>.Failure("Failed to create the trip. Please try again.");
+                return Result<TripDto>.Failure("Failed to create the trip. Please try again.");
             }
         }
-        public async Task<Result<Trip>> UpdateTripAsync(int tripId)
+        public async Task<Result<TripDto>> UpdateTripAsync(int tripId)
         {
             var trip = new Trip();
             return Result<Trip>.Success(trip);

@@ -14,5 +14,22 @@ namespace App.API.Dtos.Trips.TripsDtos
         public string TripEndDate { get; set; }
         public string TripCreationDate { get; set; } = Convert.ToString(DateTime.Now);
         public List<string> TripAttendees { get; set; } = new List<string>();
+
+        public TripDto(Trip trip)
+        {
+            TripId = trip.TripId;
+            TripName = trip.TripName;
+            TripStatus = Convert.ToString(trip.TripStatus);
+            TripStartDate = Convert.ToString(trip.TripStartDate);
+            TripEndDate = Convert.ToString(trip.TripEndDate);
+            TripCreationDate = Convert.ToString(trip.TripCreationDate);
+
+            foreach (var item in trip.TripAttendees)
+            {
+                var attendeeName = item.AppUserFirstName + item.AppUserLastName;
+
+                TripAttendees.Add(attendeeName);
+            }
+        }
     }
 }
