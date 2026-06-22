@@ -120,5 +120,49 @@ namespace App.API.Tests.Services
 
             Assert.AreEqual(expectedData.Count(), actualData.Count());
         }
+
+        [TestMethod]
+        public async Task DeleteTripValidIdDeletesTrip()
+        {
+            var isDeleted = true;
+
+            _mockRepo.Setup(repo => repo.DeleteTripAsync(1))
+                .ReturnsAsync(Result<bool>.Success(true));
+
+            var expectedResult = Result<bool>.Success(true);
+
+            var actualResult = await _tripService.DeleteTripAsync(1);
+
+            Assert.IsTrue(expectedResult.Data);
+            Assert.IsTrue(actualResult.Data);
+        }
+
+        [TestMethod]
+        public async Task DeleteTripInvalidIdReturnsFailure()
+        {
+            _mockRepo.Setup(repo => repo.DeleteTripAsync(999))
+                .ReturnsAsync(Result<bool>.Failure("Failed to delete trip..."));
+
+            var expectedResult = Result<bool>.Failure("Failed to delete trip...");
+            var expectedSucceeded = expectedResult.Succeeded;
+
+            var actualResult = await _tripService.DeleteTripAsync(999);
+            var actualSucceeded = actualResult.Succeeded;
+
+            Assert.IsFalse(expectedSucceeded);
+            Assert.IsFalse(actualSucceeded);
+        }
+
+        [TestMethod]
+        public async Task CreateTripValidObjectReturnsSuccess()
+        {
+
+        }
+
+        [TestMethod]
+        public async Task CreateTripInvalidObjectReturnsFailure()
+        {
+
+        }
     }
 }
