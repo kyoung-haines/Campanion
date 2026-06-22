@@ -67,8 +67,20 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("TripService method called: DeleteTripAsync...");
+                _logger.LogInformation($"Verifying ID: {tripId} is valid...");
+
+                var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
+
+                if (trip == null)
+                {
+                    return Result<bool>.Failure("Failed to delete the trip. Please try again.");
+                }
+
+                _logger.LogInformation($"Trip with ID: {tripId} has been verified. Attempting to delete the trip...");
 
                 var deleteResult = await _tripRepository.DeleteTripAsync(tripId);
+
+                _logger.LogInformation($"Successfully delete trip with ID: {tripId}...");
 
                 return Result<bool>.Success(true);
             }
