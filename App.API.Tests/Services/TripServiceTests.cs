@@ -106,19 +106,19 @@ namespace App.API.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetAllTripsAsyncEmptyListReturnsNull()
+        public async Task GetAllTripsAsyncEmptyListReturnsEmptyList()
         {
+            var emptyTripList = new List<Trip>();
             _mockRepo.Setup(repo => repo.GetAllTripsAsync())
-                .ReturnsAsync(Result<List<Trip>>.Success(null));
+                .ReturnsAsync(Result<List<Trip>>.Success(emptyTripList));
 
-            var expectedResult = Result<List<Trip>>.Success(null);
+            var expectedResult = Result<List<Trip>>.Success(emptyTripList);
             var expectedData = expectedResult.Data;
 
             var actualResult = await _tripService.GetAllTripsAsync();
             var actualData = actualResult.Data;
 
-            Assert.IsTrue(expectedData.GetType() == null);
-            Assert.IsTrue(actualData.GetType() == null);
+            Assert.AreEqual(expectedData.Count(), actualData.Count());
         }
     }
 }
