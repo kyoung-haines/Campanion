@@ -1,6 +1,7 @@
 ﻿using App.API.Dtos.Trips.TripsDtos;
 using App.API.Models.Trips;
 using App.API.Repositories;
+using Campanion.Shared.DTOs.Trip;
 
 namespace App.API.Services
 {
@@ -91,9 +92,12 @@ namespace App.API.Services
                 return Result<bool>.Failure("Failed to delete the trip. Please try again.");
             }
         }
-        public async Task<Result<TripDto>> CreateTripAsync(Trip trip)
+        public async Task<Result<TripDto>> CreateTripAsync(CreateTripDto createTripDto)
         {
-            TripDto tripDto = new TripDto(trip);
+            TripDto tripDto = new TripDto
+            {
+
+            };
 
             try
             {
