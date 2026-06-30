@@ -131,10 +131,10 @@ namespace App.API.Tests.Services
 
             var expectedResult = Result<bool>.Success(true);
 
-            var actualResult = await _tripService.DeleteTripAsync(1);
+            var actualResult = await _tripService.DeleteTripAsync(1);            
 
-            Assert.IsTrue(expectedResult.Data);
-            Assert.IsTrue(actualResult.Data);
+            Assert.IsTrue(expectedResult.Succeeded);
+            Assert.IsTrue(actualResult.Succeeded);
         }
 
         [TestMethod]
