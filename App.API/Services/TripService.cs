@@ -72,7 +72,8 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: DeleteTripAsync...");
                 _logger.LogInformation($"Verifying ID: {tripId} is valid...");
 
-                var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
+                Result<Trip> tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
+                Trip trip = tripResult.Data;
 
                 if (trip == null)
                 {
