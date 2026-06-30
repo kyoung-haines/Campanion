@@ -101,14 +101,15 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
 
                 TripDto tripDto = await TripDto.ConvertCreateTripDtoToTripDto(createTripDto);
-                Trip trip = new Trip()
-                var createResult = await _tripRepository.CreateTripAsync(tripDto);
+                Trip trip = await TripDto.ConvertTripDtoToTrip(tripDto);
+
+                var createResult = await _tripRepository.CreateTripAsync(trip);
 
                 return Result<TripDto>.Success(tripDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to create new trip with ID: {trip.TripId}..."); ;
+                _logger.LogError(ex, $"Failed to create new trip..."); ;
                 return Result<TripDto>.Failure("Failed to create the trip. Please try again.");
             }
         }
