@@ -1,6 +1,7 @@
 ﻿using App.API.Data;
 using App.API.Models.Trips;
 using Microsoft.EntityFrameworkCore;
+using App.API.Dtos.Trips.TripsDtos;
 
 namespace App.API.Repositories
 {
@@ -17,21 +18,30 @@ namespace App.API.Repositories
 
         public async Task<Result<List<Trip>>> GetAllTripsAsync()
         {
+            List<Trip> allTrips = new();
+            
+
             try
             {
                 _logger.LogInformation("TripRepository method called: GetAllTripsAsync...");
                 _logger.LogInformation("Attempting to retrieve all trips from the database...");
 
-                var allTrips = await _context.Trips.ToListAsync<Trip>();
+                allTrips = await _context.Trips.ToListAsync<Trip>();
 
                 if (allTrips == null || allTrips.Count() == 0)
                 {
                     _logger.LogWarning("No trips found in the database...");
                     _logger.LogWarning("Returning an empty list...");
                 }
+                else
+                {
+                    var totalRecords = allTrips.Count();
+                    _logger.LogInformation($"Total of: {totalRecords} retrieved...");
 
-                _logger.LogInformation("Successfully retrieved all trips from the database...");
-
+                    _logger.LogInformation("Successfully retrieved all trips. Returning list...");
+                    return Result<List<Trip>>.Success(allTrips);
+                }
+                // this should be null if returned
                 return Result<List<Trip>>.Success(allTrips);
             }
             catch (Exception ex)

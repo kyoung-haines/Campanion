@@ -18,7 +18,7 @@ namespace App.API.Services
 
         public async Task<Result<List<TripDto>>> GetAllTripsAsync()
         {
-            TripDto tripDto = new TripDto();
+            //TripDto tripDto = new TripDto();
             List<TripDto> tripDtoList = new ();
 
             try
@@ -36,12 +36,14 @@ namespace App.API.Services
                 {
                     foreach (var trip in tripsResult.Data)
                     {
-                        tripDto.TripId = trip.TripId;
-                        tripDto.TripName = trip.TripName;
-                        tripDto.TripStatus = Convert.ToString(trip.TripStatus);
-                        tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
-                        tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
-                        tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
+                        var tripDto = new TripDto(trip);
+
+                        //tripDto.TripId = trip.TripId;
+                        //tripDto.TripName = trip.TripName;
+                        //tripDto.TripStatus = Convert.ToString(trip.TripStatus);
+                        //tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
+                        //tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
+                        //tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
 
                         foreach (var attendee in trip.TripAttendees)
                         {
@@ -103,7 +105,7 @@ namespace App.API.Services
             {
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
 
-                var createResult = await _tripRepository.CreateTripAsync(trip);
+                var createResult = await _tripRepository.CreateTripAsync(tripDto);
 
                 return Result<TripDto>.Success(tripDto);
             }
