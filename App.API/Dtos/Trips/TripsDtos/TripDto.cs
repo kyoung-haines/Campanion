@@ -46,5 +46,22 @@ namespace App.API.Dtos.Trips.TripsDtos
 
             return tripDto;
         }
+
+        // this method needs to be refactored
+        // eventually, the ability to add attendees or invite attendees
+        // right from the creation screen will be a feature
+        // for now TripAttendees at the Trip level are an empty List<AppUser>
+        public static async Task<Trip> ConvertTripDtoToTrip(TripDto tripDto)
+        {
+            Trip trip = new Trip
+            {
+                TripName = tripDto.TripName,
+                TripStartDate = Convert.ToDateTime(tripDto.TripStartDate) ,
+                TripEndDate = Convert.ToDateTime(tripDto.TripEndDate),
+                TripCreationDate = Convert.ToDateTime(tripDto.TripCreationDate)
+            };
+
+            return trip;
+        }
     }
 }
