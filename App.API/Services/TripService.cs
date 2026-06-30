@@ -96,15 +96,12 @@ namespace App.API.Services
         }
         public async Task<Result<TripDto>> CreateTripAsync(CreateTripDto createTripDto)
         {
-            TripDto tripDto = new TripDto
-            {
-
-            };
-
             try
             {
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
 
+                TripDto tripDto = await TripDto.ConvertCreateTripDtoToTripDto(createTripDto);
+                Trip trip = new Trip()
                 var createResult = await _tripRepository.CreateTripAsync(tripDto);
 
                 return Result<TripDto>.Success(tripDto);
