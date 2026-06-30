@@ -1,19 +1,20 @@
 ﻿using App.API.Enums;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
+using Campanion.Shared.DTOs.Trip;
 
 namespace App.API.Dtos.Trips.TripsDtos
 {
     public class TripDto
     {
 
-        public int TripId { get; set; }
+        public int? TripId { get; set; }
         public string? TripName { get; set; }
         public string TripStatus { get; set; }
         public string TripStartDate { get; set; }
         public string TripEndDate { get; set; }
         public string TripCreationDate { get; set; } = Convert.ToString(DateTime.Now);
-        public List<string> TripAttendees { get; set; } = new List<string>();
+        public List<string>? TripAttendees { get; set; } = new List<string>();
 
         public TripDto() { }
 
@@ -32,6 +33,18 @@ namespace App.API.Dtos.Trips.TripsDtos
 
                 TripAttendees.Add(attendeeName);
             }
+        }
+
+        public static async Task<TripDto> ConvertCreateTripDtoToTripDto(CreateTripDto createDto)
+        {
+            var tripDto = new TripDto();
+
+            tripDto.TripName = createDto.TripName;
+            tripDto.TripStartDate = Convert.ToString(createDto.TripStartDate);
+            tripDto.TripEndDate = Convert.ToString(createDto.TripEndDate);
+            tripDto.TripCreationDate = Convert.ToString(DateOnly.FromDateTime(createDto.TripCreatedAt));
+
+            return tripDto;
         }
     }
 }
