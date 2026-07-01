@@ -142,11 +142,13 @@ namespace App.API.Repositories
 
                 var trip = await _context.FindAsync<Trip>(tripId);
 
-                if (trip == null)
-                {
-                    // change this to a custom InvalidTripId Exception
-                    throw new Exception("Invalid TripID value. Check the value and try again.");
-                }
+                //if (trip == null)
+                //{
+                //    // change this to a custom InvalidTripId Exception
+                //    throw new Exception("Invalid TripID value. Check the value and try again.");
+                //}
+
+
 
                 return Result<Trip>.Success(trip);
             }
