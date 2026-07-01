@@ -73,11 +73,15 @@ namespace App.API.Services
                 _logger.LogInformation($"Verifying ID: {tripId} is valid...");
 
                 Result<Trip> tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
-                Trip trip = tripResult.Data;
+                Trip trip = new Trip(); 
+                trip = tripResult.Data;
 
                 if (trip == null)
                 {
-                    return Result<bool>.Failure("Failed to delete the trip. Please try again.");
+                    // return Result<bool>.Failure("Failed to delete the trip. Please try again.");
+                    
+                    // this will return a null object - means no record exists with given ID
+                    return Result<bool>.Success(true);
                 }
 
                 _logger.LogInformation($"Trip with ID: {tripId} has been verified. Attempting to delete the trip...");
