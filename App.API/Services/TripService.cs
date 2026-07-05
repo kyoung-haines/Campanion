@@ -1,7 +1,8 @@
 ﻿using App.API.Dtos.Trips.TripsDtos;
 using App.API.Models.Trips;
 using App.API.Repositories;
-using Campanion.Shared.DTOs.Trip;
+//using Campanion.Shared.DTOs.Trip;
+using Campanion.Shared.Dtos.TripDtos;
 
 namespace App.API.Services
 {
@@ -25,25 +26,22 @@ namespace App.API.Services
             {
                 _logger.LogInformation("TripService method called: GetAllTripsAsync...");
 
-                var tripsResult = await _tripRepository.GetAllTripsAsync();
+                var trips = await _tripRepository.GetAllTripsAsync();
                 
-                if (tripsResult.Data == null || tripsResult.Data.Count() == 0)
-                {
-                    _logger.LogWarning("There are no trips to return. The list is empty. If there are known trips saved, this is an error...");
-                }
+                
 
-                if (tripsResult.Data.Count() > 0)
+                if (trips.Count() > 0)
                 {
-                    foreach (var trip in tripsResult.Data)
+                    foreach (var trip in trips)
                     {
                         var tripDto = new TripDto(trip);
 
-                        //tripDto.TripId = trip.TripId;
-                        //tripDto.TripName = trip.TripName;
-                        //tripDto.TripStatus = Convert.ToString(trip.TripStatus);
-                        //tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
-                        //tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
-                        //tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
+                        tripDto.TripId = trip.TripId;
+                        tripDto.TripName = trip.TripName;
+                        tripDto.TripStatus = Convert.ToString(trip.TripStatus);
+                        tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
+                        tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
+                        tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
 
                         foreach (var attendee in trip.TripAttendees)
                         {
@@ -72,23 +70,11 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: DeleteTripAsync...");
                 _logger.LogInformation($"Verifying ID: {tripId} is valid...");
 
-                Result<Trip> tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
-                Trip trip = new Trip(); 
-                trip = tripResult.Data;
-
-                if (trip == null)
-                {
-                    // return Result<bool>.Failure("Failed to delete the trip. Please try again.");
-                    
-                    // this will return a null object - means no record exists with given ID
-                    return Result<bool>.Success(true);
-                }
-
-                _logger.LogInformation($"Trip with ID: {tripId} has been verified. Attempting to delete the trip...");
+                Trip trip = await _tripRepository.GetTripByTripIdAsync(tripId);
 
                 var deleteResult = await _tripRepository.DeleteTripAsync(tripId);
 
-                _logger.LogInformation($"Successfully delete trip with ID: {tripId}...");
+                _logger.LogInformation($"Successfully deleted trip with ID: {tripId}...");
 
                 return Result<bool>.Success(true);
             }
