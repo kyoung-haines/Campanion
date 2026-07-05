@@ -72,9 +72,19 @@ namespace App.API.Services
 
                 Trip trip = await _tripRepository.GetTripByTripIdAsync(tripId);
 
-                var deleteResult = await _tripRepository.DeleteTripAsync(tripId);
+                if (trip == null)
+                {
+                    return Result<bool>.Failure("Failed to retrieve the trip");
+                }
 
+                var deleteResult = await _tripRepository.DeleteTripAsync(tripId);
                 _logger.LogInformation($"Successfully deleted trip with ID: {tripId}...");
+
+                if (!deleteResult)
+                {
+                    _logger.LogError($"Failed to delete trip with ID: {tripId}.");
+                    return Result<bool>.Failure("Failed to delete the trip.");
+                }
 
                 return Result<bool>.Success(true);
             }
