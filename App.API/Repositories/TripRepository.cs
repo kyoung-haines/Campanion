@@ -94,6 +94,7 @@ namespace App.API.Repositories
                 if (tripResult == null)
                 {
                     _logger.LogWarning($"No trip with ID: {tripId} found. Check ID value...");
+                    return false;
                 }
 
                 _context.Remove<Trip>(tripResult);
