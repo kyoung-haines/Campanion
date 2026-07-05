@@ -124,6 +124,8 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task DeleteTripValidIdDeletesTrip()
         {
+            _mockRepo.Setup(repo => repo.GetTripByTripIdAsync(1))
+                .ReturnsAsync(_testTrip1);
             _mockRepo.Setup(repo => repo.DeleteTripAsync(1))
                 .ReturnsAsync(true);
 
@@ -131,8 +133,8 @@ namespace App.API.Tests.Services
 
             var actualResult = await _tripService.DeleteTripAsync(1);
 
-            Assert.IsTrue(expectedResult.Data);
-            Assert.IsTrue(actualResult.Data);
+            Assert.IsTrue(expectedResult.Succeeded);
+            Assert.IsTrue(actualResult.Succeeded);
         }
 
         [TestMethod]
