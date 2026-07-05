@@ -78,23 +78,25 @@ namespace App.API.Tests.Services
             _testTrip2.TripAttendees.AddRange<AppUser>(_testUser1, _testUser2);
 
             _testTripList = new List<Trip> { _testTrip1, _testTrip2 };
-        }
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
             _mockLogger = new Mock<ILogger>();
             _mockRepo = new Mock<ITripRepository>();
             _tripService = new TripService(_mockLogger.Object, _mockRepo.Object);
             _testTripDto = new TripDto();
             _testTripDtoList = new List<TripDto>();
         }
+        
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            
+        }
 
         [TestMethod]
         public async Task GetAllTripsAsyncReturnsListOfTrips()
         {
             _mockRepo.Setup(repo => repo.GetAllTripsAsync())
-                .ReturnsAsync(Result<List<Trip>>.Success(_testTripList));
+                .ReturnsAsync(_testTripList);
 
             var expectedResult = Result<List<Trip>>.Success(_testTripList);
             var expectedDataCount = expectedResult.Data.Count();
@@ -110,22 +112,20 @@ namespace App.API.Tests.Services
         {
             var emptyTripList = new List<Trip>();
             _mockRepo.Setup(repo => repo.GetAllTripsAsync())
-                .ReturnsAsync(Result<List<Trip>>.Success(emptyTripList));
+                .ReturnsAsync(emptyTripList);
 
-            var expectedResult = Result<List<Trip>>.Success(emptyTripList);
-            var expectedData = expectedResult.Data;
+            var expectedResult = emptyTripList;
 
             var actualResult = await _tripService.GetAllTripsAsync();
-            var actualData = actualResult.Data;
 
-            Assert.AreEqual(expectedData.Count(), actualData.Count());
+            Assert.AreEqual(expectedResult.Count(), actualResult.Data.Count());
         }
 
         [TestMethod]
         public async Task DeleteTripValidIdDeletesTrip()
         {
             _mockRepo.Setup(repo => repo.DeleteTripAsync(1))
-                .ReturnsAsync(Result<bool>.Success(true));
+                .ReturnsAsync(true);
 
             var expectedResult = Result<bool>.Success(true);
 
@@ -139,7 +139,7 @@ namespace App.API.Tests.Services
         public async Task DeleteTripInvalidIdReturnsFailure()
         {
             _mockRepo.Setup(repo => repo.DeleteTripAsync(999))
-                .ReturnsAsync(Result<bool>.Failure("Failed to delete trip..."));
+                .ReturnsAsync(false);
 
             var expectedResult = Result<bool>.Failure("Failed to delete trip...");
             var expectedSucceeded = expectedResult.Succeeded;
