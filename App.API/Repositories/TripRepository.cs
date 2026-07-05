@@ -153,7 +153,7 @@ namespace App.API.Repositories
 
                 return trip;
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not TripNotFoundException)
             {
                 _logger.LogError(ex, $"Failed to retrieve trip with ID: {tripId}...");
                 throw;
