@@ -1,7 +1,7 @@
 ﻿using App.API.Enums;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
-using Campanion.Shared.DTOs.Trip;
+//using Campanion.Shared.DTOs.Trip;
 
 namespace App.API.Dtos.Trips.TripsDtos
 {
@@ -35,33 +35,33 @@ namespace App.API.Dtos.Trips.TripsDtos
             }
         }
 
-        public static async Task<TripDto> ConvertCreateTripDtoToTripDto(CreateTripDto createDto)
-        {
-            var tripDto = new TripDto();
+        //public static async Task<TripDto> ConvertCreateTripDtoToTripDto(CreateTripDto createDto)
+        //{
+        //    var tripDto = new TripDto();
 
-            tripDto.TripName = createDto.TripName;
-            tripDto.TripStartDate = Convert.ToString(createDto.TripStartDate);
-            tripDto.TripEndDate = Convert.ToString(createDto.TripEndDate);
-            tripDto.TripCreationDate = Convert.ToString(DateOnly.FromDateTime(createDto.TripCreatedAt));
+        //    tripDto.TripName = createDto.TripName;
+        //    tripDto.TripStartDate = Convert.ToString(createDto.TripStartDate);
+        //    tripDto.TripEndDate = Convert.ToString(createDto.TripEndDate);
+        //    tripDto.TripCreationDate = Convert.ToString(DateOnly.FromDateTime(createDto.TripCreatedAt));
 
-            return tripDto;
-        }
+        //    return tripDto;
+        //}
 
-        // this method needs to be refactored
-        // eventually, the ability to add attendees or invite attendees
-        // right from the creation screen will be a feature
-        // for now TripAttendees at the Trip level are an empty List<AppUser>
-        public static async Task<Trip> ConvertTripDtoToTrip(TripDto tripDto)
-        {
-            Trip trip = new Trip
-            {
-                TripName = tripDto.TripName,
-                TripStartDate = Convert.ToDateTime(tripDto.TripStartDate) ,
-                TripEndDate = Convert.ToDateTime(tripDto.TripEndDate),
-                TripCreationDate = Convert.ToDateTime(tripDto.TripCreationDate)
-            };
+        //// this method needs to be refactored
+        //// eventually, the ability to add attendees or invite attendees
+        //// right from the creation screen will be a feature
+        //// for now TripAttendees at the Trip level are an empty List<AppUser>
+        //public static async Task<Trip> ConvertTripDtoToTrip(TripDto tripDto)
+        //{
+        //    Trip trip = new Trip
+        //    {
+        //        TripName = tripDto.TripName,
+        //        TripStartDate = Convert.ToDateTime(tripDto.TripStartDate) ,
+        //        TripEndDate = Convert.ToDateTime(tripDto.TripEndDate),
+        //        TripCreationDate = Convert.ToDateTime(tripDto.TripCreationDate)
+        //    };
 
-            return trip;
-        }
+        //    return trip;
+        //}
     }
 }
