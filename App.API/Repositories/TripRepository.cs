@@ -2,6 +2,7 @@
 using App.API.Models.Trips;
 using Microsoft.EntityFrameworkCore;
 using Campanion.Shared.Dtos.TripDtos;
+using App.API.Exceptions.TripExceptions;
 
 namespace App.API.Repositories
 {
@@ -147,7 +148,7 @@ namespace App.API.Repositories
                 if (trip == null)
                 {
                     // change this to a custom InvalidTripId Exception
-                    throw new NullReferenceException("Invalid TripID value. Check the value and try again.");
+                    throw new TripNotFoundException("Trip not found. If possible confirm, the TripId value and try again.");
                 }
 
                 return trip;
