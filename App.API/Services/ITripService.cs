@@ -1,6 +1,6 @@
 ﻿using App.API.Dtos.Trips.TripsDtos;
 using App.API.Models.Trips;
-using Campanion.Shared.DTOs.Trip;
+using Campanion.Shared.Dtos.TripDtos;
 
 namespace App.API.Services
 {
