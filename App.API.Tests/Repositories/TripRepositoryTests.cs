@@ -1,5 +1,6 @@
 ﻿using App.API.Data;
 using App.API.Dtos.Trips.TripsDtos;
+using App.API.Exceptions.TripExceptions;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
 using App.API.Repositories;
@@ -112,12 +113,12 @@ namespace App.API.Tests.Repositories
         [TestMethod]
         public async Task GetTripByIdInvalidIdReturnsTripNotFoundException()
         {
-            await _dbContext.Trips.AddAsync(new Trip());
-            await _dbContext.SaveChangesAsync();
+            var exception = await Assert.ThrowsAsync<TripNotFoundException>(async () =>
+            {
+                await _tripRepository.GetTripByTripIdAsync(999);
+            });
 
-            var result = await _tripRepository.GetTripByTripIdAsync(999);
-
-            Assert.ThrowsAsync<Exception>(() => _tripRepository.GetTripByTripIdAsync(999), "Invalid TripID value. Check the value and try again.");
+            Assert.IsNotNull(exception);
         }
     }
 }
