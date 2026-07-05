@@ -1,7 +1,7 @@
 ﻿using App.API.Data;
 using App.API.Models.Trips;
 using Microsoft.EntityFrameworkCore;
-using App.API.Dtos.Trips.TripsDtos;
+using Campanion.Shared.Dtos.TripDtos;
 
 namespace App.API.Repositories
 {
