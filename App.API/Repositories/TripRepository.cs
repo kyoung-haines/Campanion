@@ -16,42 +16,45 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        public async Task<Result<List<Trip>>> GetAllTripsAsync()
+        public async Task<List<Trip>> GetAllTripsAsync()
         {
-            List<Trip> allTrips = new();
-            
-
             try
             {
                 _logger.LogInformation("TripRepository method called: GetAllTripsAsync...");
                 _logger.LogInformation("Attempting to retrieve all trips from the database...");
 
-                allTrips = await _context.Trips.ToListAsync<Trip>();
+                List<Trip> allTrips = await _context.Trips.ToListAsync<Trip>();
 
-                if (allTrips == null || allTrips.Count() == 0)
+                if (allTrips == null)
+                {
+                    _logger.LogError("Trips list is null...");
+                    throw new NullReferenceException("An error occurred. The list of trips returned was null. Please try again.");
+                }
+
+                if (allTrips.Count() == 0)
                 {
                     _logger.LogWarning("No trips found in the database...");
                     _logger.LogWarning("Returning an empty list...");
                 }
+
                 else
                 {
                     var totalRecords = allTrips.Count();
                     _logger.LogInformation($"Total of: {totalRecords} retrieved...");
-
                     _logger.LogInformation("Successfully retrieved all trips. Returning list...");
-                    return Result<List<Trip>>.Success(allTrips);
                 }
-                // this should be null if returned
-                return Result<List<Trip>>.Success(allTrips);
+
+                return allTrips;
+
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while retrieving all trips from the database...");
-                return Result<List<Trip>>.Failure("Failed to retrieve trips from the database. Please try again.");
+                throw;
             }
         }
 
-        public async Task<Result<Trip>> UpdateTripAsync(int tripId)
+        public async Task<Trip> UpdateTripAsync(int tripId)
         {
             try
             {
@@ -69,17 +72,16 @@ namespace App.API.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return Result<Trip>.Success(trip);
+                return trip;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to update trip with ID: {tripId}...");
-
-                return Result<Trip>.Failure("Failed to update the trip. Please try again.");
+                throw;
             }
         }
 
-        public async Task<Result<bool>> DeleteTripAsync(int tripId)
+        public async Task<bool> DeleteTripAsync(int tripId)
         {
             try
             {
@@ -97,26 +99,26 @@ namespace App.API.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return Result<bool>.Success(true);
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete trip with ID: {tripId}...");
-                return Result<bool>.Failure("Failed to delete the trip from the database." + ex.Message);
+                throw;
             }
         }
 
-        public async Task<Result<Trip>> CreateTripAsync(Trip trip)
+        public async Task<Trip> CreateTripAsync(Trip trip)
         {
             try
             {
                 _logger.LogInformation("TripRepository method called: CreateTripAsync...");
                 _logger.LogInformation($"Attempring to create a new trip with ID: {trip.TripId}");
-
+                
                 if (trip == null)
                 {
-                    _logger.LogError("Failed to create the trip. The trip is empty...");
-                    return Result<Trip>.Failure("Failed to create the trip. Please try again.");
+                    _logger.LogError("Failed to create the trip. The trip is null...");
+                    return trip;
 
                 }
 
@@ -124,16 +126,16 @@ namespace App.API.Repositories
 
                 await _context.SaveChangesAsync();
 
-                return Result<Trip>.Success(trip);
+                return trip;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to create new trip with ID: {trip.TripId}...");
-                return Result<Trip>.Failure("Failed to create the trip: " + ex.Message);
+                throw;
             }
         }
 
-        public async Task<Result<Trip>> GetTripByTripIdAsync(int tripId)
+        public async Task<Trip> GetTripByTripIdAsync(int tripId)
         {
             try
             {
@@ -142,20 +144,18 @@ namespace App.API.Repositories
 
                 var trip = await _context.FindAsync<Trip>(tripId);
 
-                //if (trip == null)
-                //{
-                //    // change this to a custom InvalidTripId Exception
-                //    throw new Exception("Invalid TripID value. Check the value and try again.");
-                //}
+                if (trip == null)
+                {
+                    // change this to a custom InvalidTripId Exception
+                    throw new NullReferenceException("Invalid TripID value. Check the value and try again.");
+                }
 
-
-
-                return Result<Trip>.Success(trip);
+                return trip;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to retrieve trip with ID: {tripId}...");
-                return Result<Trip>.Failure("Failed to retrieve trip.");
+                throw;
             }
         }
     }
