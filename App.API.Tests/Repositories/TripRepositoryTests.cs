@@ -3,6 +3,7 @@ using App.API.Dtos.Trips.TripsDtos;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
 using App.API.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -16,9 +17,9 @@ namespace App.API.Tests.Repositories
     [TestClass]
     public class TripRepositoryTests
     {
-        private Mock<ILogger<ITripRepository>> _mockLogger;
-        private Mock<CampanionDbContext> _mockCampanionDbContext;
+        private CampanionDbContext _dbContext;
         private ITripRepository _tripRepository;
+        private Mock<ILogger<TripRepository>> _mockLogger;
 
         private Trip _testTrip1;
         private Trip _testTrip2;
@@ -29,9 +30,13 @@ namespace App.API.Tests.Repositories
         [TestInitialize]
         public void TestInitialize()
         {
-            _mockLogger = new Mock<ILogger<ITripRepository>>();
-            _mockCampanionDbContext = new Mock<CampanionDbContext>();
-            _tripRepository = new TripRepository(_mockLogger.Object, _mockCampanionDbContext.Object);
+            var options = new DbContextOptionsBuilder<CampanionDbContext>()
+            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
+            .Options;
+
+            _dbContext = new CampanionDbContext(options);
+            _mockLogger = new Mock<ILogger<TripRepository>>();
+            _tripRepository = new TripRepository(_mockLogger.Object, _dbContext);
 
             _testUser1 = new AppUser
             {
@@ -82,17 +87,37 @@ namespace App.API.Tests.Repositories
             _testTripList = new List<Trip> { _testTrip1, _testTrip2 };
         }
 
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            _dbContext.Database.EnsureDeleted();
+            _dbContext.Dispose();
+        }
+
         [TestMethod]
         public async Task GetTripByIdValidIdReturnsResultWithTrip()
         {
-            _mockCampanionDbContext.Setup(repo => repo.Trips.FindAsync(1))
-                .ReturnsAsync(_testTrip1);
+            // Arrange - seed the in-memory database directly
+            await _dbContext.Trips.AddAsync(_testTrip1);
+            await _dbContext.SaveChangesAsync();
 
-            var expectedResult = _testTrip1;
+            // Act
+            var result = await _tripRepository.GetTripByTripIdAsync(1);
 
-            var actualResult = await _tripRepository.GetTripByTripIdAsync(1);
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(_testTrip1.TripId, result.TripId);
+        }
 
-            //Assert.AreEqual(expectedResult, actualResult);
+        [TestMethod]
+        public async Task GetTripByIdInvalidIdReturnsTripNotFoundException()
+        {
+            await _dbContext.Trips.AddAsync(new Trip());
+            await _dbContext.SaveChangesAsync();
+
+            var result = await _tripRepository.GetTripByTripIdAsync(999);
+
+            Assert.ThrowsAsync<Exception>(() => _tripRepository.GetTripByTripIdAsync(999), "Invalid TripID value. Check the value and try again.");
         }
     }
 }
