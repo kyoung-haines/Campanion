@@ -111,8 +111,7 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: UpdateTripAsync...");
                 _logger.LogInformation($"Attempting to update trip with ID: {tripId}...");
 
-                var tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
-                var trip = tripResult.Data;
+                var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
 
                 var tripDto = new TripDto(trip);
                 return Result<TripDto>.Success(tripDto);
@@ -131,8 +130,8 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: GetTripByIdAsync...");
                 _logger.LogInformation($"Attempting to retrieve trip with ID: {tripId}");
 
-                var tripResult = await _tripRepository.GetTripByTripIdAsync(tripId);
-                var tripDto = new TripDto(tripResult.Data);
+                var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
+                var tripDto = new TripDto(trip);
 
                 return Result<TripDto>.Success(tripDto);
             }
