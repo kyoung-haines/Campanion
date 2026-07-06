@@ -20,9 +20,11 @@ namespace App.API.Services
         {
             try
             {
-                var result = await _repository.GetAllAppUsersAsync();
+                var allUsers = await _repository.GetAllAppUsersAsync();
 
-                return result;
+                var allUsersResult = Result<List<AppUser>>.Success(allUsers);
+
+                return allUsersResult;
             }
             catch (Exception ex)
             {
@@ -37,8 +39,11 @@ namespace App.API.Services
             {
                 _logger.LogInformation("AppUserServiceMethod called: GetAllAppAdminsAsync()...");
 
-                var result = await _repository.GetAllAdminAppUsersAsync();
-                return result;
+                var allAdmins = await _repository.GetAllAdminAppUsersAsync();
+
+                var allAdminsResult = Result<List<AppUser>>.Success(allAdmins);
+
+                return allAdminsResult;
             }
             catch (Exception ex)
             {
@@ -52,8 +57,11 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAllRegularAppUsersAsync...");
-                var regularUsersResult = await _repository.GetAllRegularAppUsersAsync();
-                return regularUsersResult;
+                var allRegularUsers = await _repository.GetAllRegularAppUsersAsync();
+
+                var allRegularUsersResult = Result<List<AppUser>>.Success(allRegularUsers);
+
+                return allRegularUsersResult;
             }
             catch (Exception ex)
             {
@@ -84,8 +92,11 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAppUserByIdAsync...");
-                var result = await _repository.GetAppUserByIdAsync(id);
-                return result;
+                var appUser = await _repository.GetAppUserByIdAsync(id);
+
+                var appUserResult = Result<AppUser>.Success(appUser);
+
+                return appUserResult;
             }
             catch (Exception ex)
             {
@@ -99,8 +110,8 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("AppUserService method called: UpdateAppUserByIdAsync...");
-                var result = await _repository.UpdateAppUserAsync(id);
-                return result;
+                var updateUser = await _repository.UpdateAppUserAsync(id);
+                return Result<AppUser>.Success(updateUser);
             }
             catch (Exception ex)
             {
@@ -114,7 +125,7 @@ namespace App.API.Services
             {
                 _logger.LogInformation("AppUserService method called: DeleteAppUserAsync...");
                 var result = await _repository.DeleteAppUserAsync(id);
-                return result;
+                return Result<bool>.Success(true);
             }
             catch (Exception ex)
             {
