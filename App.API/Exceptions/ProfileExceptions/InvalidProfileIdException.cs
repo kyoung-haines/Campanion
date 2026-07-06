@@ -2,7 +2,7 @@
 {
     public class InvalidProfileIdException : Exception
     {
-        public InvalidProfileIdException(string message) : base(message)
+        public InvalidProfileIdException(string message = "No profile found with the associated ProfileId.") : base(message)
         {
         }
         public InvalidProfileIdException()
