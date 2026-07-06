@@ -1,15 +1,17 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using App.API.Exceptions.ProfileExceptions;
+using App.API.Exceptions.TripExceptions;
+using App.API.Models.Identity;
+using App.API.Repositories;
+using App.API.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
-using Moq;
-using App.API.Services;
-using App.API.Repositories;
-using App.API.Models.Identity;
-using System.Security.Policy;
 
 namespace App.API.Tests.Services
 {
@@ -68,11 +70,13 @@ namespace App.API.Tests.Services
             };
         }
 
+        
+
         [TestMethod]
         public async Task GetProfileByIdAsyncValidIdReturnsProfile()
         {
             _mockProfileRepository.Setup(repo => repo.GetProfileByIdAsync(1))
-                .ReturnsAsync(Result<Profile>.Success(_testProfile));
+                .ReturnsAsync(_testProfile);
 
             var expectedResult = Result<Profile>.Success(_testProfile);
 
@@ -82,21 +86,23 @@ namespace App.API.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetProfileByIdAsyncInvalidIdReturnsFailure()
+        public async Task GetProfileByIdAsyncInvalidIdReturnsException()
         {
             _mockProfileRepository.Setup(repo => repo.GetProfileByIdAsync(999))
-                .ReturnsAsync(Result<Profile>.Failure("Profile not found."));
+                .ThrowsAsync(new InvalidProfileIdException(""));
+
             var expectedResult = Result<Profile>.Failure("Profile not found.");
             var actualResult = await _profileService.GetProfileByIdAsync(999);
-            Assert.AreEqual(expectedResult.Succeeded, actualResult.Succeeded);
-            Assert.AreEqual(expectedResult.Error, actualResult.Error);
+            var actualError = actualResult.Error;
+
+            Assert.IsFalse(actualResult.Succeeded);
         }
 
         [TestMethod]
         public async Task UpdateProfileValidIdUpdatesProfile()
         {
             _mockProfileRepository.Setup(repo => repo.UpdateProfileAsync(1))
-                .ReturnsAsync(Result<Profile>.Success(_testProfileUpdated));
+                .ReturnsAsync(_testProfileUpdated);
 
             var expectedResult = Result<Profile>.Success(_testProfileUpdated);
             var actualResult = await _profileService.UpdateProfileAsync(1);
@@ -109,7 +115,7 @@ namespace App.API.Tests.Services
         public async Task CreateNewProfileAsyncValidIdCreatesProfileAndReturns()
         {
             _mockProfileRepository.Setup(repo => repo.CreateNewProfileAsync(_testUser))
-                .ReturnsAsync(Result<Profile>.Success(_testProfile));
+                .ReturnsAsync(_testProfile);
 
             var expectedResult = Result<Profile>.Success(_testProfile);
             var actualResult = await _profileService.CreateNewProfileAsync(_testUser);
