@@ -18,7 +18,7 @@ namespace App.API.Repositories
             _userManager = context;
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAppUsersAsync()
+        public async Task<List<AppUser>> GetAllAppUsersAsync()
         {
             try
             {
@@ -32,16 +32,16 @@ namespace App.API.Repositories
                     _logger.LogWarning("Users List is empty. If there are registered users, an error has occurred...");
                 }
 
-                return Result<List<AppUser>>.Success(appUsers);
+                return appUsers;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving users from the database...");
-                return Result<List<AppUser>>.Failure($"Failed to retrieve users from the database.");
+                throw;
             }
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAdminAppUsersAsync()
+        public async Task<List<AppUser>> GetAllAdminAppUsersAsync()
         {
             try
             {
@@ -60,16 +60,16 @@ namespace App.API.Repositories
                     _logger.LogInformation("Successfully retrieved administrator users...");
                 }
 
-                return Result<List<AppUser>>.Success(admins);
+                return admins;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve administrator users from the database...");
-                return Result<List<AppUser>>.Failure("Failed to retrieve administrator users from the database.");
+                throw;
             }
         }
 
-        public async Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync()
+        public async Task<List<AppUser>> GetAllRegularAppUsersAsync()
         {
             try
             {
@@ -88,20 +88,20 @@ namespace App.API.Repositories
                 {
                     _logger.LogError("The returned List<AppUser>() object is null. This should never be null. It can be empty, but it shouldn't be null. " +
                         "This indicates that the operation to retrieve the regular users from the database completely failed.");
-                    throw new NullReferenceException("The List of regular users cannot be null. This indicates a backend issue. Please contact support.");
+                    throw new NullReferenceException("This indicates a critical issue. Contact support.");
                 }
-                
-                return Result<List<AppUser>>.Success(regularUsers);
+
+                return regularUsers;
                
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to retrieve regular users from the database...");
-                return Result<List<AppUser>>.Failure("Failed to retrieve regulare users from the datbase. Please try again.");
+                throw;
             }
         }
 
-        public async Task<Result<AppUser>> GetAppUserByIdAsync(int appUserId)
+        public async Task<AppUser> GetAppUserByIdAsync(int appUserId)
         {
             try
             {
@@ -113,19 +113,19 @@ namespace App.API.Repositories
                 if(appUser == null)
                 {
                     _logger.LogError($"AppUserId: {appUserId} is not in the system.");
-                    return Result<AppUser>.Failure("User not found.");
+                    throw new InvalidUserIdException($"Invalid User ID: {appUserId}.");
                 }
 
-                return Result<AppUser>.Success(appUser);
+                return appUser;
             }
             catch (Exception ex)
             {
                 _logger.LogError($"Failed to retrieve user. AppUserID: {appUserId}...");
-                return Result<AppUser>.Failure("Failed to retrieve user.");
+                throw;
             }
         }
 
-        public async Task<Result<bool>> DeleteAppUserAsync(int appUserId)
+        public async Task<bool> DeleteAppUserAsync(int appUserId)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace App.API.Repositories
                 if(user == null)
                 {
                     _logger.LogWarning($"User not found. Check user with ID: {appUserId} exists in the system");
-                    return Result<bool>.Failure("Failed to retrieve the User. User not deleted from the database.");
+                    return false;
                 }
 
                 var deleteResult = await _userManager.DeleteAsync(user);
@@ -147,16 +147,16 @@ namespace App.API.Repositories
                     throw new RepositoryException("Failed to delete the user from the database. No changes made.");
                 }
 
-                return Result<bool>.Success(true);
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete user ID: {appUserId}...");
-                return Result<bool>.Failure("Failed to delete user.");
+                return false;
             }
         }
 
-        public async Task<Result<AppUser>> UpdateAppUserAsync(int appUserId)
+        public async Task<AppUser> UpdateAppUserAsync(int appUserId)
         {
             try
             {
@@ -182,13 +182,13 @@ namespace App.API.Repositories
                     _logger.LogInformation($"Failed to update AppUser: {appUserId}");
                     throw new DbUpdateException("Failed to delete the user from the database. Please try again.");
                 }
-                
-                return Result<AppUser>.Success(appUser);
+
+                return appUser;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to update AppUser: {appUserId}...");
-                return Result<AppUser>.Failure("Failed to delete user from the database. Please try again.");
+                throw;
             }
         }
     
