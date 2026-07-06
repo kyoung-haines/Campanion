@@ -23,7 +23,8 @@ namespace App.API.Repositories
                 _logger.LogInformation($"Repository Method Called: DeleteCampgroundAsync()...");
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}...");
 
-                var campground = await _context.FindAsync<Campground>(id);
+                // var campground = await _context.FindAsync<Campground>(id);
+                var campground = await GetCampgroundByIdAsync(id);
 
                 if(campground == null)
                 {
