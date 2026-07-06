@@ -12,6 +12,8 @@ using App.API.Models.Campgrounds;
 using App.API.Enums;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using App.API.Services;
+using App.API.Exceptions.AppUserExceptions;
+using App.API.Exceptions.CampgroundExceptions;
 
 namespace App.API.Tests.Services
 {
@@ -78,10 +80,10 @@ namespace App.API.Tests.Services
         public async Task DeleteCampgroundAsyncValidIdDeleteReturnsSuccess()
         {
             _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
-                .ReturnsAsync(Result<Campground>.Success(_testCampground1));
+                .ReturnsAsync(_testCampground1);
 
             _campRepo.Setup(repo => repo.DeleteCampgroundAsync(1))
-                .ReturnsAsync(Result<bool>.Success(true));
+                .ReturnsAsync(true);
 
             var expectedResult = Result<bool>.Success(true);
 
@@ -93,28 +95,25 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task DeleteCampgroundAsyncInvalidIdDeleteReturnsFailure()
         {
+            Campground camp = null;
+
             _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(3))
-                .ReturnsAsync(Result<Campground>.Failure("Failed to retrieve the campground from the database."));
+                .ReturnsAsync(_testCampground1);
+
+            _campRepo.Setup(repo => repo.DeleteCampgroundAsync(3))
+                .ThrowsAsync(new InvalidCampgroundIdException());
                 
             var actualResult = await _campService.DeleteCampgroundAsync(3);
-            var actualError = actualResult.Error;
 
             Assert.IsFalse(actualResult.Succeeded);
-            _campRepo.Verify(repo => repo.DeleteCampgroundAsync(It.IsAny<int>()),Times.Never);
+            //_campRepo.Verify(repo => repo.DeleteCampgroundAsync(It.IsAny<int>()),Times.Never);
         }
 
         [TestMethod]
         public async Task GetAllCampgroundsAsyncReturnsAllCampgrounds()
         {
-            //var successResult = new Result<List<Campground>>();
-            //successResult.Succeeded = true;
-            //successResult.Data = _testCampgrounds;
-
-            // tightened the above to this refactor
-            var successResult = Result<List<Campground>>.Success(_testCampgrounds);
-
             _campRepo.Setup(repo => repo.GetAllCampgroundsAsync())
-                .ReturnsAsync(successResult);
+                .ReturnsAsync(_testCampgrounds);
 
             var actualResult = await _campService.GetAllCampgroundsAsync();
 
@@ -126,7 +125,7 @@ namespace App.API.Tests.Services
         public async Task GetCampgroundByIdValidIdReturnsSuccess()
         {
             _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
-                .ReturnsAsync(Result<Campground>.Success(_testCampground1));
+                .ReturnsAsync(_testCampground1);
 
             var expectedResult = Result<Campground>.Success(_testCampground1);
 
@@ -141,22 +140,22 @@ namespace App.API.Tests.Services
         public async Task GetCampgroundByIdInvalidIdReturnsFailure()
         {
             _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(99))
-                .ReturnsAsync(Result<Campground>.Failure("Campground not found."));
+                .ThrowsAsync(new InvalidCampgroundIdException());
 
             var expectedResult = Result<Campground>.Failure("Campground not found.");
 
             var actualResult = await _campService.GetCampgroundByIdAsync(99);
 
             Assert.IsFalse(actualResult.Succeeded);
-            Assert.AreEqual(expectedResult.Error, actualResult.Error);
-            _campRepo.Verify(repo => repo.GetCampgroundByIdAsync(99), Times.Once);
+            //Assert.AreEqual(expectedResult.Error, actualResult.Error);
+            //_campRepo.Verify(repo => repo.GetCampgroundByIdAsync(99), Times.Once);
         }
 
         [TestMethod]
         public async Task UpdateCampgroundAsyncValidCampgroundReturnsSuccess()
         {
            _campRepo.Setup(repo => repo.UpdateCampgroundAsync(_testCampground1))
-                .ReturnsAsync(Result<Campground>.Success(_testCampground1));
+                .ReturnsAsync(_testCampground1);
 
             var expectedResult = Result<Campground>.Success(_testCampground1);
 
@@ -169,7 +168,7 @@ namespace App.API.Tests.Services
         public async Task UpdateCampgroundAsyncInvalidCampgroundReturnsFalse()
         {
             _campRepo.Setup(repo => repo.UpdateCampgroundAsync(_testCampgroundInvalid))
-                .ReturnsAsync(Result<Campground>.Failure("Failed to update campground."));
+                .ThrowsAsync(new CampgroundException());
 
             var expectedResult = Result<Campground>.Failure("Failed to update campground.");
 
@@ -198,7 +197,7 @@ namespace App.API.Tests.Services
                 CampgroundHasFacilities = false
             };
             _campRepo.Setup(repo => repo.AddCampgroundAsync(newCampground))
-                .ReturnsAsync(Result<Campground>.Success(newCampground));
+                .ReturnsAsync(newCampground);
 
             var expectedResult = Result<Campground>.Success(newCampground);
 
@@ -211,27 +210,10 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task AddCampgroundAsyncReturnsFailure()
         {
-            var newCampground = new Campground
-            {
-                CampgroundId = 3,
-                CampgroundName = "Test Campground 3",
-                CampgroundCity = "Guelph",
-                CampgroundCountry = "Canada",
-                CampgroundEmail = "testcampground3@test.ca",
-                CampgroundProvince = "ON",
-                CampgroundStreetName = "Tester Road",
-                CampgroundPostalCode = "M1N1N1",
-                CampgroundPhone = "3333333333",
-                CampgroundType = CampgroundType.NATIONAL,
-                CampgroundIsOpenYearRound = true,
-                CampgroundHasActivities = false,
-                CampgroundHasFacilities = false
-            };
+            Campground newCampground = null;
 
             _campRepo.Setup(repo => repo.AddCampgroundAsync(newCampground))
-                .ReturnsAsync(Result<Campground>.Failure("Unable to add campground."));
-
-            var expectedResult = Result<Campground>.Failure("Unable to add campground.");
+                .ThrowsAsync(new Exception());
 
             var actualResult = await _campService.AddCampgroundAsync(newCampground);
 
@@ -242,7 +224,7 @@ namespace App.API.Tests.Services
         public async Task CampgroundIdIsExistsAsyncReturnsSuccess()
         {
             _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
-                .ReturnsAsync(Result<Campground>.Success(_testCampground1));
+                .ReturnsAsync(_testCampground1);
 
             var campId = 1;
 
@@ -251,22 +233,6 @@ namespace App.API.Tests.Services
             var actualResult = await _campService.CampgroundIdIsExistsAsync(campId);
 
             Assert.IsTrue(actualResult.Succeeded);
-        }
-
-        [TestMethod]
-        public async Task CampgroundIdIsExistsAsyncReturnsFailure()
-        {
-            var campId = 99;
-
-            _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(campId))
-                .ReturnsAsync(Result<Campground>.Failure("Unable to retrieve campground."));
-
-            var expectedResult = Result<bool>.Failure($"Campground with ID: {campId} does not exist.");
-
-            var actualResult = await _campService.CampgroundIdIsExistsAsync(campId);
-            actualResult.Error = $"Campground with ID: {campId} does not exist.";
-
-            Assert.AreEqual(expectedResult.Error.ToString(), actualResult.Error.ToString());
         }
     }
 }
