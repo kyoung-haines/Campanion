@@ -1,6 +1,7 @@
 ﻿using App.API.Models.Campgrounds;
 using App.API.Repositories;
 using App.API.Exceptions.RepositoryExceptions;
+using App.API.Exceptions.CampgroundExceptions;
 
 namespace App.API.Services
 {
@@ -19,26 +20,28 @@ namespace App.API.Services
         {
             try
             {
+                _logger.LogInformation("CampgroundService method called: DeleteCampgroundAsync...");
                 _logger.LogInformation($"Attempting to delete campground with ID: {id}");
 
+                // Ensure the campground exists (repository may throw for invalid id)
                 var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                if(!campground.Succeeded || campground.Data == null)
+                // Attempt delete via repository and return actual delete result
+                var deleteSucceeded = await _campgroundRepo.DeleteCampgroundAsync(id);
+
+                if (deleteSucceeded)
                 {
-                    _logger.LogWarning($"Campground with ID: {id} not found...");
-                    return Result<bool>.Failure("Campground not found...");
+                    _logger.LogInformation($"Campground with ID: {id} deleted...");
+                    return Result<bool>.Success(true);
                 }
 
-                var result = await _campgroundRepo.DeleteCampgroundAsync(id);
-
-                if(!result.Succeeded)
-                {
-                    _logger.LogError($"Failed to delete campground with ID: {id}...");
-                    return Result<bool>.Failure(result.Error.ToString());
-                }
-
-                _logger.LogInformation($"Campground with ID: {id} deleted...");
-                return Result<bool>.Success(true);
+                _logger.LogWarning($"Repository reported failure deleting campground with ID: {id}.");
+                return Result<bool>.Failure("Failed to delete the campground.");
+            }
+            catch (InvalidCampgroundIdException ex)
+            {
+                _logger.LogError(ex, $"Invalid campground id: {id} specified for deletion.");
+                return Result<bool>.Failure("Campground not found.");
             }
             catch (RepositoryException ex)
             {
@@ -49,82 +52,68 @@ namespace App.API.Services
 
         public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
         {
-            var campgroundsResult = new Result<List<Campground>>();
-
             try
             {
+                _logger.LogInformation("CampgroundService method called: GetAllCampgroundsAsync...");
                 _logger.LogInformation("Service Layer: GetAllCampgroundsAsync called...");
 
-                campgroundsResult = await _campgroundRepo.GetAllCampgroundsAsync();
+                var campgrounds = await _campgroundRepo.GetAllCampgroundsAsync();
 
-                return campgroundsResult;
+                Result<List<Campground>> campgroundResults = Result<List<Campground>>.Success(campgrounds);
+
+                return campgroundResults;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving all campgrounds. See Exception.");
-                return campgroundsResult;
+                return Result<List<Campground>>.Failure("Failed to retrieve all campgrounds.");
             }
         }
 
         public async Task<Result<Campground>> GetCampgroundByIdAsync(int id)
         {
-            var campgroundResult = new Result<Campground>();
             try
             {
+                _logger.LogInformation("CampgroundService method called: GetCampgroundByIdAsync...");
                 _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
-                campgroundResult = await _campgroundRepo.GetCampgroundByIdAsync(id);
+                var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                if(campgroundResult == null)
-                {
-                    _logger.LogError($"Result object is null. Check the ID Value: {id}...");
-                }
-
-                if (campgroundResult.Succeeded != true)
-                {
-                    _logger.LogInformation($"Campground found. Returning campground with ID: {id}...");
-                }
+                Result<Campground> campgroundResult = Result<Campground>.Success(campground);
 
                 return campgroundResult;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving campground with ID: {id}. See exception for details.");
-                return campgroundResult;
+                return Result<Campground>.Failure("Failed to retrieve the campground.");
             }
         }
 
         public async Task<Result<Campground>> UpdateCampgroundAsync(Campground originalCampground)
         {
-            var updatedCampground = new Result<Campground>();
             try
             {
+                _logger.LogInformation("CampgroundService method called: UpdateCampgroundAsync...");
                 _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
 
-                if (originalCampground != null)
-                {
-                    updatedCampground = await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
+                var updatedCampground = await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
+                var updatedResult = Result<Campground>.Success(updatedCampground);
 
-                    if(updatedCampground.Succeeded == true)
-                    {
-                        _logger.LogInformation($"Campground updated successfully...");
-                    }
-                }
-
-                return updatedCampground;
+                return updatedResult;
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update campground. See Exception");
-                return updatedCampground;
+                return Result<Campground>.Failure("Failed to update the campground.");
             }
         }
 
         public async Task<Result<Campground>> AddCampgroundAsync(Campground newCampground)
         {
-            Result<Campground> result = new Result<Campground>();
             try
             {
+                _logger.LogInformation("CampgroundService method called: AddCampgroundAsync...");
                 _logger.LogInformation($"Attempting to add new campground with ID: {newCampground.CampgroundId}...");
                 _logger.LogInformation($"Checking if the campground already exists in the system...");
 
@@ -133,7 +122,7 @@ namespace App.API.Services
                 if(isExists.Succeeded == false)
                 {
                     _logger.LogInformation("Adding campground to the system...");
-                    result = await _campgroundRepo.AddCampgroundAsync(newCampground);
+                    var result = await _campgroundRepo.AddCampgroundAsync(newCampground);
                 }
 
                 var isCampgroundAdded = await IsCampgroundAddedAsync(newCampground.CampgroundId);
@@ -143,12 +132,12 @@ namespace App.API.Services
                     _logger.LogInformation("Campground has been added to the system...");
                 }
 
-                return result;
+                return Result<Campground>.Success(newCampground);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Error adding campground. See exception.");
-                return result;
+                return Result<Campground>.Failure("Failed to add new campground.");
             }
         }
 
@@ -160,14 +149,10 @@ namespace App.API.Services
         {
             try
             {
+                _logger.LogInformation("CampgroundService method called: CampgroundIdIsExistsAsync...");
                 _logger.LogInformation($"Verifying ID: {newCampgroundId} is valid...");
 
                 var campgroundResult = await _campgroundRepo.GetCampgroundByIdAsync(newCampgroundId);
-
-                if(campgroundResult.Succeeded == true)
-                {
-                    _logger.LogInformation($"Campground with ID: {newCampgroundId} exists in the system...");
-                }
 
                 return Result<bool>.Success(true);
             }
@@ -182,6 +167,7 @@ namespace App.API.Services
         {
             try
             {
+                _logger.LogInformation("CampgroundService method called: IsCampgroundUpdatedAsync...");
                 _logger.LogInformation($"Validating campground with ID: {originalCampground.CampgroundId} has been updated...");
                 var isEqual = originalCampground.Equals(updatedCampground);
 
@@ -205,6 +191,7 @@ namespace App.API.Services
 
             try
             {
+                _logger.LogInformation("CampgroundService method called: IsCampgroundAddedAsync...");
                 result = await CampgroundIdIsExistsAsync(id);
 
                 if(result.Succeeded == true)
