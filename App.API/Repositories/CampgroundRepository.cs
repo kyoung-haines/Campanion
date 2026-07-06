@@ -2,8 +2,6 @@
 using App.API.Data;
 using App.API.Exceptions.CampgroundExceptions;
 using Microsoft.EntityFrameworkCore;
-using App.API.Exceptions.RepositoryExceptions;
-using App.API.Exceptions.AppUserExceptions;
 
 namespace App.API.Repositories
 {
@@ -18,10 +16,7 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        // TO-DO: REFACTOR METHOD RETURN TYPES TO Result<T>
-        // NOTE: USE bool as the data type of the generic specification where applicable
-
-        public async Task<Result<bool>> DeleteCampgroundAsync(int id)
+        public async Task<bool> DeleteCampgroundAsync(int id)
         {
             try
             {
@@ -33,35 +28,26 @@ namespace App.API.Repositories
                 if(campground == null)
                 {
                     _logger.LogWarning($"Campground with ID: {id} is not in the system...");
-                    throw new InvalidUserIdException($"The CampgroundId: {id} does not exist. No Campground found.");
+                    throw new InvalidCampgroundIdException($"The CampgroundId: {id} does not exist. No Campground found.");
                 }
 
                 _logger.LogInformation("Campground found. Attempting to delete...");
 
-                var deleteResult = _context.Remove<Campground>(campground);
+                _context.Remove<Campground>(campground);
 
-                var saveResult = await _context.SaveChangesAsync();
-                
-                if (saveResult > 0)
-                {
-                    _logger.LogInformation($"Campground with ID: {id} successfully deleted!");
-                }
+                await _context.SaveChangesAsync();
 
-                else
-                {
-                    throw new RepositoryException("Campground failed to delete from the system. Please try again.");
-                }
 
-                return Result<bool>.Success(true);
+                return true;
             }
-            catch(RepositoryException ex)
+            catch(Exception ex)
             {
                 _logger.LogError(ex, "Error deleting the campground from the database.");
-                return Result<bool>.Failure("Failed to delete the campground from the database.");
+                throw;
             }
         }
 
-        public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
+        public async Task<List<Campground>> GetAllCampgroundsAsync()
         {
             try
             {
@@ -75,71 +61,83 @@ namespace App.API.Repositories
                     _logger.LogInformation("Campgrounds successfully retrieved...");
                 }
 
-                return Result<List<Campground>>.Success(campgrounds);
+                return campgrounds;
             }
             catch (Exception ex)
             {
 
                 _logger.LogError(ex, "Error retrieving all Campgrounds from database...");
-                return Result<List<Campground>>.Failure("Error retrieving all campgrounds.");
+                throw;
             }
         }
 
-        public async Task<Result<Campground>> GetCampgroundByIdAsync(int id)
+        public async Task<Campground> GetCampgroundByIdAsync(int id)
         {
             try
             {
                 _logger.LogInformation("CampgroundRepository method called: GetCampgroundByIdAsync()...");
                 _logger.LogInformation($"Attempting to retrieve campground: {id}...");
 
-                var campgroundResult = await _context.FindAsync<Campground>(id);
+                var campground = await _context.FindAsync<Campground>(id);
 
-                if(campgroundResult == null)
+                if(campground == null)
                 {
                     _logger.LogWarning($"Campground: {id} doesn't exist in the system...");
                     throw new InvalidCampgroundIdException($"No campground with ID: {id} exists. Please check the value.");
                 }
 
-                return Result<Campground>.Success(campgroundResult);
+                return campground;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to retrieve campground with ID: {id}...See exception for details.");
-                return Result<Campground>.Failure("Failed to retrieve the campground from the database");
+                throw;
             }
         }
 
-        public async Task<Result<Campground>> UpdateCampgroundAsync(Campground originalCampground)
+        public async Task<Campground> UpdateCampgroundAsync(Campground originalCampground)
         {
             try
             {
+                if (originalCampground == null)
+                {
+                    throw new CampgroundException("Cannot update the record. The given object is null.");
+                }
                 _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
+                
                 _context.Update(originalCampground);
+               
                 _context.SaveChangesAsync();
+               
                 _logger.LogInformation($"Campground with ID: {originalCampground.CampgroundId} successfully updated...");
-                return Result<Campground>.Success(originalCampground);
+
+                return originalCampground;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Campground failed to update. See stack trace for details...");
-                return Result<Campground>.Failure("Failed to update the campground in the database.");
+                throw;
             }
         }
 
-        public async Task<Result<Campground>> AddCampgroundAsync(Campground newCampground)
+        public async Task<Campground> AddCampgroundAsync(Campground newCampground)
         {
             try
             {
                 _logger.LogInformation($"Attempting to add new campgroundwith ID: {newCampground.CampgroundId}...");
+                
                 _context.Add<Campground>(newCampground);
+               
                 _context.SaveChangesAsync();
+                
                 _logger.LogInformation($"Campground successfully added...");
-                return Result<Campground>.Success(newCampground);
+
+                return newCampground;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to add the campground to the database. See stack trace for details...");
-                return Result<Campground>.Failure("Failed to add the campground to the database");
+                throw;
             }
         }
     }
