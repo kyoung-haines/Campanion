@@ -1,4 +1,6 @@
 ﻿using App.API.Data;
+using App.API.Exceptions.AppUserExceptions;
+using App.API.Exceptions.ProfileExceptions;
 using App.API.Models.Identity;
 
 namespace App.API.Repositories
@@ -14,7 +16,7 @@ namespace App.API.Repositories
             _logger = logger;
         }
 
-        public async Task<Result<bool>> DeleteProfileAsync(int id)
+        public async Task<bool> DeleteProfileAsync(int id)
         {
             try
             {
@@ -26,16 +28,18 @@ namespace App.API.Repositories
                 if (profile == null)
                 {
                     _logger.LogWarning($"Profile with ID {id} not found...");
+                    throw new InvalidProfileIdException(); // throws default message
                 }
 
                 var delete = _context.Remove<Profile>(profile);
+                await _context.SaveChangesAsync();
 
-                return Result<bool>.Success(true);
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to delete profile with ID {id}...");
-                return Result<bool>.Failure("An error occurred while attempting to delete the profile.");
+                return false;
             }
 
 
@@ -49,7 +53,7 @@ namespace App.API.Repositories
         /// A Result object of type Profile that contains the respective Profile if successful, or an error message if the operation fails.
         /// See <see cref="Result{T}"/> for more details on the return object.
         /// </returns>
-        public async Task<Result<Profile>> GetProfileByIdAsync(int id)
+        public async Task<Profile> GetProfileByIdAsync(int id)
         {
             try
             {
@@ -58,19 +62,20 @@ namespace App.API.Repositories
 
                 var profile = await _context.FindAsync<Profile>(id);
 
-                if(profile == null)
+                if (profile == null)
                 {
                     _logger.LogWarning($"Profile with ID {id} not found...");
+                    throw new InvalidProfileIdException();
                 }
 
                 _logger.LogInformation($"Profile with ID {id} successfully retrieved...");
 
-                return Result<Profile>.Success(profile);
+                return profile;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to retrieve profile with ID: {id}...");
-                return Result<Profile>.Failure("Failed to retrieve profile.");
+                throw;
             }
         }
 
@@ -82,25 +87,39 @@ namespace App.API.Repositories
         /// A Result object of type Profile that contains an updated object of the respective Profile if the update is successful, or an error message if the operation fails.
         /// See <see cref="Result{T}"/> for more details on the return object.
         /// </returns>
-        public async Task<Result<Profile>> UpdateProfileAsync(int id)
+        public async Task<Profile> UpdateProfileAsync(int id)
         {
             try
             {
                 _logger.LogInformation("ProfileRepository method called: UpdateProfileAsync...");
                 _logger.LogInformation($"Attempting to retrieve profile with ID: {id}...");
-                var profileResult = await GetProfileByIdAsync(id);
+                var profile = await GetProfileByIdAsync(id);
 
-                if(profileResult.Succeeded == false)
+                if(profile == null)
                 {
                     _logger.LogWarning($"Profile with ID: {id} not found...");
+                    throw new InvalidProfileIdException(); // throws default message
                 }
 
-                return profileResult;
+                _context.Update<Profile>(profile);
+                var saveResult = await _context.SaveChangesAsync();
+
+                if (saveResult == 0)
+                {
+                    _logger.LogError($"Failed to save profile...");
+
+                    while (saveResult == 0)
+                    {
+                        saveResult = await _context.SaveChangesAsync();
+                    }
+                }
+
+                return profile;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to update profile with ID: {id}...");
-                return Result<Profile>.Failure("An error occurred while attempting to update the profile.");
+                throw;
             }
         }
 
@@ -114,12 +133,18 @@ namespace App.API.Repositories
         /// A Result object of type Profile that contains the respective Profile if successful, or an error message if the operation fails.
         /// See <see cref="Result{T}"/> for more details on the return object.
         /// </returns>
-        public async Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser)
+        public async Task<Profile> CreateNewProfileAsync(AppUser newUser)
         {
             try
             {
                 _logger.LogInformation("ProfileRepository method called: CreateNewProfileAsync...");
                 _logger.LogInformation($"Attempting to create new profile for user with ID: {newUser.Id}...");
+
+                if (newUser == null)
+                {
+                    _logger.LogWarning("The AppUser object is null. Cannot add new user to database...");
+                    throw new AppUserException("The AppUser object is null. Cannot create a new user from a null object");
+                }
 
                 // Create new profile object using data from the new user
                 var newProfile = new Profile
@@ -139,12 +164,12 @@ namespace App.API.Repositories
                     _logger.LogError($"Failed to save new profile to the database.");
                 }
 
-                return Result<Profile>.Success(newProfile);
+                return newProfile;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex,$"Failled to create new profile with ID: {newUser.Id}...");
-                return Result<Profile>.Failure("Failed to create new profile");
+                throw;
             }
         }
     }
