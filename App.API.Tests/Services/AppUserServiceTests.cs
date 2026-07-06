@@ -18,6 +18,8 @@ namespace App.API.Tests.Services
         private Mock<IAppUserRepository> _mockRepository;
         private IAppUserService _userService;
         private List<AppUser> _users = new List<AppUser>();
+        AppUser _mockUser1;
+        AppUser _mockUser2;
 
         [TestInitialize]
         public void TestInitialize()
@@ -26,7 +28,7 @@ namespace App.API.Tests.Services
             _mockRepository = new Mock<IAppUserRepository>();
             _userService = new AppUserService(_mockLogger.Object, _mockRepository.Object);
             
-            var _mockUser1 = new AppUser
+            _mockUser1 = new AppUser
             {
                 Id = "1",
                 Email = "mockuser1@mockeruser.ca",
@@ -36,7 +38,7 @@ namespace App.API.Tests.Services
                 AppUserProvince = "ON"
             };
 
-            var _mockUser2 = new AppUser
+            _mockUser2 = new AppUser
             {
                 Id = "2",
                 Email = "mockuser2@mockeruser.ca",
@@ -58,7 +60,7 @@ namespace App.API.Tests.Services
             var expectedCount = expectedResult.Data.Count();
 
             _mockRepository.Setup(repo => repo.GetAllAppUsersAsync())
-                .ReturnsAsync(expectedResult);
+                .ReturnsAsync(_users);
 
             var actualResult = await _userService.GetAllAppUsersAsync();
             var actualCount = actualResult.Data.Count();
