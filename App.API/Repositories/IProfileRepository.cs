@@ -4,9 +4,9 @@ namespace App.API.Repositories
 {
     public interface IProfileRepository
     {
-        public Task<Result<Profile>> GetProfileByIdAsync(int id);
-        public Task<Result<Profile>> UpdateProfileAsync(int id);
-        public Task<Result<bool>> DeleteProfileAsync(int id);
-        public Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser);
+        public Task<Profile> GetProfileByIdAsync(int id);
+        public Task<Profile> UpdateProfileAsync(int id);
+        public Task<bool> DeleteProfileAsync(int id);
+        public Task<Profile> CreateNewProfileAsync(AppUser newUser);
     }
 }
