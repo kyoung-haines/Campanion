@@ -19,7 +19,10 @@ namespace App.API.Services
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByIdAsync...");
-				var profileResult = await _profileRepository.GetProfileByIdAsync(id);
+				var profile = await _profileRepository.GetProfileByIdAsync(id);
+
+				Result<Profile> profileResult = Result<Profile>.Success(profile);
+
 				return profileResult;
             }
 			catch (Exception ex)
@@ -35,9 +38,11 @@ namespace App.API.Services
 			{
 				_logger.LogInformation("ProfileService method called: UpdateProfileAsync...");
 
-				var profileResult = await _profileRepository.UpdateProfileAsync(id);
+				var profile = await _profileRepository.UpdateProfileAsync(id);
 
-				return Result<Profile>.Success(profileResult.Data);
+				Result<Profile> profileResult = Result<Profile>.Success(profile);
+
+				return profileResult;
             }
 			catch (Exception ex)
 			{
@@ -69,9 +74,11 @@ namespace App.API.Services
 			try
 			{
 				_logger.LogInformation("ProfileService method called: CreateNewProfileAsync...");
-				var newUserResult = await _profileRepository.CreateNewProfileAsync(newUser);
+				var newProfile = await _profileRepository.CreateNewProfileAsync(newUser);
 
-				return Result<Profile>.Success(newUserResult.Data);
+				var newProfileResult = Result<Profile>.Success(newProfile);
+
+				return newProfileResult;
             }
 			catch (Exception ex)
 			{
