@@ -23,11 +23,13 @@ namespace App.API
 
             // Retrieving and setting connection string
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
+            // the below AddDbContext will utilize the production SQL database - the proceeding one is in memory for testing
+            // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
 
             // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
             // see AddAuthorization() middleware 
-            builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CampanionDbContext>();
 
