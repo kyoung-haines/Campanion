@@ -37,7 +37,7 @@ namespace App.API
 
             // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
             // see AddAuthorization() middleware 
-            builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+            builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<CampanionDbContext>();
 
