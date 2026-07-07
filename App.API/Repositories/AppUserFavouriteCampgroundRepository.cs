@@ -20,31 +20,39 @@ namespace App.API.Repositories
             _userManager = userManager;
         }
 
-        public async Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
+        public async Task<bool> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
         {
             try
             {
+                _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: DeleteFavouriteCampgroundAsync...");
                 _logger.LogInformation($"Attempting to delete favourite campground...");
+
+                if (favouriteCampground == null)
+                {
+                    _logger.LogWarning("Campground passed is empty. No changes made...");
+                    throw new ArgumentNullException("The campground passed was null. Cannot delete a campground of null value.");
+                }
 
                 _context.Remove<AppUserFavouriteCampground>(favouriteCampground);
 
                 await _context.SaveChangesAsync();
 
-                return Result<bool>.Success(true);
+                _logger.LogInformation($"Campground with ID: {favouriteCampground.CampgroundId} deleted...");
+
+                return true;
             }
             catch (Exception ex)
             {
                 _logger.LogWarning(ex, $"Unable to delete the favourite campground...");
-                return Result<bool>.Failure($"Failed to delete the favourite campground.");
+                throw;
             }
         }
-        public async Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(int appUserId)
+        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync(int appUserId)
         {
             try
             {
                 var favCampgrounds = new List<AppUserFavouriteCampground>();
 
-                //var appUser = await _context.AppUsers.FindAsync(appUserId);
                 var appUser = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
 
                 if(appUser != null)
@@ -67,17 +75,18 @@ namespace App.API.Repositories
                     throw new AppUserException($"Invalid UserID. Verify that ID: {appUserId} exists.");
                 }
 
-                return Result<List<AppUserFavouriteCampground>>.Success(favCampgrounds);
+                return favCampgrounds;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to retrieve user's favourite campgrounds. See exception for details.");
-                return Result<List<AppUserFavouriteCampground>>.Failure(ex.Message);
+                throw;
             }
         }
-        public async Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
+        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
         {
-            return Result<AppUserFavouriteCampground>.Failure("Testing...");
+            var appUserFavourites = new AppUserFavouriteCampground();
+            return appUserFavourites;
         }
     }
 }
