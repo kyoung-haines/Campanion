@@ -7,7 +7,7 @@ using App.API.Models.Identity;
 
 namespace App.API.Repositories
 {
-    public class AppUserFavouriteCampgroundRepository
+    public class AppUserFavouriteCampgroundRepository : IAppUserFavouriteCampgroundRepository
     {
         private readonly ILogger _logger;
         private readonly CampanionDbContext _context;
@@ -87,6 +87,21 @@ namespace App.API.Repositories
         {
             var appUserFavourites = new AppUserFavouriteCampground();
             return appUserFavourites;
+        }
+
+        Task<Result<bool>> IAppUserFavouriteCampgroundRepository.DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Result<List<AppUserFavouriteCampground>>> IAppUserFavouriteCampgroundRepository.GetAllFavouriteCampgroundsAsync(int appUserId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Result<AppUserFavouriteCampground>> IAppUserFavouriteCampgroundRepository.GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

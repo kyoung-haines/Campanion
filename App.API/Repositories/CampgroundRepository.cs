@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Repositories
 {
-    public class CampgroundRepository
+    public class CampgroundRepository : ICampgroundRepository
     {
         private readonly ILogger<CampgroundRepository> _logger;
         private readonly CampanionDbContext _context;

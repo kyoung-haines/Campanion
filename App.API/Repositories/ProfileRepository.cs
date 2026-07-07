@@ -5,7 +5,7 @@ using App.API.Models.Identity;
 
 namespace App.API.Repositories
 {
-    public class ProfileRepository
+    public class ProfileRepository :IProfileRepository
     {
         private CampanionDbContext _context;
         private ILogger<ProfileRepository> _logger;
