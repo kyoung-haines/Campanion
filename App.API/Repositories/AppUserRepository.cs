@@ -32,6 +32,8 @@ namespace App.API.Repositories
                     _logger.LogWarning("Users List is empty. If there are registered users, an error has occurred...");
                 }
 
+                _logger.LogInformation("AppUserRepository successfully retrieved users...passing users to the service layer...");
+
                 return appUsers;
             }
             catch (Exception ex)
