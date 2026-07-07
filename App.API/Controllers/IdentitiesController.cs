@@ -1,5 +1,6 @@
 ﻿using App.API.Data;
 using App.API.Models.Identity;
+using App.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,18 +12,22 @@ namespace App.API.Controllers
     [ApiController]
     public class IdentitiesController : ControllerBase
     {
-        private readonly CampanionDbContext _context;
-        public IdentitiesController(CampanionDbContext context)
+        private readonly IAppUserService _userService;
+
+        public IdentitiesController(IAppUserService userService)
         {
-            _context = context;
+            _userService = userService;
         }
 
-    //    [HttpGet]
-    //    public async Task<IEnumerable<AppUser>> GetAllAppUsers()
-    //    {
-    //        var allAppUsers = await _context.AppUsers.ToListAsync();
+        [HttpGet("allusers")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<AppUser>> GetAllAppUsers()
+        {
+            var allAppUsersResult = await _userService.GetAllAppUsersAsync();
 
-    //        return allAppUsers;
-    //    }
+            var allAppUsers = allAppUsersResult.Data;
+
+            return allAppUsers;
+        }
     }
 }
