@@ -3,10 +3,10 @@ namespace App.API.Services
 {
     public interface IAppUserFavouriteCampgroundService
     {
-        public Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
-        public Task<Result<AppUserFavouriteCampground>> AddFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
-        public Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync();
-        public Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, int userId);
+        public Task<bool> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
+        public Task<AppUserFavouriteCampground> AddFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
+        public Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync();
+        public Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKey(int campId, int userId);
 
     }
 }
