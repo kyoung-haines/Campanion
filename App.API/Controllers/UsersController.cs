@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
-    public class IdentitiesController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly IAppUserService _userService;
 
-        public IdentitiesController(IAppUserService userService)
+        public UsersController(IAppUserService userService)
         {
             _userService = userService;
         }
