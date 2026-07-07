@@ -9,9 +9,9 @@ namespace App.API.Controllers
     public class AuthController : ControllerBase
     {
         [HttpGet("login")]
-        public async Task<Profile> UserLogin()
+        public async Task UserLogin()
         {
-
+            return;
         }
     }
 }
