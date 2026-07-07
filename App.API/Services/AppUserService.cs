@@ -7,7 +7,7 @@ namespace App.API.Services
 {
     public class AppUserService : IAppUserService
     {
-        private ILogger _logger;
+        private ILogger<AppUserService> _logger;
         private readonly IAppUserRepository _repository;
 
         public AppUserService(ILogger<AppUserService> logger, IAppUserRepository repo)
