@@ -5,7 +5,7 @@ namespace App.API.Services
     {
         public Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
         public Task<Result<AppUserFavouriteCampground>> AddFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
-        public Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync();
+        public Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(int appUserId);
         public Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, int userId);
 
     }
