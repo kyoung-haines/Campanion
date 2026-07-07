@@ -40,6 +40,38 @@ namespace App.API.Seeders
             {
                 logger.LogInformation("Test user already exists, skipping...");
             }
+            if (await userManager.FindByEmailAsync("admin@campanion.com") == null)
+            {
+                logger.LogInformation("Seeding test user(s)...");
+
+                var admin = new AppUser
+                {
+                    UserName = "admin01",
+                    Email = "admin@campanion.com",
+                    AppUserFirstName = "Admin",
+                    AppUserLastName = "Testerton01",
+                    AppUserCountry = "Canada",
+                    AppUserProvince = "ON"
+                };
+
+                var result = await userManager.CreateAsync(admin, "Admin@123!");
+                if (result.Succeeded)
+                {
+                    logger.LogInformation("Test user created successfully!");
+                    await userManager.AddToRoleAsync(admin, Roles.Admin);
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        logger.LogError("User seeding failed: {Code} - {Description}", error.Code, error.Description);
+                    }
+                }
+            }
+            else
+            {
+                logger.LogInformation("Test user already exists, skipping...");
+            }
         }
     }
 }
