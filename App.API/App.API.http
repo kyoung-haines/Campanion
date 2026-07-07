@@ -8,3 +8,6 @@ Accept: application/json
 GET {{App.API_HostAddress}}/api/identities
 
 ###
+GET {{App.API_HostAddress}}/api/identities/GetAllAppUsers
+
+###
