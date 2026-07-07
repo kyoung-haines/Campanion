@@ -6,6 +6,8 @@ using App.API.Seeders;
 using App.API.Models;
 using App.API.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using App.API.Services;
+using App.API.Repositories;
 
 namespace App.API
 {
@@ -26,6 +28,12 @@ namespace App.API
             // the below AddDbContext will utilize the production SQL database - the proceeding one is in memory for testing
             // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
+
+            // Registering Repository Layer dependencies
+            builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
+
+            // Registering Service Class dependencies
+            builder.Services.AddScoped<IAppUserService, AppUserService>();
 
             // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
             // see AddAuthorization() middleware 
@@ -48,6 +56,7 @@ namespace App.API
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var logger = scope.ServiceProvider.GetService<ILogger<AppUser>>()!;
+            
 
             await RoleSeeder.SeedRolesAsync(roleManager);
             await UserSeeder.SeedUsersAsync(userManager, logger);
