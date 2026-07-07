@@ -20,9 +20,13 @@ namespace App.API.Services
         {
             try
             {
+                _logger.LogInformation("AppUserService method called: GetAllAppUsersAsync...");
                 var allUsers = await _repository.GetAllAppUsersAsync();
 
                 var allUsersResult = Result<List<AppUser>>.Success(allUsers);
+
+                _logger.LogInformation("AppUserService successfully retrieved all users from the repository layer...");
+                _logger.LogInformation("AppUserService sending users list...");
 
                 return allUsersResult;
             }
