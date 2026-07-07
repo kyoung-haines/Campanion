@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace App.API.Services
 {
-    public class AppUserFavouriteCampgroundService
+    public class AppUserFavouriteCampgroundService : IAppUserFavouriteCampgroundService
     {
         private readonly ILogger _logger;
         private readonly IAppUserFavouriteCampgroundRepository _favCampgroundRepo;
