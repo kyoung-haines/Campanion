@@ -10,7 +10,7 @@ namespace App.API.Services
         private ILogger _logger;
         private readonly IAppUserRepository _repository;
 
-        public AppUserService(ILogger logger, IAppUserRepository repo)
+        public AppUserService(ILogger<AppUserService> logger, IAppUserRepository repo)
         {
             _logger = logger;
             _repository = repo;
