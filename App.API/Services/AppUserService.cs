@@ -136,5 +136,26 @@ namespace App.API.Services
                 return Result<bool>.Failure(ex.Message);
             }
         }
+
+        public async Task<Result<AppUser>> GetAppUserByEmailAsync(string userEmail)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserService method called: GetAppUserByEmailAsync...");
+
+                var user = await _repository.GetAppUserByEmailAsync(userEmail);
+
+                var userResult = Result<AppUser>.Success(user);
+
+                _logger.LogInformation($"Successfully retrieved user with email: {userEmail}...");
+
+                return userResult;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("AppUserService Exception thrown: ", ex.Message);
+                throw;
+            }
+        }
     }
 }
