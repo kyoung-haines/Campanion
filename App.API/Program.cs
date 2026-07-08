@@ -6,6 +6,8 @@ using App.API.Seeders;
 using App.API.Models;
 using App.API.Models.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using App.API.Services;
 using App.API.Repositories;
 
@@ -79,6 +81,8 @@ namespace App.API
                 //    await roleManager.CreateAsync(new IdentityRole(Roles.Member));
                 //}
             }
+
+            app.UseRouting();
 
             app.UseHttpsRedirection();
 
