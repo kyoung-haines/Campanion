@@ -25,12 +25,12 @@
         /// will be automatically recorded to effect the profile image change on the user's profile.
         /// </remarks>
         /// </summary>
-        public required string ProfileImagePath { get; set; } = "images/profile/profile-placeholder-image.png";
+        public string ProfileImagePath { get; set; } = "images/profile/profile-placeholder-image.png";
 
         /// <summary>
         /// Property <c>ProfileCreatedAt</c> represents the date and time the profile was created.
         /// </summary>
-        public required DateTime ProfileCreatedAt { get; set; }
+        public DateTime ProfileCreatedAt { get; set; } = DateTime.Now;
 
         // NAVIGATIONAL PROPERTIES
         /// <summary>
@@ -39,11 +39,11 @@
         /// This property can never be null. A profile is automatically created for every user at the time of successful registration.
         /// </remarks>
         /// </summary>
-        public required int AppUserId { get; set; }
+        public int AppUserId { get; set; }
 
         /// <summary>
         /// Property <c>ProfileOwner</c> represents the AppUser object that is associated with this profile.
         /// </summary>
-        public required AppUser ProfileOwner { get; set; }
+        public AppUser ProfileOwner { get; set; }
     }
 }
