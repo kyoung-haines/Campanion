@@ -23,7 +23,7 @@ namespace App.API.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<ActionResult<AuthResponseDto>> UserLogin(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
