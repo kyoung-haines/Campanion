@@ -221,5 +221,34 @@ namespace App.API.Repositories
                 return result;
             }
         }
+
+        public async Task<AppUser> GetAppUserByEmailAsync(string userEmail)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserRepository method called: GetAppUserByEmailAsync...");
+                _logger.LogInformation($"Attempting to retrieve user with email:  {userEmail}...");
+
+                if (userEmail == null || userEmail == string.Empty)
+                {
+                    _logger.LogError("The email address provided is blank...");
+                    throw new InvalidUserEmailException("The user email provided is blank.");
+                }
+
+                AppUser user = await _userManager.FindByEmailAsync(userEmail.ToLower());
+
+                if (user == null)
+                {
+                    _logger.LogWarning($"No user found with email: {userEmail}...");
+                }
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to retrieve user with email: {userEmail}...");
+                throw;
+            }
+        }
     }
 }
