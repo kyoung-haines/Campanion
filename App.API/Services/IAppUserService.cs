@@ -12,5 +12,6 @@ namespace App.API.Services
         public Task<Result<AppUser>> GetAppUserByIdAsync(int id);
         public Task<Result<AppUser>> UpdateAppUserByIdAsync(int id);
         public Task<Result<bool>> DeleteAppUserAsync(int id);
+        public Task<Result<AppUser>> GetAppUserByEmailAsync(string email);
     }
 }
