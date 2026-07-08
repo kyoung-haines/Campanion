@@ -1,6 +1,26 @@
 @App.API_HostAddress = https://localhost:7172
+@contentType = application/json
+
+### Log in as admin to get a token
+# @name login
+POST {{App.API_HostAddress}}/api/v1/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "admin@campanion.com",
+  "password": "Admin@123!"
+}
 
 ###
+# @name allUsersAdmin
+GET {{App.API_HostAddress}}/api/v1/users/allusers
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+# @name allUsersNonAdmin
 GET {{App.API_HostAddress}}/api/v1/users/allusers
 
-###
+
+### Use the captured token on a protected endpoint
+GET {{App.API_HostAddress}}/api/v1/campgrounds
+Authorization: Bearer {{login.response.body.$.token}}
