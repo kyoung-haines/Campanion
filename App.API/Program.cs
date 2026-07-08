@@ -37,6 +37,9 @@ namespace App.API
             // Registering Service Class dependencies
             builder.Services.AddScoped<IAppUserService, AppUserService>();
 
+            // Register TokenService - Generates JWT token for auth
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
             // See the anon function and AddRoles<IdentityRole>() additions - required auth for all users
             // see AddAuthorization() middleware 
             builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
