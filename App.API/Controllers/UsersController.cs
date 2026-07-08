@@ -1,4 +1,5 @@
 ﻿using App.API.Data;
+using App.API.Models;
 using App.API.Models.Identity;
 using App.API.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -19,8 +20,8 @@ namespace App.API.Controllers
             _userService = userService;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet("allusers")]
-        [AllowAnonymous]
         public async Task<IEnumerable<AppUser>> GetAllAppUsers()
         {
             var allAppUsersResult = await _userService.GetAllAppUsersAsync();
