@@ -17,6 +17,17 @@
         public int ProfileId { get; set; }
 
         /// <summary>
+        /// Property <c>ProfileUsername</c> represents the custom, user-defined username that is displayed 
+        /// on their profile page and is visible to the public.
+        /// </summary>
+        private string _profileUsername = string.Empty;
+        public string ProfileUsername 
+        {
+            get => _profileUsername;
+            set => _profileUsername = value;
+        }
+
+        /// <summary>
         /// Property <c>ProfileImagePath</c> represents the local path to the user profile's profile image.
         /// <remarks>
         /// This will default to the placeholder profile image upon profile creation.
