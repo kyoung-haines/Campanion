@@ -81,7 +81,7 @@ namespace App.API.Services
             {
                 _logger.LogInformation("AppUserService method called: CreateAppUserAsync...");
                 
-                result = await _repository.CreateAppUserAsync(newUser, result);
+                result = await _repository.CreateAppUserAsync(newUser);
                 return result;
             }
             catch (Exception ex)
