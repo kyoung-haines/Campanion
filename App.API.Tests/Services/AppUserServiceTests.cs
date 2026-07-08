@@ -14,7 +14,7 @@ namespace App.API.Tests.Services
     [TestClass]
     public class AppUserServiceTests
     {
-        private Mock<ILogger> _mockLogger;
+        private Mock<ILogger<AppUserService>> _mockLogger;
         private Mock<IAppUserRepository> _mockRepository;
         private IAppUserService _userService;
         private List<AppUser> _users = new List<AppUser>();
@@ -24,7 +24,7 @@ namespace App.API.Tests.Services
         [TestInitialize]
         public void TestInitialize()
         {
-            _mockLogger = new Mock<ILogger>();
+            _mockLogger = new Mock<ILogger<AppUserService>>();
             _mockRepository = new Mock<IAppUserRepository>();
             _userService = new AppUserService(_mockLogger.Object, _mockRepository.Object);
             
