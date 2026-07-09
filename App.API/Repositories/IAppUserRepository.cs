@@ -12,6 +12,7 @@ namespace App.API.Repositories
         public Task<bool> DeleteAppUserAsync(string appUserId);
         public Task<AppUser> UpdateAppUserAsync(string appUserId);
         public Task<IdentityResult> CreateAppUserAsync(AppUser newUser, string password);
+        public Task<IdentityResult> AddUserToRoleAsync(AppUser user, string role);
         public Task<AppUser> GetAppUserByEmailAsync(string userEmail);
     }
 }
