@@ -1,6 +1,7 @@
 ﻿using App.API.Models.Identity;
 using App.API.Services;
 using Campanion.Shared.Dtos.AuthDtos;
+using Campanion.Shared.Dtos.ProfileDtos;
 using Humanizer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,12 +17,14 @@ namespace App.API.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly ITokenService _tokenService;
         private IAppUserService _userService;
+        private IAuthService _authService;
 
-        public AuthController(UserManager<AppUser> userManager, ITokenService tokenService, IAppUserService userService)
+        public AuthController(UserManager<AppUser> userManager, ITokenService tokenService, IAppUserService userService, IAuthService authService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _userService = userService;
+            _authService = authService;
         }
 
         [AllowAnonymous]
@@ -40,53 +43,23 @@ namespace App.API.Controllers
             return Ok(new AuthResponseDto { Token = token });
         }
 
-        // take in reg dto -> create profile dto
-        // create profile from create profile dto
-        // serve profile response dto?
-        /*
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult<ProfileResponseDto>> RegisterUser(RegistrationDto regDto)
+        public async Task<ActionResult<ProfileResponseDto>> RegisterUser(RegistrationDto registrationDto)
         {
-            AppUser newUser = new AppUser()
+            var regResponseDto = await _authService.RegisterNewUserAsync(registrationDto);
+            var regResponse = regResponseDto.Data;
+            var profileDto = regResponse.Profile;
+
+            var profileResponseDto = new ProfileResponseDto
             {
-                Email = regDto.AppUserEmail,
-                AppUserFirstName = regDto.AppUserFirstName,
-                AppUserLastName = regDto.AppUserLastName,
-                AppUserProvince = regDto.AppUserProvince,
-                AppUserCountry = regDto.AppUserCountry
+                ProfileId = Convert.ToString(profileDto.ProfileId),
+                ProfileUsername = profileDto.ProfileUsername,
+                ProfileCreatedAt = Convert.ToString(profileDto.ProfileCreatedAt),
+                ProfileImagePath = profileDto.ProfileImagePath,
             };
 
-            var saveUserResult = await _userService.CreateAppUserAsync(newUser);
-
-            if (saveUserResult.Succeeded == true)
-            {
-                var user = await _userService.GetAppUserByEmailAsync(newUser.Email);
-                var profileDto = new ProfileResponseDto()
-                {
-                    
-                };
-            }
+            return Ok(profileResponseDto);
         }
-        */
-    }
-
-    public class RegistrationDto()
-    {
-        public string AppUserPassword = string.Empty;
-        public string AppUserEmail = string.Empty;
-        public string AppUserPhone = string.Empty;
-        public string AppUserFirstName = string.Empty;
-        public string AppUserLastName = string.Empty;
-        public string AppUserStreetAddress = string.Empty;
-        public string AppUserCity = string.Empty;
-        public string AppUserProvince = string.Empty;
-        public string AppUserCountry = string.Empty;
-        public string AppUserPostalCode = string.Empty;
-    }
-
-    public class ProfileResponseDto()
-    {
-        public string ProfileUsername = string.Empty;
     }
 }
