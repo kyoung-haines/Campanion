@@ -201,7 +201,7 @@ namespace App.API.Repositories
             try
             {
                 _logger.LogInformation($"AppUserRepository method called: CreateAppUserAsync()...");
-                _logger.LogInformation($"Attempting to create user with ID: {newUser.AppUserProfileId}...");
+                _logger.LogInformation($"Attempting to create user with ID: {newUser.Id}...");
                 result = await _userManager.CreateAsync(newUser);
 
                 if (result.Succeeded == false)
@@ -210,7 +210,7 @@ namespace App.API.Repositories
                 }
                 else
                 {
-                    _logger.LogInformation($"Successfully saved user: {newUser.AppUserProfileId} to the database...");
+                    _logger.LogInformation($"Successfully saved user: {newUser.Id} to the database...");
                 }
 
                 return result;
