@@ -138,7 +138,7 @@ namespace App.API.Models.Identity
         /// so this should always be satisfied.
         /// </remarks>
         /// </summary>
-        public Profile? AppUserProfile { get; set; }
+        //public Profile? AppUserProfile { get; set; }
     }
 }
 
