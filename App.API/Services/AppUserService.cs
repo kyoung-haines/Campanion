@@ -74,21 +74,22 @@ namespace App.API.Services
             }
         }
 
-        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser)
+        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, string password, string role = Roles.Member)
         {
             var result = new IdentityResult();
-            try
-            {
-                _logger.LogInformation("AppUserService method called: CreateAppUserAsync...");
+            _logger.LogInformation("AppUserService method called: CreateAppUserAsync...");
                 
-                result = await _repository.CreateAppUserAsync(newUser);
-                return result;
-            }
-            catch (Exception ex)
+            var createResult = await _repository.CreateAppUserAsync(newUser, password);
+            
+            if (!createResult.Succeeded)
             {
-                _logger.LogInformation(ex, "Failed to create user...");
-                return result;
+                return createResult;
             }
+
+            var roleResult = await _repository.AddUserToRoleAsync(newUser, role);
+
+            return roleResult;
+
         }
 
         public async Task<Result<AppUser>> GetAppUserByIdAsync(int id)
