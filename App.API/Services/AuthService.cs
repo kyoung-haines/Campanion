@@ -4,14 +4,14 @@ using Campanion.Shared.Dtos.ProfileDtos;
 
 namespace App.API.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly ILogger<AuthService> _logger;
         private readonly IAppUserService _userService;
         private readonly IProfileService _profileService;
         private readonly ITokenService _tokenService;
 
-        public async Task<Result<RegisterResponseDto>> RegisterNewUser(RegistrationDto regDto)
+        public async Task<Result<RegisterResponseDto>> RegisterNewUserAsync(RegistrationDto regDto)
         {
             _logger.LogInformation("AuthService method called: RegisterNewUser...");
             _logger.LogInformation("Attempting to register a new user...");
@@ -63,21 +63,6 @@ namespace App.API.Services
             };
 
             return Result<RegisterResponseDto>.Success(regResponseDto);
-        }
-
-        public async Task<Result<bool>> IsValidPassword(string password)
-        {
-            _logger.LogInformation("Validating user password against validation criteria...");
-
-            (int length, bool hasCapital) validationCriteria = (8, true);
-
-            if (password.Length != validationCriteria.length)
-            {
-                _logger.LogWarning("User password is too short. Doesn't meet criteria and failed validation...");
-                return Result<bool>.Failure("Password must be a minimum of 8 characters long.");
-            }
-
-            return Result<bool>.Success(true);
         }
 
     }
