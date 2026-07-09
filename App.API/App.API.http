@@ -20,7 +20,27 @@ Authorization: Bearer {{login.response.body.$.token}}
 # @name allUsersNonAdmin
 GET {{App.API_HostAddress}}/api/v1/users/allusers
 
-
 ### Use the captured token on a protected endpoint
 GET {{App.API_HostAddress}}/api/v1/campgrounds
 Authorization: Bearer {{login.response.body.$.token}}
+
+### Register as a new user
+# @name register
+POST {{App.API_HostAddress}}/api/v1/auth/register
+Content-Type: {{contentType}}
+
+{
+  "AppUserId": 1,
+  "AppUserType": "Roles.Member",
+  "AppUserPassword": "abc123!",
+  "AppUserUsername": "AppUser01",
+  "AppUserEmail": "email@email.ca",
+  "AppUserPhone": "9995551234",
+  "AppUserFirstName": "App",
+  "AppUserLastName": "User01",
+  "AppUserStreetAddress": "123 Main St",
+  "AppUserCity": "Toronto",
+  "AppUserProvince": "Ontario",
+  "AppUserCountry": "Canada",
+  "AppUserPostalCode": "N1G1E1"
+}
