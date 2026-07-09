@@ -10,9 +10,9 @@ namespace App.API.Services
         public Task<Result<List<AppUser>>> GetAllAppAdminsAsync();
         public Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync();
         public Task<IdentityResult> CreateAppUserAsync(AppUser user, string password, string role = Roles.Member);
-        public Task<Result<AppUser>> GetAppUserByIdAsync(int id);
-        public Task<Result<AppUser>> UpdateAppUserByIdAsync(int id);
-        public Task<Result<bool>> DeleteAppUserAsync(int id);
+        public Task<Result<AppUser>> GetAppUserByIdAsync(string id);
+        public Task<Result<AppUser>> UpdateAppUserByIdAsync(string id);
+        public Task<Result<bool>> DeleteAppUserAsync(string id);
         public Task<Result<AppUser>> GetAppUserByEmailAsync(string email);
     }
 }
