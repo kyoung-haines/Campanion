@@ -22,7 +22,7 @@ namespace App.API.Services
         {
             var roles = await _userManager.GetRolesAsync(user);
 
-            var appUserId = Convert.ToString(user.AppUserId);
+            var appUserId = Convert.ToString(user.Id);
             var appUserEmail = user.Email;
 
             var claims = new List<Claim>
