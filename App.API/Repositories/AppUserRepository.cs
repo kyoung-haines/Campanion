@@ -103,7 +103,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<AppUser> GetAppUserByIdAsync(int appUserId)
+        public async Task<AppUser> GetAppUserByIdAsync(string appUserId)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<bool> DeleteAppUserAsync(int appUserId)
+        public async Task<bool> DeleteAppUserAsync(string appUserId)
         {
             try
             {
@@ -158,7 +158,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<AppUser> UpdateAppUserAsync(int appUserId)
+        public async Task<AppUser> UpdateAppUserAsync(string appUserId)
         {
             try
             {

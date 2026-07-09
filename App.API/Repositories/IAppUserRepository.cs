@@ -8,9 +8,9 @@ namespace App.API.Repositories
         public Task<List<AppUser>> GetAllAppUsersAsync();
         public Task<List<AppUser>> GetAllAdminAppUsersAsync();
         public Task<List<AppUser>> GetAllRegularAppUsersAsync();
-        public Task<AppUser> GetAppUserByIdAsync(int appUserId);
-        public Task<bool> DeleteAppUserAsync(int appUserId);
-        public Task<AppUser> UpdateAppUserAsync(int appUserId);
+        public Task<AppUser> GetAppUserByIdAsync(string appUserId);
+        public Task<bool> DeleteAppUserAsync(string appUserId);
+        public Task<AppUser> UpdateAppUserAsync(string appUserId);
         public Task<IdentityResult> CreateAppUserAsync(AppUser newUser);
         public Task<AppUser> GetAppUserByEmailAsync(string userEmail);
     }
