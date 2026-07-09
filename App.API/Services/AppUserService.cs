@@ -91,7 +91,7 @@ namespace App.API.Services
 
         }
 
-        public async Task<Result<AppUser>> GetAppUserByIdAsync(int id)
+        public async Task<Result<AppUser>> GetAppUserByIdAsync(string id)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<AppUser>> UpdateAppUserByIdAsync(int id)
+        public async Task<Result<AppUser>> UpdateAppUserByIdAsync(string id)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<bool>> DeleteAppUserAsync(int id)
+        public async Task<Result<bool>> DeleteAppUserAsync(string id)
         {
             try
             {
