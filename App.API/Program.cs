@@ -31,6 +31,9 @@ namespace App.API
             // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
 
+            // Registering AuthService
+            builder.Services.AddScoped<IAuthService, AuthService>();
+
             // Registering Repository Layer dependencies
             builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 
