@@ -4,6 +4,6 @@ namespace App.API.Services
 {
     public interface IAuthService
     {
-        public Task<Profile> RegisterNewUserAsync(RegistrationDto regDto);
+        public Task<Result<RegisterResponseDto>> RegisterNewUserAsync(RegistrationDto regDto);
     }
 }
