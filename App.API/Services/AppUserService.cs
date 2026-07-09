@@ -76,7 +76,6 @@ namespace App.API.Services
 
         public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, string password, string role = Roles.Member)
         {
-            var result = new IdentityResult();
             _logger.LogInformation("AppUserService method called: CreateAppUserAsync...");
                 
             var createResult = await _repository.CreateAppUserAsync(newUser, password);
