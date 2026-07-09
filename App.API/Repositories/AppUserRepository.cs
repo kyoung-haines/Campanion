@@ -194,7 +194,7 @@ namespace App.API.Repositories
             }
         }
     
-        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser)
+        public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, string password)
         {
             var result = new IdentityResult(); 
 
@@ -202,7 +202,7 @@ namespace App.API.Repositories
             {
                 _logger.LogInformation($"AppUserRepository method called: CreateAppUserAsync()...");
                 _logger.LogInformation($"Attempting to create user with ID: {newUser.Id}...");
-                result = await _userManager.CreateAsync(newUser);
+                result = await _userManager.CreateAsync(newUser, password);
 
                 if (result.Succeeded == false)
                 {
