@@ -24,7 +24,7 @@ namespace App.API.Models.Identity
         /// <summary>
         /// Property <c>AppUserId</c> represents the unique integer ID for a given user.
         /// </summary>
-        public int AppUserId { get; set; }
+        // public int AppUserId { get; set; }
 
         /// <summary>
         /// Property <c>AppUserType</c> represents the type of account a given user holds.
