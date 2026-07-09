@@ -218,7 +218,36 @@ namespace App.API.Repositories
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Failed to save the user to the database...");
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "UnexpectedError",
+                    Description = "An unexpected error occurred while creating the user.";
+                });
+            }
+        }
+
+        public async Task<IdentityResult> AddAppUserToRoleAsync(AppUser user, string role)
+        {
+            try
+            {
+                _logger.LogInformation($"Attempting to add user {user.Id} to role {role}...");
+                var result = await _userManager.AddToRoleAsync(user, role);
+
+                if (!result.Succeeded)
+                {
+                    _logger.LogWarning($"Failed to add user {user.Id} to role {role}...");
+                }
+
                 return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to add user {user.Id} to role {role}...");
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Code = "UnexpectedError",
+                    Description = "An unexpected error occurred while assigning the role."
+                });
             }
         }
 
