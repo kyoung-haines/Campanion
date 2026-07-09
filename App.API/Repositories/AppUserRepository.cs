@@ -221,12 +221,12 @@ namespace App.API.Repositories
                 return IdentityResult.Failed(new IdentityError
                 {
                     Code = "UnexpectedError",
-                    Description = "An unexpected error occurred while creating the user.";
+                    Description = "An unexpected error occurred while creating the user."
                 });
             }
         }
 
-        public async Task<IdentityResult> AddAppUserToRoleAsync(AppUser user, string role)
+        public async Task<IdentityResult> AddUserToRoleAsync(AppUser user, string role)
         {
             try
             {
