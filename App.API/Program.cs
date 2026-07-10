@@ -28,8 +28,8 @@ namespace App.API
             // Retrieving and setting connection string
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             // the below AddDbContext will utilize the production SQL database - the proceeding one is in memory for testing
-            // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
-            builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
+            builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
+            // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
 
             // Registering AuthService
             builder.Services.AddScoped<IAuthService, AuthService>();
