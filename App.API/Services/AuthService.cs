@@ -1,7 +1,8 @@
-﻿using App.API.Models.Identity;
-using App.API.Data;
+﻿using App.API.Data;
+using App.API.Models.Identity;
 using Campanion.Shared.Dtos.AuthDtos;
 using Campanion.Shared.Dtos.ProfileDtos;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace App.API.Services
 {
@@ -12,6 +13,8 @@ namespace App.API.Services
         private readonly IProfileService _profileService;
         private readonly ITokenService _tokenService;
         private readonly CampanionDbContext _dbContext;
+        private AppUser _newUser = null;
+        private Profile _profile = null;
 
         public AuthService(ILogger<AuthService> logger, IAppUserService userService, IProfileService profileService, ITokenService tokenService, CampanionDbContext dbContext)
         {
@@ -33,7 +36,7 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("Creating a new user...");
-                AppUser newUser = new AppUser
+                _newUser = new AppUser
                 {
                     UserName = regDto.AppUserUsername,
                     Email = regDto.AppUserEmail,
@@ -43,46 +46,53 @@ namespace App.API.Services
                     AppUserCountry = regDto.AppUserCountry
                 };
 
-                var createUserResult = await _userService.CreateAppUserAsync(newUser, regDto.AppUserPassword);
+                var createUserResult = await _userService.CreateAppUserAsync(_newUser, regDto.AppUserPassword);
 
                 if (!createUserResult.Succeeded)
                 {
+                    _logger.LogError("Failed to create and persist new user. Operation failed...");
+                    await transaction.RollbackAsync();
                     return Result<RegisterResponseDto>.Failure("Failed to register new user.");
                 }
 
-                var newProfileResult = await _profileService.CreateNewProfileAsync(newUser);
+                var newProfileResult = await _profileService.CreateNewProfileAsync(_newUser);
 
                 if (!newProfileResult.Succeeded)
                 {
+                    _logger.LogInformation("Failed to create and persist the new user profile. Operation failed...");
+                    await transaction.RollbackAsync();
                     return Result<RegisterResponseDto>.Failure("Failed to register new user.");
                 }
 
-                await transaction.CommitAsync();
-
                 var profile = newProfileResult.Data;
-                var token = await _tokenService.GenerateTokenAsync(newUser);
-                var profileResponseDto = new ProfileResponseDto
-                {
-                    ProfileId = Convert.ToString(profile.ProfileId),
-                    ProfileUsername = profile.ProfileUsername,
-                    ProfileImagePath = profile.ProfileImagePath,
-                    ProfileCreatedAt = Convert.ToString(profile.ProfileCreatedAt),
-                    AppUserId = Convert.ToString(profile.AppUserId)
-                };
-                var regResponseDto = new RegisterResponseDto
-                {
-                    Token = token,
-                    Profile = profileResponseDto
-                };
 
-                return Result<RegisterResponseDto>.Success(regResponseDto);
+                await transaction.CommitAsync();
             }
+
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                _logger.LogError(ex, "Failed to register new user. Entire operation aborted...");
                 await transaction.RollbackAsync();
-                throw;
+                return Result<RegisterResponseDto>.Failure("An unexpected error occurred. Failed to register new user.");
             }
+
+            var token = await _tokenService.GenerateTokenAsync(_newUser);
+            var profileResponseDto = new ProfileResponseDto
+            {
+                ProfileId = Convert.ToString(_profile.ProfileId),
+                ProfileUsername = _profile.ProfileUsername,
+                ProfileImagePath = _profile.ProfileImagePath,
+                ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
+                AppUserId = Convert.ToString(_profile.AppUserId)
+            };
+            var regResponseDto = new RegisterResponseDto
+            {
+                Token = token,
+                Profile = profileResponseDto
+            };
+
+            return Result<RegisterResponseDto>.Success(regResponseDto);
+
         }
 
     }
