@@ -87,5 +87,10 @@ namespace App.API.Services
 				return Result<Profile>.Failure($"Failed to create new profile in the system: {ex.Message}");
             }
 		}
+
+		public async Task<Result<Profile>> GetProfileByAppUserIdAsync(int appUserId)
+		{
+
+		}
     }
 }
