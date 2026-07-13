@@ -14,7 +14,7 @@ namespace App.API.Services
 			_profileRepository = profileRepository;
         }
 
-        public async Task<Result<Profile>> GetProfileByIdAsync(int id)
+        public async Task<Result<Profile>> GetProfileByProfileIdAsync(int id)
         {
 			try
 			{
