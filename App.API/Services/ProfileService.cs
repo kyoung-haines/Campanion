@@ -89,7 +89,7 @@ namespace App.API.Services
             }
 		}
 
-		protected async Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser appUser)
+		public async Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser appUser)
 		{
 			try
 			{
