@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace App.API.Controllers
 {
@@ -19,14 +20,16 @@ namespace App.API.Controllers
         private readonly ITokenService _tokenService;
         private IAppUserService _userService;
         private IAuthService _authService;
+        private IProfileService _profileService;
 
-        public AuthController(UserManager<AppUser> userManager, ITokenService tokenService, IAppUserService userService, IAuthService authService, ILogger<AuthController> logger)
+        public AuthController(UserManager<AppUser> userManager, ITokenService tokenService, IAppUserService userService, IAuthService authService, ILogger<AuthController> logger, IProfileService profileService)
         {
             _userManager = userManager;
             _tokenService = tokenService;
             _userService = userService;
             _authService = authService;
             _logger = logger;
+            _profileService = profileService;
         }
 
         [AllowAnonymous]
@@ -72,12 +75,47 @@ namespace App.API.Controllers
          * there is an argument for there being a function to retrieve the user profile directly
          * at successful user registration time - however, 
          * the logic will likely overlap largely with a similar method in the AppUserController instead...
-        [Authorize(Roles="Role.Member", "Role.Admin")]
+         * 
+         */
+        [Authorize(Roles= "Role.Member, Role.Admin")]
         [HttpGet("profile")]
-        public async Task<ActionResult><ProfileResponseDto> GetNewUserProfile()
+        public async Task<ActionResult<ProfileResponseDto>> GetCurrentUserProfile()
         {
 
+            _logger.LogInformation("AuthController method called: GetCurrentUserProfile...");
+            
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var userResult = await _userService.GetAppUserByIdAsync(userId);
+
+            if (userResult.Succeeded == false)
+            {
+                _logger.LogWarning("Failed to retrieve the user profile...");
+                return BadRequest(userResult.Error);
+            }
+
+            if (userId != userResult.Data.Id)
+            {
+                _logger.LogError("The UserId retrieved from the claims is different than the ID saved in the database...");
+                return BadRequest("Data mismatch. Operation cancelled.");
+            }
+
+            var userProfileResult = await _profileService.GetProfileByAppUserIdAsync(userResult.Data);
+
+            if (userProfileResult.Succeeded == false)
+            {
+                _logger.LogWarning($"Error retrieving profile. Ensure the ProfileId is valid...");
+                return BadRequest(userProfileResult.Error);
+            }
+
+            _logger.LogInformation("Profile successfully retrieved....");
+
+            ProfileResponseDto profileResponseDto = new();
+
+            profileResponseDto = await _profileService.ConvertProfileObjectToResponseDto(userProfileResult.Data);
+
+            return Ok(profileResponseDto);
         }
-        */
+        
     }
 }
