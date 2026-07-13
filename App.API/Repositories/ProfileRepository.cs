@@ -173,7 +173,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<Profile> GetProfileByAppUserId(AppUser appUser)
+        public async Task<Profile> GetProfileByAppUserIdAsync(AppUser appUser)
         {
             try
             {
