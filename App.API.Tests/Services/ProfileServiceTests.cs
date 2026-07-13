@@ -80,7 +80,7 @@ namespace App.API.Tests.Services
 
             var expectedResult = Result<Profile>.Success(_testProfile);
 
-            var actualResult = await _profileService.GetProfileByIdAsync(1);
+            var actualResult = await _profileService.GetProfileByProfileIdAsync(1);
 
             Assert.AreEqual(expectedResult.Data, actualResult.Data);
         }
@@ -92,7 +92,7 @@ namespace App.API.Tests.Services
                 .ThrowsAsync(new InvalidProfileIdException(""));
 
             var expectedResult = Result<Profile>.Failure("Profile not found.");
-            var actualResult = await _profileService.GetProfileByIdAsync(999);
+            var actualResult = await _profileService.GetProfileByProfileIdAsync(999);
             var actualError = actualResult.Error;
 
             Assert.IsFalse(actualResult.Succeeded);
