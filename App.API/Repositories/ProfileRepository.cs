@@ -172,5 +172,34 @@ namespace App.API.Repositories
                 throw;
             }
         }
+
+        public async Task<Profile> GetProfileByAppUserId(AppUser appUser)
+        {
+            try
+            {
+                _logger.LogInformation("ProfileRepository method called: GetProfileByAppUserId...");
+                _logger.LogInformation($"Attempting to retrieve profile for user: {appUser.Id}...");
+
+                int appUserId = Convert.ToInt32(appUser.Id);
+
+                List<Profile> allProfiles = _context.Profiles.ToList<Profile>();
+                Profile profileById = new();
+
+                foreach (var profile in allProfiles)
+                {
+                    if (profile.AppUserId == appUserId)
+                    {
+                        profileById = profile;
+                    }
+                }
+
+                return profileById;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve user profile...");
+                throw;
+            }
+        }
     }
 }

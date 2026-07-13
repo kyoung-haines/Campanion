@@ -8,5 +8,6 @@ namespace App.API.Repositories
         public Task<Profile> UpdateProfileAsync(int id);
         public Task<bool> DeleteProfileAsync(int id);
         public Task<Profile> CreateNewProfileAsync(AppUser newUser);
+        public Task<Profile> GetProfileByAppUserIdAsync(AppUser newUser);
     }
 }
