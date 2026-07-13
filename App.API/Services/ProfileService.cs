@@ -1,5 +1,6 @@
 ﻿using App.API.Models.Identity;
 using App.API.Repositories;
+using Campanion.Shared.Dtos.ProfileDtos;
 
 namespace App.API.Services
 {
@@ -88,9 +89,39 @@ namespace App.API.Services
             }
 		}
 
-		public async Task<Result<Profile>> GetProfileByAppUserIdAsync(int appUserId)
+		protected async Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser appUser)
 		{
+			try
+			{
+				_logger.LogInformation("ProfileService method called: GetProfileByAppUserIdAsync...");
 
+				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser);
+
+				_logger.LogInformation("Profile retrieved...");
+
+				return Result<Profile>.Success(profile);
+			}
+			catch (Exception ex)
+			{
+
+				return Result<Profile>.Failure("Failed to retrieve the user profile. Try again.");
+			}
 		}
-    }
+
+		protected async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile)
+		{
+			_logger.LogInformation("ProfileService method called: ConvertProfileObjectToResponseDto...");
+            _logger.LogInformation("Attempting to convert Profile object...");
+
+			ProfileResponseDto profileResponseDto = new ProfileResponseDto
+			{
+				ProfileId = profile.ProfileId.ToString(),
+				ProfileUsername = profile.ProfileUsername,
+				ProfileImagePath = profile.ProfileImagePath,
+				ProfileCreatedAt = profile.ProfileCreatedAt.ToString(),
+				AppUserId = profile.AppUserId.ToString()
+            };
+
+			return profileResponseDto;
+		}
 }
