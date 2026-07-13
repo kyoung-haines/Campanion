@@ -9,7 +9,7 @@ namespace App.API.Services
         public Task<Result<Profile>> UpdateProfileAsync(int id);
         public Task<Result<bool>> DeleteProfileAsync(int id);
         public Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser);
-        protected Task<Result<Profile>> GetProfileByAppUserIdAsync(int appUserId);
-        protected Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile);
+        public Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser user);
+        public Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile);
     }
 }

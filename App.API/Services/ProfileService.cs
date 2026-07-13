@@ -4,8 +4,8 @@ using Campanion.Shared.Dtos.ProfileDtos;
 
 namespace App.API.Services
 {
-    public class ProfileService : IProfileService
-    {
+	public class ProfileService : IProfileService
+	{
 		private ILogger<ProfileService> _logger;
 		private IProfileRepository _profileRepository;
 
@@ -13,10 +13,10 @@ namespace App.API.Services
 		{
 			_logger = logger;
 			_profileRepository = profileRepository;
-        }
+		}
 
-        public async Task<Result<Profile>> GetProfileByProfileIdAsync(int id)
-        {
+		public async Task<Result<Profile>> GetProfileByProfileIdAsync(int id)
+		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByIdAsync...");
@@ -25,13 +25,13 @@ namespace App.API.Services
 				Result<Profile> profileResult = Result<Profile>.Success(profile);
 
 				return profileResult;
-            }
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to get profile by ID: {id}...");
 				return Result<Profile>.Failure($"An error occurred while retrieving the profile: {ex.Message}");
-            }
-        }
+			}
+		}
 
 		public async Task<Result<Profile>> UpdateProfileAsync(int id)
 		{
@@ -44,31 +44,31 @@ namespace App.API.Services
 				Result<Profile> profileResult = Result<Profile>.Success(profile);
 
 				return profileResult;
-            }
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to update profile with ID: {id}...");
 				return Result<Profile>.Failure($"An error occurred while updating the profile: {ex.Message}");
-            }
-        }
+			}
+		}
 
 		public async Task<Result<bool>> DeleteProfileAsync(int id)
 		{
 			try
 			{
-                _logger.LogInformation("ProfileService method called: DeleteProfileAsync...");
+				_logger.LogInformation("ProfileService method called: DeleteProfileAsync...");
 
-                var profileResult = await _profileRepository.DeleteProfileAsync(id);
+				var profileResult = await _profileRepository.DeleteProfileAsync(id);
 
 				return Result<bool>.Success(true);
 
-            }
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to delete profile with ID: {id}...");
 				return Result<bool>.Failure("An error occurred attempting to delete the profile. Try again");
 			}
-        }
+		}
 
 		public async Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser)
 		{
@@ -80,13 +80,13 @@ namespace App.API.Services
 				var newProfileResult = Result<Profile>.Success(newProfile);
 
 				return newProfileResult;
-            }
+			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to create new profile in the system)");
 
 				return Result<Profile>.Failure($"Failed to create new profile in the system: {ex.Message}");
-            }
+			}
 		}
 
 		public async Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser appUser)
@@ -94,6 +94,7 @@ namespace App.API.Services
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByAppUserIdAsync...");
+				int appUserId = Convert.ToInt32(appUser.Id);
 
 				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser);
 
@@ -108,10 +109,10 @@ namespace App.API.Services
 			}
 		}
 
-		protected async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile)
+		public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile)
 		{
 			_logger.LogInformation("ProfileService method called: ConvertProfileObjectToResponseDto...");
-            _logger.LogInformation("Attempting to convert Profile object...");
+			_logger.LogInformation("Attempting to convert Profile object...");
 
 			ProfileResponseDto profileResponseDto = new ProfileResponseDto
 			{
@@ -120,8 +121,9 @@ namespace App.API.Services
 				ProfileImagePath = profile.ProfileImagePath,
 				ProfileCreatedAt = profile.ProfileCreatedAt.ToString(),
 				AppUserId = profile.AppUserId.ToString()
-            };
+			};
 
 			return profileResponseDto;
 		}
+	}
 }
