@@ -31,14 +31,43 @@ namespace App.API
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
             // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
 
-            // Registering AuthService
-            builder.Services.AddScoped<IAuthService, AuthService>();
+            // RolesService - added first for potential dependencies further down
+            builder.Services.AddScoped<IRolesService, RolesService>();
 
             // Registering Repository Layer dependencies
+            // AppUserRepositoryLayer
             builder.Services.AddScoped<IAppUserRepository, AppUserRepository>();
 
+            // ProfileRepositoryLayer
+            builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+
+            // CampgroundRepositoryLayer
+            builder.Services.AddScoped<ICampgroundRepository, CampgroundRepository>();
+
+            // AppUserFavouriteCampgroundRepository
+            builder.Services.AddScoped<IAppUserFavouriteCampgroundRepository, AppUserFavouriteCampgroundRepository>();
+
+            // TripRepository
+            builder.Services.AddScoped<ITripRepository, TripRepository>();
+
             // Registering Service Class dependencies
+            //AppUserService
             builder.Services.AddScoped<IAppUserService, AppUserService>();
+
+            // ProfileService
+            builder.Services.AddScoped<IProfileService, ProfileService>();
+
+            // CampgroundService
+            builder.Services.AddScoped<ICampgroundService, CampgroundService>();
+
+            // AppUserFavouriteCampgroundService
+            builder.Services.AddScoped<IAppUserFavouriteCampgroundService, AppUserFavouriteCampgroundService>();
+
+            // TripService
+            builder.Services.AddScoped<ITripService, TripService>();
+
+            // AuthService
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             // Register TokenService - Generates JWT token for auth
             builder.Services.AddScoped<ITokenService, TokenService>();
