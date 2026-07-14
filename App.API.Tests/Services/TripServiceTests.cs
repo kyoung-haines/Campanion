@@ -18,7 +18,7 @@ namespace App.API.Tests.Services
     [TestClass]
     public class TripServiceTests
     {
-        private Mock<ILogger<TripService> _mockLogger;
+        private Mock<ILogger<TripService>> _mockLogger;
         private Mock<ITripRepository> _mockRepo;
         private ITripService _tripService;
         private Trip _testTrip1;
