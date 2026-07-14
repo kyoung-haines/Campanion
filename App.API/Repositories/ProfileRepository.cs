@@ -2,6 +2,7 @@
 using App.API.Exceptions.AppUserExceptions;
 using App.API.Exceptions.ProfileExceptions;
 using App.API.Models.Identity;
+using System.Security.Cryptography;
 
 namespace App.API.Repositories
 {
@@ -147,13 +148,20 @@ namespace App.API.Repositories
                 }
 
                 // Create new profile object using data from the new user
+                Random rand = new Random();
+                var randInt = rand.Next();
+
                 var newProfile = new Profile
                 {
                     AppUserId = newUser.Id,
                     ProfileCreatedAt = DateTime.UtcNow,
                     ProfileImagePath = "https://picsum.photos/seed/picsum/200",
-                    ProfileOwner = newUser
+                    ProfileOwner = newUser,
+                    ProfileUsername = newUser.AppUserFirstName + newUser.AppUserLastName + randInt
                 };
+
+                _logger.LogInformation($"New user Profile object created.\nAppUserId: {newProfile.AppUserId} + " +
+                    $"\nProfileCreatedAt: {newProfile.ProfileCreatedAt}\nProfileImagePath: {newProfile.ProfileImagePath}\nUsername: {newProfile.ProfileUsername}");
 
                 var addResult = await _context.Profiles.AddAsync(newProfile);
 
