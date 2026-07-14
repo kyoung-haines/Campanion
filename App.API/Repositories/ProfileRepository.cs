@@ -149,7 +149,7 @@ namespace App.API.Repositories
                 // Create new profile object using data from the new user
                 var newProfile = new Profile
                 {
-                    AppUserId = Convert.ToInt32(newUser.Id),
+                    AppUserId = newUser.Id,
                     ProfileCreatedAt = DateTime.UtcNow,
                     ProfileImagePath = "https://picsum.photos/seed/picsum/200",
                     ProfileOwner = newUser
@@ -180,7 +180,7 @@ namespace App.API.Repositories
                 _logger.LogInformation("ProfileRepository method called: GetProfileByAppUserId...");
                 _logger.LogInformation($"Attempting to retrieve profile for user: {appUser.Id}...");
 
-                int appUserId = Convert.ToInt32(appUser.Id);
+                string appUserId = appUser.Id;
 
                 List<Profile> allProfiles = _context.Profiles.ToList<Profile>();
                 Profile profileById = new();
