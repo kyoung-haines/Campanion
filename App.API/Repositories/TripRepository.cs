@@ -8,10 +8,10 @@ namespace App.API.Repositories
 {
     public class TripRepository : ITripRepository
     {
-        private ILogger<ITripRepository> _logger;
+        private ILogger<TripRepository> _logger;
         private CampanionDbContext _context;
 
-        public TripRepository(ILogger<ITripRepository> logger, CampanionDbContext context)
+        public TripRepository(ILogger<TripRepository> logger, CampanionDbContext context)
         {
             _logger = logger;
             _context = context;

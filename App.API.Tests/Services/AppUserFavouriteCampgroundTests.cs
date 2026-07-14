@@ -19,7 +19,7 @@ namespace App.API.Tests.Services
     public class AppUserFavouriteCampgroundTests
     {
         Mock<IAppUserFavouriteCampgroundRepository> _repo;
-        Mock<ILogger> _logger;
+        Mock<ILogger<AppUserFavouriteCampgroundService>> _logger;
         AppUserFavouriteCampgroundService _service;
 
         AppUser _testUser = new AppUser
@@ -60,7 +60,7 @@ namespace App.API.Tests.Services
         public void TestInitialize()
         {
             _repo = new Mock<IAppUserFavouriteCampgroundRepository>();
-            _logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<AppUserFavouriteCampgroundService>>();
             _service = new AppUserFavouriteCampgroundService(_logger.Object, _repo.Object);
 
             _favCampgrounds.Add(_favCampground);

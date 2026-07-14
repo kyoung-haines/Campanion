@@ -8,10 +8,10 @@ namespace App.API.Services
 {
     public class TripService : ITripService
     {
-        private ILogger _logger;
+        private ILogger<TripService> _logger;
         private ITripRepository _tripRepository;
 
-        public TripService(ILogger logger, ITripRepository tripRepoository)
+        public TripService(ILogger<TripService> logger, ITripRepository tripRepoository)
         {
             _logger = logger;
             _tripRepository = tripRepoository;

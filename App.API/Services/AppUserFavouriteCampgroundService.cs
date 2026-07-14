@@ -7,10 +7,10 @@ namespace App.API.Services
 {
     public class AppUserFavouriteCampgroundService : IAppUserFavouriteCampgroundService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AppUserFavouriteCampgroundService> _logger;
         private readonly IAppUserFavouriteCampgroundRepository _favCampgroundRepo;
 
-        public AppUserFavouriteCampgroundService(ILogger logger, IAppUserFavouriteCampgroundRepository _repo)
+        public AppUserFavouriteCampgroundService(ILogger<AppUserFavouriteCampgroundService> logger, IAppUserFavouriteCampgroundRepository _repo)
         {
             _logger = logger;
             _favCampgroundRepo = _repo;

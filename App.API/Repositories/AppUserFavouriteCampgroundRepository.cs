@@ -9,11 +9,11 @@ namespace App.API.Repositories
 {
     public class AppUserFavouriteCampgroundRepository : IAppUserFavouriteCampgroundRepository
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<AppUserFavouriteCampgroundRepository> _logger;
         private readonly CampanionDbContext _context;
         private readonly UserManager<AppUser> _userManager;
 
-        public AppUserFavouriteCampgroundRepository(ILogger logger, CampanionDbContext context, UserManager<AppUser> userManager)
+        public AppUserFavouriteCampgroundRepository(ILogger<AppUserFavouriteCampgroundRepository> logger, CampanionDbContext context, UserManager<AppUser> userManager)
         {
             _logger = logger;
             _context = context;
