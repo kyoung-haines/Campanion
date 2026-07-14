@@ -66,56 +66,7 @@ namespace App.API.Controllers
 
             var regResponseData = regResponseDto.Data;
 
-            return Created("/api/v1/profile", regResponseData);
+            return Created("/api/v1/profiles/profile", regResponseData);
         }
-
-        /*
-         * not sure if I want to keep this here or not...
-         * retrieving the user profile isn't exactly an Authorization function but
-         * there is an argument for there being a function to retrieve the user profile directly
-         * at successful user registration time - however, 
-         * the logic will likely overlap largely with a similar method in the AppUserController instead...
-         * 
-         */
-        [Authorize(Roles= "Role.Member, Role.Admin")]
-        [HttpGet("profile")]
-        public async Task<ActionResult<ProfileResponseDto>> GetCurrentUserProfile()
-        {
-
-            _logger.LogInformation("AuthController method called: GetCurrentUserProfile...");
-            
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            var userResult = await _userService.GetAppUserByIdAsync(userId);
-
-            if (userResult.Succeeded == false)
-            {
-                _logger.LogWarning("Failed to retrieve the user profile...");
-                return BadRequest(userResult.Error);
-            }
-
-            if (userId != userResult.Data.Id)
-            {
-                _logger.LogError("The UserId retrieved from the claims is different than the ID saved in the database...");
-                return BadRequest("Data mismatch. Operation cancelled.");
-            }
-
-            var userProfileResult = await _profileService.GetProfileByAppUserIdAsync(userResult.Data);
-
-            if (userProfileResult.Succeeded == false)
-            {
-                _logger.LogWarning($"Error retrieving profile. Ensure the ProfileId is valid...");
-                return BadRequest(userProfileResult.Error);
-            }
-
-            _logger.LogInformation("Profile successfully retrieved....");
-
-            ProfileResponseDto profileResponseDto = new();
-
-            profileResponseDto = await _profileService.ConvertProfileObjectToResponseDto(userProfileResult.Data);
-
-            return Ok(profileResponseDto);
-        }
-        
     }
 }
