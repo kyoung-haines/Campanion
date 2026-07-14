@@ -1,4 +1,6 @@
-﻿namespace App.API.Models.Identity
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace App.API.Models.Identity
 {
     /// <summary>
     /// Class <c>Profile</c> represents the public-facing representation of a given user.
@@ -50,11 +52,12 @@
         /// This property can never be null. A profile is automatically created for every user at the time of successful registration.
         /// </remarks>
         /// </summary>
-        public int AppUserId { get; set; }
+        public string AppUserId { get; set; }
 
         /// <summary>
         /// Property <c>ProfileOwner</c> represents the AppUser object that is associated with this profile.
         /// </summary>
+        [ForeignKey(nameof(AppUserId))]
         public AppUser ProfileOwner { get; set; }
     }
 }
