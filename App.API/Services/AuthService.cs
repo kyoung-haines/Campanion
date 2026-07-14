@@ -64,7 +64,7 @@ namespace App.API.Services
                     return Result<RegisterResponseDto>.Failure("Failed to register new user.");
                 }
 
-                var profile = newProfileResult.Data;
+                _profile = newProfileResult.Data;
 
                 await transaction.CommitAsync();
             }
