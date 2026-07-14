@@ -196,17 +196,16 @@ namespace App.API.Repositories
     
         public async Task<IdentityResult> CreateAppUserAsync(AppUser newUser, string password)
         {
-            var result = new IdentityResult(); 
-
             try
             {
                 _logger.LogInformation($"AppUserRepository method called: CreateAppUserAsync()...");
                 _logger.LogInformation($"Attempting to create user with ID: {newUser.Id}...");
-                result = await _userManager.CreateAsync(newUser, password);
+                var result = await _userManager.CreateAsync(newUser, password);
 
                 if (result.Succeeded == false)
                 {
-                    _logger.LogWarning("Failed to save the user to the database...");
+                    _logger.LogWarning("Failed to save the user to the database... Errors: { Errors}", 
+                        string.Join("; ", result.Errors.Select(e => e.Description)));
                 }
                 else
                 {
