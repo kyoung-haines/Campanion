@@ -1,6 +1,7 @@
 ﻿using App.API.Models.Identity;
 using App.API.Repositories;
 using Campanion.Shared.Dtos.ProfileDtos;
+using System.Security.Cryptography;
 
 namespace App.API.Services
 {
@@ -76,7 +77,7 @@ namespace App.API.Services
 			{
 				_logger.LogInformation("ProfileService method called: CreateNewProfileAsync...");
 				var newProfile = await _profileRepository.CreateNewProfileAsync(newUser);
-
+				
 				var newProfileResult = Result<Profile>.Success(newProfile);
 
 				return newProfileResult;
@@ -94,7 +95,6 @@ namespace App.API.Services
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByAppUserIdAsync...");
-				int appUserId = Convert.ToInt32(appUser.Id);
 
 				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser);
 
@@ -104,7 +104,7 @@ namespace App.API.Services
 			}
 			catch (Exception ex)
 			{
-
+				_logger.LogError(ex, $"Failed to retrieve profile by AppUserId: {appUser.Id}...");
 				return Result<Profile>.Failure("Failed to retrieve the user profile. Try again.");
 			}
 		}
