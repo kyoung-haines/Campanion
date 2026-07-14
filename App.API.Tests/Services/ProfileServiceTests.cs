@@ -55,7 +55,7 @@ namespace App.API.Tests.Services
 
             _testProfile = new Profile
             {
-                AppUserId = 1,
+                AppUserId = "!",
                 ProfileCreatedAt = DateTime.UtcNow,
                 ProfileImagePath = "https://picsum.photos/seed/picsum/200",
                 ProfileOwner = _testUser
@@ -63,7 +63,7 @@ namespace App.API.Tests.Services
 
             _testProfileUpdated = new Profile
             {
-                AppUserId = 1,
+                AppUserId = "1",
                 ProfileCreatedAt = DateTime.UtcNow,
                 ProfileImagePath = "https://picsum.photos/seed/picsum/200",
                 ProfileOwner = _testUserUpdated
