@@ -31,6 +31,9 @@ namespace App.API
             builder.Services.AddDbContext<CampanionDbContext>(options => options.UseSqlServer(connectionString));
             // builder.Services.AddDbContext<CampanionDbContext>(options => options.UseInMemoryDatabase("TestDb"));
 
+            // Logger Dependencies
+            builder.Services.AddScoped<ILogger<AppUserFavouriteCampgroundRepository>, Logger<AppUserFavouriteCampgroundRepository>>();
+
             // RolesService - added first for potential dependencies further down
             builder.Services.AddScoped<IRolesService, RolesService>();
 
