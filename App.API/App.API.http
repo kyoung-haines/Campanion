@@ -30,17 +30,20 @@ POST {{App.API_HostAddress}}/api/v1/auth/register
 Content-Type: {{contentType}}
 
 {
-  "AppUserId": 1,
-  "AppUserType": "Roles.Member",
-  "AppUserPassword": "abc123!",
-  "AppUserUsername": "AppUser01",
-  "AppUserEmail": "email@email.ca",
-  "AppUserPhone": "9995551234",
-  "AppUserFirstName": "App",
-  "AppUserLastName": "User01",
-  "AppUserStreetAddress": "123 Main St",
-  "AppUserCity": "Toronto",
-  "AppUserProvince": "Ontario",
-  "AppUserCountry": "Canada",
-  "AppUserPostalCode": "N1G1E1"
+  "appUserPassword": "aBc123!",
+  "appUserUsername": "AppUser01",
+  "appUserEmail": "email@email.ca",
+  "appUserPhone": "9995551234",
+  "appUserFirstName": "App",
+  "appUserLastName": "User01",
+  "appUserStreetAddress": "123 Main St",
+  "appUserCity": "Toronto",
+  "appUserProvince": "Ontario",
+  "appUserCountry": "Canada",
+  "appUserPostalCode": "N1G1E1"
 }
+
+### View profile upon registration
+# @name profile
+GET {{App.API_HostAddress}}/api/v1/profiles/profile
+Authorization: Bearer {{register.response.body.$.token}}
