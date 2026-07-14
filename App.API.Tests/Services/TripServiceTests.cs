@@ -18,7 +18,7 @@ namespace App.API.Tests.Services
     [TestClass]
     public class TripServiceTests
     {
-        private Mock<ILogger> _mockLogger;
+        private Mock<ILogger<TripService> _mockLogger;
         private Mock<ITripRepository> _mockRepo;
         private ITripService _tripService;
         private Trip _testTrip1;
@@ -79,7 +79,7 @@ namespace App.API.Tests.Services
 
             _testTripList = new List<Trip> { _testTrip1, _testTrip2 };
 
-            _mockLogger = new Mock<ILogger>();
+            _mockLogger = new Mock<ILogger<TripService>>();
             _mockRepo = new Mock<ITripRepository>();
             _tripService = new TripService(_mockLogger.Object, _mockRepo.Object);
             _testTripDto = new TripDto();
