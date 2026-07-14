@@ -10,8 +10,6 @@
   <ItemGroup>
     <PackageReference Include="Campanion.Shared" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.11" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.9" />
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="18.7.1" />
@@ -24,7 +22,6 @@
     <PackageReference Include="Microsoft.OpenApi" Version="2.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
-    <PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.9" />
   </ItemGroup>
 	
 </Project>
