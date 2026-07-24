@@ -36,6 +36,10 @@ namespace App.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<AuthResponseDto>> UserLogin(LoginDto loginDto)
         {
+            _logger.LogInformation("HTTP REQUEST RECEIVED...");
+            _logger.LogInformation("AuthController method called: UserLogin...");
+            _logger.LogInformation($"USER EMAIL:\n{loginDto.Email}");
+
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
             if (user is null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
