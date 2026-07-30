@@ -30,5 +30,16 @@ namespace App.API.Controllers
 
             return allAppUsers;
         }
+
+        [Authorize]
+        [HttpGet("user/{appUserId}")]
+        public async Task<AppUser> GetAppUserByIdAsync(string appUserId)
+        {
+            var userResult = await _userService.GetAppUserByIdAsync(appUserId);
+            var user = userResult.Data;
+
+            return user;
+
+        }
     }
 }
