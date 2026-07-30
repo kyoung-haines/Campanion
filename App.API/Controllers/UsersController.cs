@@ -32,10 +32,10 @@ namespace App.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("user/{appUserId}")]
-        public async Task<AppUser> GetAppUserByIdAsync(string appUserId)
+        [HttpGet("users/{userId}")]
+        public async Task<AppUser> GetAppUserByIdAsync(string userId)
         {
-            var userResult = await _userService.GetAppUserByIdAsync(appUserId);
+            var userResult = await _userService.GetAppUserByIdAsync(userId);
             var user = userResult.Data;
 
             return user;
