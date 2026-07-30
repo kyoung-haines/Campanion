@@ -54,13 +54,13 @@ namespace App.API.Controllers
 
         [Authorize]
         [HttpGet("users/{userId}")]
-        public async Task<AppUser> GetAppUserByIdAsync(string userId)
+        public async Task<AppUserDto> GetAppUserByIdAsync(string userId)
         {
             var userResult = await _userService.GetAppUserByIdAsync(userId);
             var user = userResult.Data;
+            var userDto = new AppUserDto();
 
-            return user;
-
+            return userDto;
         }
     }
 }
