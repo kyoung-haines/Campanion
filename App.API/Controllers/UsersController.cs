@@ -22,13 +22,34 @@ namespace App.API.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("allusers")]
-        public async Task<IEnumerable<AppUser>> GetAllAppUsers()
+        public async Task<IEnumerable<AppUser>> GetAllAppUsersAsync()
         {
             var allAppUsersResult = await _userService.GetAllAppUsersAsync();
 
             var allAppUsers = allAppUsersResult.Data;
 
             return allAppUsers;
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("alladminusers")]
+        public async Task<IEnumerable<AppUser>> GetAllAdminUsersAsync()
+        {
+            var allAdminsResult = await _userService.GetAllAppAdminsAsync();
+
+            var allAdmins = allAdminsResult.Data;
+
+            return allAdmins;
+        }
+
+        [Authorize(Roles = Roles.Admin)]
+        [HttpGet("allregularusers")]
+        public async Task<IEnumerable<AppUser>> GetAllRegularAppUsersAsync()
+        {
+            var allRegularAppUsersResult = await _userService.GetAllRegularAppUsersAsync();
+            var allRegularAppUsersList = allRegularAppUsersResult.Data;
+
+            return allRegularAppUsersList;
         }
 
         [Authorize]
