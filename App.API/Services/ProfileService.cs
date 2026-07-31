@@ -108,22 +108,5 @@ namespace App.API.Services
 				return Result<Profile>.Failure("Failed to retrieve the user profile. Try again.");
 			}
 		}
-
-		public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile)
-		{
-			_logger.LogInformation("ProfileService method called: ConvertProfileObjectToResponseDto...");
-			_logger.LogInformation("Attempting to convert Profile object...");
-
-			ProfileResponseDto profileResponseDto = new ProfileResponseDto
-			{
-				ProfileId = profile.ProfileId.ToString(),
-				ProfileUsername = profile.ProfileUsername,
-				ProfileImagePath = profile.ProfileImagePath,
-				ProfileCreatedAt = profile.ProfileCreatedAt.ToString(),
-				AppUserId = profile.AppUserId.ToString()
-			};
-
-			return profileResponseDto;
-		}
 	}
 }
