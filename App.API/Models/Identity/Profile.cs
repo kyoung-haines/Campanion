@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Campanion.Shared.Dtos.ProfileDtos;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.API.Models.Identity
 {
@@ -59,5 +60,20 @@ namespace App.API.Models.Identity
         /// </summary>
         [ForeignKey(nameof(AppUserId))]
         public AppUser ProfileOwner { get; set; }
+
+
+        // HELPER METHOD(S)
+        public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto()
+        {
+            ProfileResponseDto profileResponseDto = new ProfileResponseDto
+            {
+                ProfileId = this.ProfileId.ToString(),
+                ProfileUsername = this.ProfileUsername,
+                ProfileImagePath = this.ProfileImagePath,
+                ProfileCreatedAt = this.ProfileCreatedAt.ToString()
+            };
+
+            return profileResponseDto;
+        }
     }
 }
