@@ -49,7 +49,13 @@ namespace App.API.Controllers
 
             var token = await _tokenService.GenerateTokenAsync(user);
 
-            return Ok(new AuthResponseDto { Token = token });
+            var authResponseDto = new AuthResponseDto
+            {
+                Token = token,
+                UserId = user.Id,
+                TokenExpiry = new DateTime(2055, 1, 1, 7, 0, 0)
+            };
+            return Ok(authResponseDto);
         }
 
         [AllowAnonymous]
