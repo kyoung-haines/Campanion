@@ -23,26 +23,20 @@ namespace App.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("profile")]
+        [HttpGet("current")]
         public async Task<ActionResult<ProfileResponseDto>> GetCurrentUserProfile()
         {
 
             _logger.LogInformation("AuthController method called: GetCurrentUserProfile...");
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var userResult = await _userService.GetAppUserByIdAsync(userId);
+            var userResult = await _userService.GetAppUserByIdAsync(userIdClaim);
 
             if (userResult.Succeeded == false)
             {
                 _logger.LogWarning("Failed to retrieve the user profile...");
                 return BadRequest(userResult.Error);
-            }
-
-            if (userId != userResult.Data.Id)
-            {
-                _logger.LogError("The UserId retrieved from the claims is different than the ID saved in the database...");
-                return BadRequest("Data mismatch. Operation cancelled.");
             }
 
             var userProfileResult = await _profileService.GetProfileByAppUserIdAsync(userResult.Data);
@@ -55,9 +49,7 @@ namespace App.API.Controllers
 
             _logger.LogInformation("Profile successfully retrieved....");
 
-            ProfileResponseDto profileResponseDto = new();
-
-            profileResponseDto = await _profileService.ConvertProfileObjectToResponseDto(userProfileResult.Data);
+            var profileResponseDto = await _profileService.ConvertProfileObjectToResponseDto(userProfileResult.Data);
 
             return Ok(profileResponseDto);
         }
