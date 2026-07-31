@@ -49,7 +49,9 @@ namespace App.API.Controllers
 
             _logger.LogInformation("Profile successfully retrieved....");
 
-            var profileResponseDto = await _profileService.ConvertProfileObjectToResponseDto(userProfileResult.Data);
+            var userProfile = userProfileResult.Data;
+
+            var profileResponseDto = userProfile.ConvertProfileObjectToResponseDto();
 
             return Ok(profileResponseDto);
         }
