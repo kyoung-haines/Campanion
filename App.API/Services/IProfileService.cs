@@ -10,6 +10,5 @@ namespace App.API.Services
         public Task<Result<bool>> DeleteProfileAsync(int id);
         public Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser);
         public Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser user);
-        public Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile);
     }
 }
