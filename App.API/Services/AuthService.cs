@@ -83,7 +83,7 @@ namespace App.API.Services
                 ProfileUsername = _profile.ProfileUsername,
                 ProfileImagePath = _profile.ProfileImagePath,
                 ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
-                AppUserId = Convert.ToString(_profile.AppUserId)
+                AppUserId = Convert.ToString(_newUser.Id)
             };
             var regResponseDto = new RegisterResponseDto
             {
