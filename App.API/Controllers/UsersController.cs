@@ -59,7 +59,25 @@ namespace App.API.Controllers
         {
             var userResult = await _userService.GetAppUserByIdAsync(userId);
             var user = userResult.Data;
-            var userDto = new AppUserDto();
+
+            var userDto = new AppUserDto
+            {
+                AppUserEmail = user.Email,
+                AppUserPhone = user.PhoneNumber,
+                AppUserType = Convert.ToString(user.AppUserType),
+                AppUserFirstName = user.AppUserFirstName,
+                AppUserLastName = user.AppUserLastName,
+                AppUserStreetAddress = user.AppUserStreetAddress,
+                AppUserCity = user.AppUserCity,
+                AppUserProvince = user.AppUserProvince,
+                AppUserCountry = user.AppUserCountry,
+                AppUserPostalCode = user.AppUserPostalCode
+            };
+
+            foreach (var camp in user.AppUserFavouriteCampgrounds)
+            {
+                userDto.AppUserFavouriteCampgrounds.Add(Convert.ToString(camp.CampgroundId));
+            }
 
             return userDto;
         }
