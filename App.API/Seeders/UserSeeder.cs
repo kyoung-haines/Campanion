@@ -1,5 +1,7 @@
 ﻿using App.API.Models;
 using App.API.Models.Identity;
+using App.API.Repositories;
+using App.API.Services;
 using Microsoft.AspNetCore.Identity;
 
 namespace App.API.Seeders
