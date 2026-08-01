@@ -30,6 +30,9 @@ namespace App.API.Models.Identity
             set => _profileUsername = value;
         }
 
+        public string ProfileUserProvince { get; set; }
+        public string ProfileUserCountry { get; set; }
+
         /// <summary>
         /// Property <c>ProfileImagePath</c> represents the local path to the user profile's profile image.
         /// <remarks>
