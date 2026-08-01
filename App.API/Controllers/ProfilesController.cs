@@ -23,8 +23,8 @@ namespace App.API.Controllers
         }
 
         [Authorize]
-        [HttpGet("current")]
-        public async Task<ActionResult<ProfileResponseDto>> GetCurrentUserProfile()
+        [HttpGet("{appUserId}")]
+        public async Task<ActionResult<ProfileResponseDto>> GetCurrentUserProfile(string appUserId)
         {
 
             _logger.LogInformation("AuthController method called: GetCurrentUserProfile...");
@@ -51,7 +51,7 @@ namespace App.API.Controllers
 
             var userProfile = userProfileResult.Data;
 
-            var profileResponseDto = userProfile.ConvertProfileObjectToResponseDto();
+            var profileResponseDto = await userProfile.ConvertProfileObjectToResponseDto();
 
             return Ok(profileResponseDto);
         }
