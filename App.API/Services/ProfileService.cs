@@ -77,7 +77,7 @@ namespace App.API.Services
 			{
 				_logger.LogInformation("ProfileService method called: CreateNewProfileAsync...");
 				var newProfile = await _profileRepository.CreateNewProfileAsync(newUser);
-				
+
 				var newProfileResult = Result<Profile>.Success(newProfile);
 
 				return newProfileResult;
