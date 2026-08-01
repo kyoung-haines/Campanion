@@ -73,7 +73,10 @@ namespace App.API.Models.Identity
                 ProfileId = this.ProfileId.ToString(),
                 ProfileUsername = this.ProfileUsername,
                 ProfileImagePath = this.ProfileImagePath,
-                ProfileCreatedAt = this.ProfileCreatedAt.ToString()
+                ProfileCreatedAt = this.ProfileCreatedAt.ToString(),
+                AppUserId = this.AppUserId,
+                ProfileUserProvince = this.ProfileUserProvince,
+                ProfileUserCountry = this.ProfileUserCountry
             };
 
             return profileResponseDto;
