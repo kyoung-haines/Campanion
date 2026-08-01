@@ -157,7 +157,9 @@ namespace App.API.Repositories
                     ProfileCreatedAt = DateTime.UtcNow,
                     ProfileImagePath = "https://picsum.photos/seed/picsum/200",
                     ProfileOwner = newUser,
-                    ProfileUsername = newUser.AppUserFirstName + newUser.AppUserLastName + randInt
+                    ProfileUsername = newUser.AppUserFirstName + newUser.AppUserLastName + randInt,
+                    ProfileUserProvince = newUser.AppUserProvince,
+                    ProfileUserCountry = newUser.AppUserCountry
                 };
 
                 _logger.LogInformation($"New user Profile object created.\nAppUserId: {newProfile.AppUserId} + " +
