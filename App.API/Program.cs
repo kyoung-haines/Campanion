@@ -116,10 +116,14 @@ namespace App.API
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var logger = scope.ServiceProvider.GetService<ILogger<AppUser>>()!;
+            var newUser = scope.ServiceProvider.GetService<AppUser>();
+            var context = scope.ServiceProvider.GetService<CampanionDbContext>();
+            var profileService = scope.ServiceProvider.GetService<ProfileService>();
             
 
             await RoleSeeder.SeedRolesAsync(roleManager);
             await UserSeeder.SeedUsersAsync(userManager, logger);
+            await ProfileSeeder.SeedUserProfilesAsync(newUser, context, profileService, logger);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
