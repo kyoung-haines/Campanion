@@ -82,6 +82,8 @@ namespace App.API.Services
             {
                 ProfileId = Convert.ToString(_profile.ProfileId),
                 ProfileUsername = _profile.ProfileUsername,
+                ProfileUserProvince = _profile.ProfileUserProvince,
+                ProfileUserCountry = _profile.ProfileUserCountry,
                 ProfileImagePath = _profile.ProfileImagePath,
                 ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
                 AppUserId = Convert.ToString(_newUser.Id)
