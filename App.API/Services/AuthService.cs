@@ -77,6 +77,7 @@ namespace App.API.Services
             }
 
             var token = await _tokenService.GenerateTokenAsync(_newUser);
+
             var profileResponseDto = new ProfileResponseDto
             {
                 ProfileId = Convert.ToString(_profile.ProfileId),
