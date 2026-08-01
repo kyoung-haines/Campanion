@@ -90,7 +90,7 @@ namespace App.API.Services
 			}
 		}
 
-		public async Task<Result<Profile>> GetProfileByAppUserIdAsync(AppUser appUser)
+		public async Task<Result<ProfileResponseDto>> GetProfileByAppUserIdAsync(AppUser appUser)
 		{
 			try
 			{
@@ -100,12 +100,14 @@ namespace App.API.Services
 
 				_logger.LogInformation("Profile retrieved...");
 
-				return Result<Profile>.Success(profile);
+				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto();
+
+				return Result<ProfileResponseDto>.Success(profileResponseDto);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to retrieve profile by AppUserId: {appUser.Id}...");
-				return Result<Profile>.Failure("Failed to retrieve the user profile. Try again.");
+				return Result<ProfileResponseDto>.Failure("Failed to retrieve the user profile. Try again.");
 			}
 		}
 	}
