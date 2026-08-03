@@ -83,7 +83,7 @@ namespace App.API.Repositories
                 throw;
             }
         }
-        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
+        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKey(int campId, string userId)
         {
             var appUserFavourites = new AppUserFavouriteCampground();
             return appUserFavourites;
