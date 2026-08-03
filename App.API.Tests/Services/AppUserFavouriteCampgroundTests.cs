@@ -51,7 +51,7 @@ namespace App.API.Tests.Services
 
         AppUserFavouriteCampground _favCampground = new AppUserFavouriteCampground 
         {
-            AppUserId = 1,
+            AppUserId = "1",
             CampgroundId = 1,
             FavouritedAt = DateTime.UtcNow
         };
@@ -95,12 +95,12 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task GetAllFavouriteCampgroundsAsyncValidIdReturnSuccess()
         {
-            _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync(1))
+            _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync("1"))
                 .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Success(_favCampgrounds));
 
             var expectedResult = Result<List<AppUserFavouriteCampground>>.Success(_favCampgrounds);
 
-            var actualResult = await _service.GetAllFavouriteCampgroundsAsync(1);
+            var actualResult = await _service.GetAllFavouriteCampgroundsAsync("1");
 
             Assert.AreEqual(expectedResult.Data, actualResult.Data);
         }
@@ -108,7 +108,7 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task GetAllFavouriteCampgroundsAsyncInvalidIdReturnsFailure()
         {
-            var appUserId = 99; //invalid ID
+            var appUserId = "99"; //invalid ID
 
             _repo.Setup(repo => repo.GetAllFavouriteCampgroundsAsync(appUserId))
                 .ReturnsAsync(Result<List<AppUserFavouriteCampground>>.Success(new List<AppUserFavouriteCampground>()));
