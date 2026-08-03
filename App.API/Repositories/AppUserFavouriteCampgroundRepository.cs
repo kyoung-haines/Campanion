@@ -47,13 +47,13 @@ namespace App.API.Repositories
                 throw;
             }
         }
-        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync(int appUserId)
+        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync(string appUserId)
         {
             try
             {
                 var favCampgrounds = new List<AppUserFavouriteCampground>();
 
-                var appUser = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
+                var appUser = await _userManager.FindByIdAsync(appUserId);
 
                 if(appUser != null)
                 {
@@ -94,12 +94,12 @@ namespace App.API.Repositories
             throw new NotImplementedException();
         }
 
-        Task<Result<List<AppUserFavouriteCampground>>> IAppUserFavouriteCampgroundRepository.GetAllFavouriteCampgroundsAsync(int appUserId)
+        Task<Result<List<AppUserFavouriteCampground>>> IAppUserFavouriteCampgroundRepository.GetAllFavouriteCampgroundsAsync(string appUserId)
         {
             throw new NotImplementedException();
         }
 
-        Task<Result<AppUserFavouriteCampground>> IAppUserFavouriteCampgroundRepository.GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
+        Task<Result<AppUserFavouriteCampground>> IAppUserFavouriteCampgroundRepository.GetFavouriteCampgroundByPrimaryKey(int campId, string userId)
         {
             throw new NotImplementedException();
         }

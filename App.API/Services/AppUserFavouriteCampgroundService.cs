@@ -48,7 +48,7 @@ namespace App.API.Services
         {
             return Result<AppUserFavouriteCampground>.Failure("Testing...");
         }
-        public async Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(int appUserId)
+        public async Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(string appUserId)
         {
             try
             {
