@@ -76,7 +76,7 @@ namespace App.API.Services
                 return Result<List<AppUserFavouriteCampground>>.Failure("Failed to retrieve user's favourite campgrounds.");
             }            
         }
-        public async Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, int userId)
+        public async Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, string userId)
         {
             return Result<AppUserFavouriteCampground>.Failure("Testing...");
         }
