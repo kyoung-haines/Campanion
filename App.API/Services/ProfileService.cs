@@ -120,9 +120,10 @@ namespace App.API.Services
             return userFavouriteCampgroundsResult;
         }
 
-        public async Task<Result<List<AppUserTrip>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
+        public async Task<Result<List<AppUserTrip>>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
         {
-			var 
+			var newList = new List<AppUserTrip>();
+			return Result<List<AppUserTrip>>.Failure("Failure.");
         }
     }
 }
