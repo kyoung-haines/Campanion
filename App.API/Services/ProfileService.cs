@@ -1,4 +1,6 @@
-﻿using App.API.Models.Identity;
+﻿using App.API.Models.Campgrounds;
+using App.API.Models.Identity;
+using App.API.Models.Trips;
 using App.API.Repositories;
 using Campanion.Shared.Dtos.ProfileDtos;
 using System.Security.Cryptography;
@@ -110,5 +112,17 @@ namespace App.API.Services
 				return Result<ProfileResponseDto>.Failure("Failed to retrieve the user profile. Try again.");
 			}
 		}
-	}
+
+        public async Task<Result<List<AppUserFavouriteCampground>>> RetrieveProfileUserFavouriteCampgrounds(AppUserFavouriteCampgroundService appUserFavouriteCampgroundService, AppUser appUser)
+        {
+            var userFavouriteCampgroundsResult = await appUserFavouriteCampgroundService.GetAllFavouriteCampgroundsAsync(appUser.Id);
+
+            return userFavouriteCampgroundsResult;
+        }
+
+        public async Task<Result<List<AppUserTrip>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
+        {
+			var 
+        }
+    }
 }
