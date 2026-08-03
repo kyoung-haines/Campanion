@@ -30,9 +30,6 @@ namespace App.API.Models.Identity
             set => _profileUsername = value;
         }
 
-        public required string ProfileUserProvince { get; set; }
-        public required string ProfileUserCountry { get; set; }
-
         /// <summary>
         /// Property <c>ProfileImagePath</c> represents the local path to the user profile's profile image.
         /// <remarks>
@@ -66,7 +63,7 @@ namespace App.API.Models.Identity
 
 
         // HELPER METHOD(S)
-        public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto()
+        public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile, AppUser user)
         {
             ProfileResponseDto profileResponseDto = new ProfileResponseDto
             {
@@ -75,8 +72,8 @@ namespace App.API.Models.Identity
                 ProfileImagePath = this.ProfileImagePath,
                 ProfileCreatedAt = this.ProfileCreatedAt.ToString(),
                 AppUserId = this.AppUserId,
-                ProfileUserProvince = this.ProfileUserProvince,
-                ProfileUserCountry = this.ProfileUserCountry
+                ProfileUserProvince = user.AppUserProvince,
+                ProfileUserCountry = user.AppUserCountry
             };
 
             return profileResponseDto;
