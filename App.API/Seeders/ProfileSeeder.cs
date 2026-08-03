@@ -33,8 +33,6 @@ namespace App.API.Seeders
                     AppUserId = user.Id,
                     ProfileCreatedAt = DateTime.UtcNow,
                     ProfileImagePath = "https://picsum.photos/seed/picsum/200",
-                    ProfileUserProvince = user.AppUserProvince,
-                    ProfileUserCountry = user.AppUserCountry,
                     ProfileOwner = user,
                     ProfileUsername = user.AppUserFirstName + user.AppUserLastName + rand.NextInt64()
                 };
