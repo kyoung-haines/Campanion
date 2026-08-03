@@ -2,7 +2,6 @@
 using App.API.Models.Identity;
 using Campanion.Shared.Dtos.AuthDtos;
 using Campanion.Shared.Dtos.ProfileDtos;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace App.API.Services
 {
@@ -78,16 +77,18 @@ namespace App.API.Services
 
             var token = await _tokenService.GenerateTokenAsync(_newUser);
 
-            var profileResponseDto = new ProfileResponseDto
-            {
-                ProfileId = Convert.ToString(_profile.ProfileId),
-                ProfileUsername = _profile.ProfileUsername,
-                ProfileUserProvince = _profile.ProfileUserProvince,
-                ProfileUserCountry = _profile.ProfileUserCountry,
-                ProfileImagePath = _profile.ProfileImagePath,
-                ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
-                AppUserId = Convert.ToString(_newUser.Id)
-            };
+            var profileResponseDto = await _profile.ConvertProfileObjectToResponseDto(_profile, _newUser);
+
+            //var profileResponseDto = new ProfileResponseDto
+            //{
+            //    ProfileId = Convert.ToString(_profile.ProfileId),
+            //    ProfileUsername = _profile.ProfileUsername,
+            //    ProfileUserProvince = _profile.ProfileUserProvince,
+            //    ProfileUserCountry = _profile.ProfileUserCountry,
+            //    ProfileImagePath = _profile.ProfileImagePath,
+            //    ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
+            //    AppUserId = Convert.ToString(_newUser.Id)
+            //};
             var regResponseDto = new RegisterResponseDto
             {
                 Token = token,
