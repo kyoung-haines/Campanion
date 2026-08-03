@@ -100,7 +100,7 @@ namespace App.API.Services
 
 				_logger.LogInformation("Profile retrieved...");
 
-				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto();
+				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto(profile, appUser);
 
 				return Result<ProfileResponseDto>.Success(profileResponseDto);
 			}
