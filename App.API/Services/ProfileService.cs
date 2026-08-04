@@ -11,12 +11,15 @@ namespace App.API.Services
 	{
 		private ILogger<ProfileService> _logger;
 		private IProfileRepository _profileRepository;
+		private IAppUserTripService _appUserTripService;
 
-		public ProfileService(ILogger<ProfileService> logger, IProfileRepository profileRepository)
+		public ProfileService(ILogger<ProfileService> logger, IProfileRepository profileRepository, IAppUserTripService userTripService)
 		{
 			_logger = logger;
 			_profileRepository = profileRepository;
-		}
+			_appUserTripService = userTripService;
+
+        }
 
 		public async Task<Result<Profile>> GetProfileByProfileIdAsync(int id)
 		{
@@ -122,8 +125,8 @@ namespace App.API.Services
 
         public async Task<Result<List<AppUserTrip>>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
         {
-			var newList = new List<AppUserTrip>();
-			return Result<List<AppUserTrip>>.Failure("Failure.");
+			var appUserTripsResult = await _appUserTripService.RetrieveAllAppUserTripsByUserIdAsync(appUser.Id);
+			return appUserTripsResult.Data;
         }
     }
 }
