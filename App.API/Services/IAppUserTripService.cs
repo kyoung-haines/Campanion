@@ -5,7 +5,7 @@ namespace App.API.Services
 {
     public interface IAppUserTripService
     {
-        public Task<Result<AppUserTrip>> AddNewAppUserTripAsync(AppUser appUser, Trip trip);
-        public Task<Result<IEnumerable<AppUserTrip>>> RetrieveAllAppUserTripsByUserIdAsync(AppUser appUse);
+        public Task<Result<AppUserTrip>> AddNewAppUserTripAsync(string appUserId, int tripId);
+        public Task<Result<IEnumerable<AppUserTrip>>> RetrieveAllAppUserTripsByUserIdAsync(string appUserId);
     }
 }
