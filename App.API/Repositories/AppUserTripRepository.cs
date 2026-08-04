@@ -16,7 +16,7 @@ namespace App.API.Repositories
             _logger = logger;
         }
 
-        public async Task<AppUserTrip> AddNewTripAsync(AppUser appUser, Trip trip)
+        public async Task<AppUserTrip> AddNewAppUserTripAsync(AppUser appUser, Trip trip)
         {
             _logger.LogInformation("AppUserTripRepository method called: AddNewTripAsync...");
             _logger.LogInformation("Attempting to add a new trip to the database...");
@@ -39,7 +39,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<IEnumerable<AppUserTrip>> RetrieveAllTripsByUserIdAsync(AppUser appUser, Trip trip)
+        public async Task<IEnumerable<AppUserTrip>> RetrieveAllAppUserTripsByUserIdAsync(AppUser appUser)
         {
             _logger.LogInformation("AppUserTripRepository method called: RetrieveAllTripsByUserIdAsync...");
             _logger.LogInformation($"Attempting to retrieve all trips for user {appUser.Id}...");
@@ -54,7 +54,7 @@ namespace App.API.Repositories
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, $"Failed to retrieve trips for user: {appUser.Id}...");
                 throw;
             }
         }
