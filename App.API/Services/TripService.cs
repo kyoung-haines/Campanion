@@ -1,4 +1,4 @@
-﻿using App.API.Dtos.Trips.TripsDtos;
+﻿using Campanion.Shared.Dtos.TripDtos;
 using App.API.Models.Trips;
 using App.API.Repositories;
 //using Campanion.Shared.DTOs.Trip;
@@ -19,7 +19,6 @@ namespace App.API.Services
 
         public async Task<Result<List<TripDto>>> GetAllTripsAsync()
         {
-            //TripDto tripDto = new TripDto();
             List<TripDto> tripDtoList = new ();
 
             try
@@ -27,16 +26,14 @@ namespace App.API.Services
                 _logger.LogInformation("TripService method called: GetAllTripsAsync...");
 
                 var trips = await _tripRepository.GetAllTripsAsync();
-                
-                
 
                 if (trips.Count() > 0)
                 {
                     foreach (var trip in trips)
                     {
-                        var tripDto = new TripDto(trip);
+                        var tripDto = new TripDto();
 
-                        tripDto.TripId = trip.TripId;
+                        tripDto.TripId = Convert.ToString(trip.TripId);
                         tripDto.TripName = trip.TripName;
                         tripDto.TripStatus = Convert.ToString(trip.TripStatus);
                         tripDto.TripStartDate = Convert.ToString(trip.TripStartDate);
@@ -95,15 +92,17 @@ namespace App.API.Services
                 return Result<bool>.Failure("Failed to delete the trip. Please try again.");
             }
         }
-        public async Task<Result<TripDto>> CreateTripAsync(CreateTripDto createTripDto)
+        public async Task<Result<TripDto>> CreateTripAsync(TripDto tripDto)
         {
             try
             {
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
-
-                TripDto tripDto = await TripDto.ConvertCreateTripDtoToTripDto(createTripDto);
-                Trip trip = await TripDto.ConvertTripDtoToTrip(tripDto);
-
+ 
+                Trip trip = new Trip
+                {
+                    TripId = tripDto.TripId,
+                    TripName = 
+                };
                 var createResult = await _tripRepository.CreateTripAsync(trip);
 
                 return Result<TripDto>.Success(tripDto);
@@ -123,7 +122,8 @@ namespace App.API.Services
 
                 var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
 
-                var tripDto = new TripDto(trip);
+                var tripDto = await trip.ConvertTripObjecToTripDtoAsync(trip);
+
                 return Result<TripDto>.Success(tripDto);
             }
             catch (Exception ex)
