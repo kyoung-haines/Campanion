@@ -88,38 +88,29 @@ namespace App.API.Repositories
         /// A Result object of type Profile that contains an updated object of the respective Profile if the update is successful, or an error message if the operation fails.
         /// See <see cref="Result{T}"/> for more details on the return object.
         /// </returns>
-        public async Task<Profile> UpdateProfileAsync(int id)
+        public async Task<Profile> UpdateProfileAsync(Profile profile)
         {
             try
             {
                 _logger.LogInformation("ProfileRepository method called: UpdateProfileAsync...");
-                _logger.LogInformation($"Attempting to retrieve profile with ID: {id}...");
-                var profile = await GetProfileByIdAsync(id);
+                _logger.LogInformation($"Attempting to retrieve profile with ID: {profile.ProfileId}...");
 
                 if(profile == null)
                 {
-                    _logger.LogWarning($"Profile with ID: {id} not found...");
+                    _logger.LogWarning($"Profile with ID: {profile.ProfileId} not found...");
                     throw new InvalidProfileIdException(); // throws default message
                 }
 
                 _context.Update<Profile>(profile);
                 var saveResult = await _context.SaveChangesAsync();
 
-                if (saveResult == 0)
-                {
-                    _logger.LogError($"Failed to save profile...");
-
-                    while (saveResult == 0)
-                    {
-                        saveResult = await _context.SaveChangesAsync();
-                    }
-                }
+                _logger.LogInformation("Profile successfully updated...");
 
                 return profile;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to update profile with ID: {id}...");
+                _logger.LogError(ex, $"Failed to update profile with ID: {profile.ProfileId}...");
                 throw;
             }
         }
@@ -181,16 +172,14 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<Profile> GetProfileByAppUserIdAsync(AppUser appUser)
+        public async Task<Profile> GetProfileByAppUserIdAsync(string appUserId)
         {
             try
             {
                 _logger.LogInformation("ProfileRepository method called: GetProfileByAppUserId...");
-                _logger.LogInformation($"Attempting to retrieve profile for user: {appUser.Id}...");
+                _logger.LogInformation($"Attempting to retrieve profile for user: {appUserId}...");
 
-                string appUserId = appUser.Id;
-
-                List<Profile> allProfiles = _context.Profiles.ToList<Profile>();
+                List<Profile> allProfiles = _context.Profiles.ToList();
                 Profile profileById = new();
 
                 foreach (var profile in allProfiles)
