@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using App.API.Models.Identity;
 using App.API.Exceptions.CampgroundExceptions;
+using App.API.Exceptions.AppUserFavouriteCampgroundExceptions;
 
 namespace App.API.Repositories
 {
@@ -150,7 +151,11 @@ namespace App.API.Repositories
                 _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: AddNewAppUserFavouriteCampgroundAsync...");
                 _logger.LogInformation($"Attempting to add new favourite campground for user: {appUserFavouriteCampground.AppUserId}...");
 
-
+                if (appUserFavouriteCampground == null)
+                {
+                    _logger.LogWarning("Incoming AppUserFavouriteCampground object is null...");
+                    throw new InvalidAppUserFavouriteCampgroundReferenceException();
+                }
 
                 await _context.AddAsync(appUserFavouriteCampground);
 
@@ -160,7 +165,7 @@ namespace App.API.Repositories
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, $"Failed to add new favourite campground for user: {appUserFavouriteCampground.AppUserId}...");
                 throw;
             }
         }
