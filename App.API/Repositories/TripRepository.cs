@@ -17,7 +17,7 @@ namespace App.API.Repositories
             _context = context;
         }
 
-        public async Task<List<Trip>> GetAllTripsAsync()
+        public async Task<IEnumerable<Trip>> GetAllTripsAsync()
         {
             try
             {
@@ -55,18 +55,16 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<Trip> UpdateTripAsync(int tripId)
+        public async Task<Trip> UpdateTripAsync(Trip trip)
         {
             try
             {
                 _logger.LogInformation("TripRepository method called: UpdateTripAsync...");
-                _logger.LogInformation($"Attempting to update trip with ID: {tripId}...");
-
-                var trip = await _context.Trips.FindAsync(tripId);
+                _logger.LogInformation($"Attempting to update trip with ID: {trip.TripId}...");
 
                 if (trip == null)
                 {
-                    _logger.LogWarning($"No trip with ID: {tripId} found. Check ID value...");
+                    _logger.LogWarning($"No trip with ID: {trip.TripId} found. Check ID value...");
                 }
 
                 _context.Update<Trip>(trip);
@@ -77,7 +75,7 @@ namespace App.API.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to update trip with ID: {tripId}...");
+                _logger.LogError(ex, $"Failed to update trip with ID: {trip.TripId}...");
                 throw;
             }
         }

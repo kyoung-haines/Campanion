@@ -4,7 +4,7 @@ namespace App.API.Repositories
 {
     public interface ITripRepository
     {
-        Task<List<Trip>> GetAllTripsAsync();
+        Task<IEnumerable<Trip>> GetAllTripsAsync();
         Task<Trip> UpdateTripAsync(Trip trip);
         Task<bool> DeleteTripAsync(int tripId);
         Task<Trip> CreateTripAsync(Trip trip);
