@@ -108,7 +108,7 @@ namespace App.API.Repositories
                 
                 _context.Update(originalCampground);
                
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                
                 _logger.LogInformation($"Campground with ID: {originalCampground.CampgroundId} successfully updated...");
 
@@ -129,7 +129,7 @@ namespace App.API.Repositories
                 
                 _context.Add<Campground>(newCampground);
                
-                _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 
                 _logger.LogInformation($"Campground successfully added...");
 
