@@ -40,11 +40,11 @@ namespace App.API.Services
                         tripDto.TripEndDate = Convert.ToString(trip.TripEndDate);
                         tripDto.TripCreationDate = Convert.ToString(trip.TripCreationDate);
 
-                        foreach (var attendee in trip.TripAttendees)
-                        {
-                            var attendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
-                            tripDto.TripAttendees.Add(attendeeName);
-                        }
+                        //foreach (var attendee in trip.TripAttendees)
+                        //{
+                        //    var attendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
+                        //    tripDto.TripAttendees.Add(attendeeName);
+                        //};
 
                         tripDtoList.Add(tripDto);
                     }
@@ -92,20 +92,20 @@ namespace App.API.Services
                 return Result<bool>.Failure("Failed to delete the trip. Please try again.");
             }
         }
-        public async Task<Result<TripDto>> CreateTripAsync(TripDto tripDto)
+        public async Task<Result<TripDto>> CreateTripAsync(CreateTripDto createTripDto)
         {
             try
             {
                 _logger.LogInformation("TripService method called: CreateTripAsync...");
  
-                Trip trip = new Trip
-                {
-                    TripId = tripDto.TripId,
-                    TripName = 
-                };
-                var createResult = await _tripRepository.CreateTripAsync(trip);
+                //Trip trip = new Trip
+                //{
+                //    TripId = tripDto.TripId,
+                //    TripName = 
+                //};
+                //var createResult = await _tripRepository.CreateTripAsync(trip);
 
-                return Result<TripDto>.Success(tripDto);
+                return Result<TripDto>.Success(new TripDto());
             }
             catch (Exception ex)
             {
@@ -141,9 +141,9 @@ namespace App.API.Services
                 _logger.LogInformation($"Attempting to retrieve trip with ID: {tripId}");
 
                 var trip = await _tripRepository.GetTripByTripIdAsync(tripId);
-                var tripDto = new TripDto(trip);
+                //var tripDto = new TripDto(trip);
 
-                return Result<TripDto>.Success(tripDto);
+                return Result<TripDto>.Success(new TripDto());
             }
             catch (Exception ex)
             {
