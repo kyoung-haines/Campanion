@@ -4,6 +4,7 @@ using App.API.Exceptions.AppUserExceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using App.API.Models.Identity;
+using App.API.Exceptions.CampgroundExceptions;
 
 namespace App.API.Repositories
 {
@@ -115,6 +116,31 @@ namespace App.API.Repositories
                 _logger.LogError(ex, "Failed to update favourite campground...");
                 throw;
             }   
+        }
+
+        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByCampgroundId(int campgroundId)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: GetFavouriteCampgroundByCampgroundId...");
+                _logger.LogInformation($"Attempting to retrieve favourite campground with campground ID: {campgroundId}...");
+
+                var campgrounds = await _context.AppUserFavouriteCampgrounds.ToListAsync();
+
+                var favouriteCampground = campgrounds.Where(campground => campground.CampgroundId == campgroundId).FirstOrDefault();
+
+                if (favouriteCampground == null)
+                {
+                    throw new InvalidCampgroundIdException();
+                }
+
+                return favouriteCampground;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
     }
 }
