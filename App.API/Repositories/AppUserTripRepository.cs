@@ -39,22 +39,33 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<IEnumerable<AppUserTrip>> RetrieveAllAppUserTripsByUserIdAsync(AppUser appUser)
+        public async Task<IEnumerable<AppUserTrip>> RetrieveAllAppUserTripsByUserIdAsync(string appUserId)
         {
             _logger.LogInformation("AppUserTripRepository method called: RetrieveAllTripsByUserIdAsync...");
-            _logger.LogInformation($"Attempting to retrieve all trips for user {appUser.Id}...");
+            _logger.LogInformation($"Attempting to retrieve all trips for user {appUserId}...");
 
             try
             {
                 var allTrips = await _context.AppUserTrips.ToListAsync();
 
-                var allTripsByUserId = allTrips.Where<AppUserTrip>(trip => trip.AppUserId == appUser.Id);
+                if (allTrips.Count == 0)
+                {
+                    _logger.LogInformation("Trips list is empty. Either no user has saved any trips, or this is an error...");
+                    return allTrips;
+                }
+
+                var allTripsByUserId = allTrips.Where<AppUserTrip>(trip => trip.AppUserId == appUserId).ToList<AppUserTrip>();
+
+                if (allTripsByUserId.Count == 0)
+                {
+                    _logger.LogInformation($"User trips list is empty, or there was an error...");
+                }
 
                 return allTripsByUserId;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to retrieve trips for user: {appUser.Id}...");
+                _logger.LogError(ex, $"Failed to retrieve trips for user: {appUserId}...");
                 throw;
             }
         }

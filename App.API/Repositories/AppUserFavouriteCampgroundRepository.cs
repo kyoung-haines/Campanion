@@ -89,19 +89,32 @@ namespace App.API.Repositories
             return appUserFavourites;
         }
 
-        Task<Result<bool>> IAppUserFavouriteCampgroundRepository.DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
+        public async Task<AppUserFavouriteCampground> UpdateFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: UpdateFavouriteCampgroundAsync...");
+                _logger.LogInformation($"Attempting to update favourite campground: {favouriteCampground.CampgroundId} for user: {favouriteCampground.AppUserId}...");
 
-        Task<Result<List<AppUserFavouriteCampground>>> IAppUserFavouriteCampgroundRepository.GetAllFavouriteCampgroundsAsync(string appUserId)
-        {
-            throw new NotImplementedException();
-        }
+                if (favouriteCampground == null)
+                {
+                    _logger.LogWarning("Unable to edit favourite campground: object is null...");
+                    throw new NullReferenceException("Failed to update favourite campground. The record is null.");
+                }
+                else
+                {
+                    _context.Update<AppUserFavouriteCampground>(favouriteCampground);
+                    var saveTransactoin = await _context.SaveChangesAsync();
 
-        Task<Result<AppUserFavouriteCampground>> IAppUserFavouriteCampgroundRepository.GetFavouriteCampgroundByPrimaryKey(int campId, string userId)
-        {
-            throw new NotImplementedException();
+                    _logger.LogInformation("Successfully updates the favourite campground record...");
+                    return favouriteCampground;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update favourite campground...");
+                throw;
+            }   
         }
     }
 }

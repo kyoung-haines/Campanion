@@ -9,7 +9,7 @@ namespace App.API.Repositories
 {
     public class AppUserRepository : IAppUserRepository
     {
-        private readonly ILogger<AppUserRepository> _logger;
+        private readonly ILogger<IAppUserRepository> _logger;
         private readonly UserManager<AppUser> _userManager;
 
         public AppUserRepository(ILogger<AppUserRepository> logger, UserManager<AppUser> context)
@@ -158,30 +158,28 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<AppUser> UpdateAppUserAsync(string appUserId)
+        public async Task<AppUser> UpdateAppUserAsync(AppUser appUser)
         {
             try
             {
                 _logger.LogInformation("AppUserRepository method called: UpdateAppUserAsync...");
-                _logger.LogInformation($"Attempting to retrieve user: {appUserId}");
-
-                var appUser = await _userManager.FindByIdAsync(Convert.ToString(appUserId));
+                _logger.LogInformation($"Attempting to retrieve user: {appUser.Id}");
 
                 if(appUser == null)
                 {
-                    _logger.LogError($"AppUser is null. AppUser: {appUserId} doesn't exist...");
-                    throw new InvalidUserIdException($"Failed to retrieve user. ID: {appUserId} is invalid.");
+                    _logger.LogError($"AppUser is null. AppUser: {appUser.Id} doesn't exist...");
+                    throw new InvalidUserIdException($"Failed to retrieve user. ID: {appUser.Id} is invalid.");
                 }
 
                 var updatedResult = await _userManager.UpdateAsync(appUser);
 
                 if (updatedResult.Succeeded == true)
                 {
-                    _logger.LogInformation($"Successfully updated AppUser: {appUserId}...");
+                    _logger.LogInformation($"Successfully updated AppUser: {appUser.Id}...");
                 }
                 else
                 {
-                    _logger.LogInformation($"Failed to update AppUser: {appUserId}");
+                    _logger.LogInformation($"Failed to update AppUser: {appUser.Id}");
                     throw new DbUpdateException("Failed to delete the user from the database. Please try again.");
                 }
 
@@ -189,7 +187,7 @@ namespace App.API.Repositories
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Failed to update AppUser: {appUserId}...");
+                _logger.LogError(ex, $"Failed to update AppUser: {appUser.Id}...");
                 throw;
             }
         }
