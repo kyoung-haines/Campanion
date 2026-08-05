@@ -9,7 +9,7 @@ namespace App.API.Repositories
 {
     public class AppUserRepository : IAppUserRepository
     {
-        private readonly ILogger<IAppUserRepository> _logger;
+        private readonly ILogger<AppUserRepository> _logger;
         private readonly UserManager<AppUser> _userManager;
 
         public AppUserRepository(ILogger<AppUserRepository> logger, UserManager<AppUser> context)
