@@ -1,4 +1,5 @@
 ﻿using App.API.Models.Campgrounds;
+using Campanion.Shared.Dtos.AppUserDtos;
 using App.API.Repositories;
 using System.Data;
 using System.Runtime.CompilerServices;
@@ -16,25 +17,22 @@ namespace App.API.Services
             _favCampgroundRepo = _repo;
         }
 
-        public async Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground)
+        public async Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampgroundDto favCampgroundDto)
         {
             try
             {
                 _logger.LogInformation($"Attempting to delete campground from favourites...");
 
-                if(favCampground == null)
+                if(favCampgroundDto == null)
                 {
                     _logger.LogWarning($"Favourite Campground cannot be deleted. Object is null...");
                 }
 
-                var result = await _favCampgroundRepo.DeleteFavouriteCampgroundAsync(favCampground);
+                var favouriteCampground = await _favCampgroundRepo.GetFavouriteCampgroundByCampgroundId(Convert.ToInt32(favCampgroundDto.CampgroundId));
 
-                if(result.Succeeded == true)
-                {
-                    _logger.LogInformation($"Campground successfully removed from favourites...");
-                }
+                var result = await _favCampgroundRepo.DeleteFavouriteCampgroundAsync(favouriteCampground);
 
-                return result;
+                return Result<bool>.Success(true);
             }
             catch (Exception ex)
             {
@@ -44,10 +42,28 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<AppUserFavouriteCampground>> AddFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground)
+        public async Task<Result<AppUserFavouriteCampgroundDto>> AddFavouriteCampgroundAsync(AppUserFavouriteCampgroundDto favCampgroundDto)
         {
-            return Result<AppUserFavouriteCampground>.Failure("Testing...");
+            try
+            {
+                _logger.LogInformation("AppUserFavouriteCampgroundService method called: AddNewFavouriteCampgroundAscync...");
+                _logger.LogInformation($"Attempting to add new favourite campground for user: {favCampgroundDto.AppUserId}...");
+
+                var favouriteCampgroundObject = await _favCampgroundRepo.GetFavouriteCampgroundByPrimaryKeyAsync(Convert.ToInt32(favCampgroundDto.CampgroundId), favCampgroundDto.AppUserId);
+
+                await _favCampgroundRepo.AddNewAppUserFavouriteCampgroundAsync(favouriteCampgroundObject);
+
+                
+
+                return Result<AppUserFavouriteCampgroundService>.Success(favouriteCampgroundDto);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
+
         public async Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(string appUserId)
         {
             try

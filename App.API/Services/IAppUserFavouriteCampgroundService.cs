@@ -1,12 +1,12 @@
-﻿using App.API.Models.Campgrounds;
+﻿using Campanion.Shared.Dtos.AppUserDtos;
 namespace App.API.Services
 {
     public interface IAppUserFavouriteCampgroundService
     {
-        public Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
-        public Task<Result<AppUserFavouriteCampground>> AddFavouriteCampgroundAsync(AppUserFavouriteCampground favCampground);
-        public Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsAsync(string appUserId);
-        public Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, string userId);
+        public Task<Result<bool>> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampgroundDto favCampgroundDto);
+        public Task<Result<AppUserFavouriteCampgroundDto>> AddFavouriteCampgroundAsync(AppUserFavouriteCampgroundDto favCampgroundDto);
+        public Task<Result<List<AppUserFavouriteCampgroundsDto>>> GetAllFavouriteCampgroundsAsync(string appUserId);
+        public Task<Result<AppUserFavouriteCampgroundDto>> GetFavouriteCampgroundByPrimaryKey(int campId, string userId);
 
     }
 }
