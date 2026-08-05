@@ -142,5 +142,27 @@ namespace App.API.Repositories
                 throw;
             }
         }
+
+        public async Task<AppUserFavouriteCampground> AddNewAppUserFavouriteCampgroundAsync(AppUserFavouriteCampground appUserFavouriteCampground)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: AddNewAppUserFavouriteCampgroundAsync...");
+                _logger.LogInformation($"Attempting to add new favourite campground for user: {appUserFavouriteCampground.AppUserId}...");
+
+
+
+                await _context.AddAsync(appUserFavouriteCampground);
+
+                await _context.SaveChangesAsync();
+
+                return appUserFavouriteCampground;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }
