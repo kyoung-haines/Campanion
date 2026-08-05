@@ -6,6 +6,8 @@ namespace App.API.Repositories
     public interface IAppUserTripRepository
     {
         public Task<AppUserTrip> AddNewAppUserTripAsync(AppUser appUser, Trip trip);
-        public Task<IEnumerable<AppUserTrip>> RetrieveAllAppUserTripsByUserIdAsync(AppUser appUser);
+        public Task<IEnumerable<AppUserTrip>> RetrieveAllAppUserTripsByUserIdAsync(string appUserId);
+        public Task<AppUserTrip> UpdateAppUserTripAsync(AppUserTrip appUserTrip);
+        public Task DeleteAppUserTripAsync(int tripId);
     }
 }

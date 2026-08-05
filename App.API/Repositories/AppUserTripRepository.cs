@@ -69,5 +69,58 @@ namespace App.API.Repositories
                 throw;
             }
         }
+
+        public async Task<AppUserTrip> UpdateAppUserTripAsync(AppUserTrip appUserTrip)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserTripRepository method called: UpdateAppUserTripAsync...");
+                _logger.LogInformation($"Attempting to update trip {appUserTrip.TripId}...");
+
+                _context.Update<AppUserTrip>(appUserTrip);
+
+                await _context.SaveChangesAsync();
+
+                return appUserTrip;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to update user's trip...");
+                throw;
+            }
+        }
+
+        public async Task DeleteAppUserTripAsync(int tripId)
+        {
+            try
+            {
+                _logger.LogInformation("AppUserTripRepository method called: DeleteAppUserTripAsync...");
+                _logger.LogInformation($"Attempting to delete trip: {tripId}...");
+
+                var appUserTrip = await _context.FindAsync<AppUserTrip>(tripId);
+
+                if (appUserTrip == null)
+                {
+                    _logger.LogInformation("AppUserTrip is null. This trip likely doesn't exist. Check the TripId value exists...");
+                    return;
+                }
+
+                var removeAction = _context.Remove<AppUserTrip>(appUserTrip);
+
+                var deletionConfirmation = await _context.FindAsync<AppUserTrip>(tripId);
+
+                if (deletionConfirmation == null)
+                {
+                    _logger.LogInformation($"Trip {tripId} has been successfully deleted...");
+                }
+
+                return;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Failed to delete trip: {tripId}...");
+                throw;
+            }
+        }
     }
 }
