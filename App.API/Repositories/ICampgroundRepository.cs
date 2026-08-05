@@ -4,7 +4,7 @@ namespace App.API.Repositories
 {
     public interface ICampgroundRepository
     {
-        public Task<List<Campground>> GetAllCampgroundsAsync();
+        public Task<IEnumerable<Campground>> GetAllCampgroundsAsync();
         public Task<Campground> GetCampgroundByIdAsync(int id);
         public Task<Campground> UpdateCampgroundAsync(Campground campground);
         public Task<bool> DeleteCampgroundAsync(int id);

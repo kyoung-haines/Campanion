@@ -48,7 +48,7 @@ namespace App.API.Repositories
             }
         }
 
-        public async Task<List<Campground>> GetAllCampgroundsAsync()
+        public async Task<IEnumerable<Campground>> GetAllCampgroundsAsync()
         {
             try
             {
