@@ -70,7 +70,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<List<AppUserFavouriteCampground>>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
+        public async Task<Result<List<AppUserFavouriteCampgroundDto>>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
         {
             try
             {
@@ -87,14 +87,23 @@ namespace App.API.Services
                     }
                 }
 
-                return Result<List<AppUserFavouriteCampground>>.Success(favCampgrounds);
+                var favCampgroundsDtoList = new List<AppUserFavouriteCampgroundDto>();
+
+                foreach (var fav in favCampgrounds)
+                {
+                    var newFavCampDto = await this.ToDtoAsync(fav);
+                    
+                    favCampgroundsDtoList.Add(newFavCampDto);
+                }
+
+                return Result<List<AppUserFavouriteCampgroundDto>>.Success(favCampgroundsDtoList);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to retrieve user's favourite campgrounds. See exception for details...");
 
-                return Result<List<AppUserFavouriteCampground>>.Failure("Failed to retrieve user's favourite campgrounds.");
+                return Result<List<AppUserFavouriteCampgroundDto>>.Failure("Failed to retrieve user's favourite campgrounds.");
             }            
         }
         public async Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, string userId, UserManager<AppUser> appUserManager)
