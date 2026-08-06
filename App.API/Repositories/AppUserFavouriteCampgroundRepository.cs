@@ -49,7 +49,7 @@ namespace App.API.Repositories
                 throw;
             }
         }
-        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsByIdAsync(string appUserId)
+        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
         {
             try
             {
@@ -85,10 +85,10 @@ namespace App.API.Repositories
                 throw;
             }
         }
-        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKey(int campId, string userId)
+        public async Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKeyAsync(int campId, string userId)
         {
-            var appUserFavourites = new AppUserFavouriteCampground();
-            return appUserFavourites;
+            var appUserFavourite = new AppUserFavouriteCampground();
+            return appUserFavourite;
         }
 
         public async Task<AppUserFavouriteCampground> UpdateFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground)
