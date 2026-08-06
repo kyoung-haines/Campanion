@@ -59,7 +59,7 @@ namespace App.API.Services
 
                 var campgrounds = await _campgroundRepo.GetAllCampgroundsAsync();
 
-                Result<List<Campground>> campgroundResults = Result<List<Campground>>.Success(campgrounds);
+                Result<List<Campground>> campgroundResults = Result<List<Campground>>.Success(campgrounds.ToList<Campground>());
 
                 return campgroundResults;
             }
