@@ -9,5 +9,6 @@ namespace App.API.Repositories
         Task<AppUserFavouriteCampground> UpdateFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground);
         Task<AppUserFavouriteCampground> GetFavouriteCampgroundByCampgroundId(int campgroundId);
         Task<AppUserFavouriteCampground> AddNewAppUserFavouriteCampgroundAsync(AppUserFavouriteCampground appUserFavouriteCampground);
+        Task<List<AppUserFavouriteCampground>> GetAllAppUserFavouriteCampgrounds();
     }
 }
