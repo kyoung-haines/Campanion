@@ -169,5 +169,23 @@ namespace App.API.Repositories
                 throw;
             }
         }
+
+        public async Task<List<AppUserFavouriteCampground>> GetAllAppUsersFavouriteCampgrounds()
+        {
+            try
+            {
+                _logger.LogInformation("AppUserFavouriteCampgroundRepository method called: GetAllAppUsersFavouriteCampgroundsAsync...");
+                _logger.LogInformation($"Attempting to retrieve all favourite camps for all users...");
+
+                var allFavouriteCampgrounds = await _context.AppUserFavouriteCampgrounds.ToListAsync();
+
+                return allFavouriteCampgrounds;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to retrieve all favourite campgrounds for all users...");
+                throw;
+            }
+        }
     }
 }
