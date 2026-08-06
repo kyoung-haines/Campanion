@@ -49,7 +49,7 @@ namespace App.API.Repositories
                 throw;
             }
         }
-        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync(string appUserId)
+        public async Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsByIdAsync(string appUserId)
         {
             try
             {

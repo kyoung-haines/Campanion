@@ -3,7 +3,7 @@ namespace App.API.Repositories
 {
     public interface IAppUserFavouriteCampgroundRepository
     {
-        Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsAsync(string appUserId);
+        Task<List<AppUserFavouriteCampground>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId);
         Task<AppUserFavouriteCampground> GetFavouriteCampgroundByPrimaryKeyAsync(int campId, string userId);
         Task<bool> DeleteFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground);
         Task<AppUserFavouriteCampground> UpdateFavouriteCampgroundAsync(AppUserFavouriteCampground favouriteCampground);
