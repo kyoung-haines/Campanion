@@ -13,6 +13,9 @@ namespace App.API.Models.Trips
         public DateTime TripCreationDate { get; set; }
         public List<AppUser> TripAttendees { get; set; } = new List<AppUser>();
 
+        // Navigational Properties
+        public List<AppUserTrip> AppUserTrips { get; set; }
+
         // HELPERS
         public async Task<TripDto> ConvertTripObjecToTripDtoAsync(Trip trip)
         {
@@ -26,11 +29,17 @@ namespace App.API.Models.Trips
                 TripCreationDate = trip.TripCreationDate.ToString(),
                 TripAttendees = null
             };
-
+                
+            var attendees = trip.AppUserTrips.Select(appUserTrip => appUserTrip.AppUserId).ToList();
+            
             foreach (var attendee in trip.TripAttendees)
             {
-                var tripAttendee = attendee.AppUserFirstName + attendee.AppUserLastName;
-                tripDto.TripAttendees.Add(tripAttendee);
+                TripAttendeeDto tripAttendeeDto = new();
+                tripAttendeeDto.TripAttendeeName = attendee.AppUserFirstName + attendee.AppUserLastName;
+                tripAttendeeDto.TripAttendeeEmail = attendee.Email;
+                tripAttendeeDto.TripAttendeeProfileImagePath = attendee.AppUserProfile.ProfileImagePath;
+                
+                tripDto.TripAttendees.Add(tripAttendeeDto);
             }
 
             return tripDto;

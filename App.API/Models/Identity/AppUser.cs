@@ -1,6 +1,8 @@
 ﻿using App.API.Enums;
 using App.API.Models.Campgrounds;
+using App.API.Models.Trips;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Models.Identity
 {
@@ -139,6 +141,9 @@ namespace App.API.Models.Identity
         /// </remarks>
         /// </summary>
         public Profile? AppUserProfile { get; set; }
+
+        // Navigational Properties
+        public List<AppUserTrip> AppUserTrips { get; set; }
     }
 }
 
