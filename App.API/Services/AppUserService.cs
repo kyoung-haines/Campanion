@@ -114,7 +114,8 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("AppUserService method called: UpdateAppUserByIdAsync...");
-                var updateUser = await _repository.UpdateAppUserAsync(id);
+                var appUser = await _repository.GetAppUserByIdAsync(id);
+                var updateUser = await _repository.UpdateAppUserAsync(appUser);
                 return Result<AppUser>.Success(updateUser);
             }
             catch (Exception ex)
