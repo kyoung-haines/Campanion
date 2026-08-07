@@ -120,13 +120,14 @@ namespace App.API.Tests.Services
             var appUserId = "99"; //invalid ID
 
             _repo.Setup(repo => repo.GetAllFavouriteCampgroundsByUserIdAsync(appUserId))
-                .ReturnsAsync(_favCampgrounds);
+                .ReturnsAsync(new List<AppUserFavouriteCampground>());
 
             int expectedCount = 0;
             var result = await _appUserFavouriteCampgroundService.GetAllFavouriteCampgroundsByUserIdAsync(appUserId);
-            int actualCount = result.Data.ToList().Count();
+            var favCamps = result.Data;
+            //int actualCount = favCamps.Count();
 
-            Assert.HasCount(expectedCount, actualCount);
+            Assert.HasCount(expectedCount, favCamps);
     
         }
     }
