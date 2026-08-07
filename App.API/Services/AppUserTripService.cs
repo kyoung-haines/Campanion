@@ -1,4 +1,4 @@
-﻿using Campanion.Shared.Dtos.TripDtos;
+﻿using Campanion.Shared.Dtos.AppUserDtos;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
 using App.API.Repositories;
@@ -7,64 +7,69 @@ namespace App.API.Services
 {
     public class AppUserTripService : IAppUserTripService
     {
-        private readonly IAppUserTripRepository _tripRepository;
+        private readonly IAppUserTripRepository _appUserTripRepository;
         private readonly ILogger<IAppUserTripService> _logger;
         private readonly IAppUserService _appUserService;
         private readonly ITripService _tripService;
         public AppUserTripService(IAppUserTripRepository tripRepo, ILogger<IAppUserTripService> logger, IAppUserService appUserService, ITripService tripService)
         {
-            _tripRepository = tripRepo;
+            _appUserTripRepository = tripRepo;
             _logger = logger;
             _appUserService = appUserService;
             _tripService = tripService;
         }
 
-        public async Task<Result<AppUserTrip>> AddNewAppUserTripAsync(string appUserId, int tripId)
+        public async Task<Result<AppUserTripDto>> AddNewAppUserTripAsync(string appUserId, int tripId)
         {
-            TripDto trip = null;
-            AppUser appUser = null;
-
             try
             {
                 _logger.LogInformation("AppUserTripService method called: AddNewTripAsync...");
-                _logger.LogInformation($"Attempting to add a new app user trip to the database for user: {appUser.Id} and trip: {trip.TripId}...");
+                _logger.LogInformation($"Attempting to add a new app user trip to the database for user: {appUserId} and trip: {tripId}...");
 
-                var tripResult = await _tripService.GetTripByIdAsync(tripId);
-                trip = tripResult.Data;
+                var appUserTrip = new AppUserTrip
+                {
+                    AppUserId = appUserId,
+                    TripId = tripId
+                };
 
-                var appUserTrip = await _tripRepository.AddNewAppUserTripAsync(appUser, trip);
+                var appUserTripDto = await appUserTrip.AppUserTripToDTOAsync(appUserTrip);
 
-                return Result<AppUserTrip>.Success(appUserTrip);
+                return Result<AppUserTripDto>.Success(appUserTripDto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to add new app user trip to the database...");
-                return Result<AppUserTrip>.Failure("Failed to add user trip to the database. Please try again.");
+                return Result<AppUserTripDto>.Failure("Failed to add user trip to the database. Please try again.");
             }
            
         }
 
-        public async Task<Result<IEnumerable<AppUserTrip>>> RetrieveAllAppUserTripsByUserIdAsync(string appUserId)
+        public async Task<Result<IEnumerable<AppUserTripDto>>> RetrieveAllAppUserTripsByUserIdAsync(string appUserId)
         {
-            AppUser appUser = null;
-            
             try
             {
                 _logger.LogInformation("AppUserTripService method called: RetrieveAllAppUserTripsByUserIdAsync...");
                 
                 var appUserResult = await _appUserService.GetAppUserByIdAsync(appUserId);
-                appUser = appUserResult.Data;
+                var appUser = appUserResult.Data;
 
                 _logger.LogInformation($"Attempting to retrieve all trips for user: {appUser.Id}...");
 
-                var appUserTrips = await _tripRepository.RetrieveAllAppUserTripsByUserIdAsync(appUser);
+                var appUserTrips = await _appUserTripRepository.RetrieveAllAppUserTripsByUserIdAsync(appUserId);
+                List<AppUserTripDto> appUserTripsDto = new();
 
-                return Result<IEnumerable<AppUserTrip>>.Success(appUserTrips);
+                foreach(var trip in appUserTrips)
+                {
+                    AppUserTrip appUserTrip = new();
+                    var appUserTripDto = await appUserTrip.AppUserTripToDTOAsync(appUserTrip);
+                    appUserTripsDto.Add(appUserTripDto);
+                }
+                return Result<IEnumerable<AppUserTripDto>>.Success(appUserTripsDto);
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to retrieve trips for user: {appUser.Id}...");
-                return Result<IEnumerable<AppUserTrip>>.Failure("Failed to retrieve trips. Please try again.");
+                _logger.LogError($"Failed to retrieve trips for user: {appUserId}...");
+                return Result<IEnumerable<AppUserTripDto>>.Failure("Failed to retrieve trips. Please try again.");
             }
         }
     }
