@@ -17,8 +17,7 @@ namespace App.API.Services
         public AppUserFavouriteCampgroundService(
             ILogger<AppUserFavouriteCampgroundService> logger, 
             IAppUserFavouriteCampgroundRepository _repo,
-            ICampgroundService campgroundService,
-            IAppUserFavouriteCampgroundService appUserFavouriteCampgroundService)
+            ICampgroundService campgroundService)
         {
             _logger = logger;
             _favCampgroundRepo = _repo;
@@ -70,7 +69,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<AppUserFavouriteCampgroundsDto>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
+        public async Task<Result<List<AppUserFavouriteCampgroundDto>>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
         {
             try
             {
@@ -97,7 +96,7 @@ namespace App.API.Services
                     favCampgroundsDto.FavouriteCampgrounds.Add(newFavCampDto);
                 }
 
-                return Result<AppUserFavouriteCampgroundsDto>.Success(favCampgroundsDto);
+                return Result<ListAppUserFavouriteCampgroundDto>>.Success(favCampgroundsDto);
 
             }
             catch (Exception ex)

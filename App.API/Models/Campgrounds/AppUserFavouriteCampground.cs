@@ -1,4 +1,5 @@
-﻿using Campanion.Shared.Dtos.AppUserDtos;
+﻿using App.API.Models.Identity;
+using Campanion.Shared.Dtos.AppUserDtos;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Models.Campgrounds
@@ -10,15 +11,21 @@ namespace App.API.Models.Campgrounds
         public int CampgroundId { get; set; }
         public DateTime FavouritedAt { get; set; }
 
-        //public AppUserFavouriteCampgroundDto ToDto(AppUserFavouriteCampground favCampground)
-        //{
-        //    var campground = 
-        //    var appUserFavouriteCampgroundDto = new AppUserFavouriteCampgroundDto
-        //    {
-        //        AppUserId = favCampground.AppUserId,
-        //        CampgroundId = favCampground.CampgroundId.ToString(),
-        //        CampgroundName = favCampground.
-        //    };
-        //}
+        // Navigational Properties
+        public AppUser AppUser { get; set; }
+        public Campground Campground { get; set; }
+
+        public AppUserFavouriteCampgroundDto ToDto(AppUserFavouriteCampground favCampground)
+        {
+             
+            var appUserFavouriteCampgroundDto = new AppUserFavouriteCampgroundDto
+            {
+                AppUserId = favCampground.AppUserId,
+                CampgroundId = favCampground.CampgroundId.ToString(),
+                CampgroundName = favCampground.Campground.CampgroundName
+            };
+
+            return appUserFavouriteCampgroundDto;
+        }
     }
 }
