@@ -1,5 +1,4 @@
 ﻿using App.API.Data;
-using App.API.Dtos.Trips.TripsDtos;
 using App.API.Exceptions.TripExceptions;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
