@@ -23,7 +23,7 @@ namespace App.API.Repositories
 
             try
             {
-                var appUserTrip = new AppUserTrip(appUser, trip); 
+                var appUserTrip = new AppUserTrip(); 
 
                 await _context.AppUserTrips.AddAsync(appUserTrip);
 
