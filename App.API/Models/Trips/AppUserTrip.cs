@@ -1,5 +1,7 @@
 ﻿using App.API.Models.Identity;
+using Campanion.Shared.Dtos.AppUserDtos;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace App.API.Models.Trips
 {
@@ -14,15 +16,17 @@ namespace App.API.Models.Trips
         public AppUser AppUser { get; set; }
         public Trip Trip { get; set; }
 
-        public AppUserTrip()
+        // Helper Methods
+        // DTO Conversion
+        public async Task<AppUserTripDto> AppUserTripToDTOAsync(AppUserTrip appUserTrip)
         {
+            var appUserTripDto = new AppUserTripDto
+            {
+                AppUserIdDto = appUserTrip.AppUserId,
+                TripIdDto = appUserTrip.TripId.ToString()
+            };
 
-        }
-
-        public AppUserTrip(AppUser appUser, Trip trip)
-        {
-            TripId = trip.TripId;
-            AppUserId = appUser.Id;
+            return appUserTripDto;
         }
     }
 }
