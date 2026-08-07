@@ -2,6 +2,7 @@
 using App.API.Models.Identity;
 using App.API.Models.Trips;
 using App.API.Repositories;
+using Campanion.Shared.Dtos.AppUserDtos;
 using Campanion.Shared.Dtos.ProfileDtos;
 using System.Security.Cryptography;
 
@@ -39,21 +40,22 @@ namespace App.API.Services
 			}
 		}
 
-		public async Task<Result<Profile>> UpdateProfileAsync(int id)
+		public async Task<Result<Profile>> UpdateProfileAsync(ProfileResponseDto profileDto)
 		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: UpdateProfileAsync...");
+				var profileResult = await this.GetProfileByProfileIdAsync(Convert.ToInt32(profileDto.ProfileId));
 
-				var profile = await _profileRepository.UpdateProfileAsync(id);
+				Profile profile = profileResult.Data;
 
-				Result<Profile> profileResult = Result<Profile>.Success(profile);
+				var profileUpdate = await _profileRepository.UpdateProfileAsync(profile);
 
-				return profileResult;
+				return Result<Profile>.Success(profile);
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Failed to update profile with ID: {id}...");
+				_logger.LogError(ex, $"Failed to update profile with ID: {profileDto.ProfileId}...");
 				return Result<Profile>.Failure($"An error occurred while updating the profile: {ex.Message}");
 			}
 		}
@@ -101,7 +103,7 @@ namespace App.API.Services
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByAppUserIdAsync...");
 
-				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser);
+				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser.Id);
 
 				_logger.LogInformation("Profile retrieved...");
 
@@ -116,17 +118,20 @@ namespace App.API.Services
 			}
 		}
 
-        public async Task<Result<List<AppUserFavouriteCampground>>> RetrieveProfileUserFavouriteCampgrounds(AppUserFavouriteCampgroundService appUserFavouriteCampgroundService, AppUser appUser)
+        public async Task<Result<List<AppUserFavouriteCampgroundDto>>> RetrieveProfileUserFavouriteCampgrounds(AppUserFavouriteCampgroundService appUserFavouriteCampgroundService)
         {
-            var userFavouriteCampgroundsResult = await appUserFavouriteCampgroundService.GetAllFavouriteCampgroundsAsync(appUser.Id);
+			var allFavouriteCampgroundDtosResult = await appUserFavouriteCampgroundService.GetAllAppUsersFavouriteCampgroundDtos();
+			var allFavouriteCampgrounds = allFavouriteCampgroundDtosResult.Data;
 
-            return userFavouriteCampgroundsResult;
+			return Result<List<AppUserFavouriteCampgroundDto>>.Success(allFavouriteCampgrounds);
         }
 
-        public async Task<Result<List<AppUserTrip>>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
+        public async Task<Result<List<AppUserTripDto>>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser)
         {
-			var appUserTripsResult = await _appUserTripService.RetrieveAllAppUserTripsByUserIdAsync(appUser.Id);
-			return appUserTripsResult.Data;
+			var appUserTripDtosResult = await _appUserTripService.RetrieveAllAppUserTripsByUserIdAsync(appUser.Id);
+			var appUserTripDtos = appUserTripDtosResult.Data.ToList();
+
+			return Result<List<AppUserTripDto>>.Success(appUserTripDtos);
         }
     }
 }
