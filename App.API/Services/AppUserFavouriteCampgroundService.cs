@@ -70,7 +70,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<List<AppUserFavouriteCampgroundDto>>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
+        public async Task<Result<AppUserFavouriteCampgroundsDto>> GetAllFavouriteCampgroundsByUserIdAsync(string appUserId)
         {
             try
             {
@@ -87,28 +87,25 @@ namespace App.API.Services
                     }
                 }
 
+                var favCampgroundsDto = new AppUserFavouriteCampgroundsDto();
                 var favCampgroundsDtoList = new List<AppUserFavouriteCampgroundDto>();
 
                 foreach (var fav in favCampgrounds)
                 {
                     var newFavCampDto = await this.ToDtoAsync(fav);
                     
-                    favCampgroundsDtoList.Add(newFavCampDto);
+                    favCampgroundsDto.FavouriteCampgrounds.Add(newFavCampDto);
                 }
 
-                return Result<List<AppUserFavouriteCampgroundDto>>.Success(favCampgroundsDtoList);
+                return Result<AppUserFavouriteCampgroundsDto>.Success(favCampgroundsDto);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to retrieve user's favourite campgrounds. See exception for details...");
 
-                return Result<List<AppUserFavouriteCampgroundDto>>.Failure("Failed to retrieve user's favourite campgrounds.");
+                return Result<AppUserFavouriteCampgroundsDto>.Failure("Failed to retrieve user's favourite campgrounds.");
             }            
-        }
-        public async Task<Result<AppUserFavouriteCampground>> GetFavouriteCampgroundByPrimaryKey(int campId, string userId, UserManager<AppUser> appUserManager)
-        {
-            return Result<AppUserFavouriteCampground>.Failure("Not implemented...");
         }
 
         public async Task<Result<List<AppUserFavouriteCampgroundDto>>> GetAllAppUsersFavouriteCampgroundDtos()
@@ -137,7 +134,7 @@ namespace App.API.Services
             }
         }
 
-        // HELPET METHOD TO BE MOVED - EITHER INTO MODEL OR RESPECTIVE DTO
+        // HELPET METHOD TO BE MOVED - EITHER INTO MODEL OR INTO SHARED LIBRARY
         public async Task<AppUserFavouriteCampgroundDto> ToDtoAsync(AppUserFavouriteCampground favCampground)
         {
             var campgroundResult = await _campgroundService.GetCampgroundByIdAsync(favCampground.CampgroundId);
