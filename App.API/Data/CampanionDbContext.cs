@@ -21,5 +21,18 @@ namespace App.API.Data
         public DbSet<Trip> Trips { get; set; }
         public DbSet<AppUserTrip> AppUserTrips { get; set; }
         public DbSet<TripCampground> TripCampgrounds { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AppUserTrip>()
+                .HasOne(aut => aut.AppUser)
+                .WithMany(u => u.AppUserTrips)
+                .HasForeignKey(aut => aut.AppUserId);
+
+            modelBuilder.Entity<AppUserTrip>()
+                .HasOne(aut => aut.Trip)
+                .WithMany(t => t.AppUserTrips)
+                .HasForeignKey(aut => aut.TripId);
+        }
     }
 }
