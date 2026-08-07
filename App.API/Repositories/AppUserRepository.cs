@@ -11,7 +11,6 @@ namespace App.API.Repositories
     {
         private readonly ILogger<AppUserRepository> _logger;
         private readonly UserManager<AppUser> _userManager;
-
         public AppUserRepository(ILogger<AppUserRepository> logger, UserManager<AppUser> context)
         {
             _logger = logger;
