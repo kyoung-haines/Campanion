@@ -1,4 +1,4 @@
-﻿using App.API.Dtos.Trips.TripsDtos;
+﻿using Campanion.Shared.Dtos.TripDtos;
 using App.API.Models.Identity;
 using App.API.Models.Trips;
 using App.API.Repositories;
