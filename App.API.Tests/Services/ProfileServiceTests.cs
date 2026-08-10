@@ -25,14 +25,15 @@ namespace App.API.Tests.Services
         private AppUser _testUserUpdated;
         private Profile _testProfile;
         private Profile _testProfileUpdated;
+        private Mock<AppUserTripService> _mockTripService;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _mockLogger = new Mock<ILogger<ProfileService>>();
             _mockProfileRepository = new Mock<IProfileRepository>();
-            _profileService = new ProfileService(_mockLogger.Object, _mockProfileRepository.Object);
-
+            _mockTripService = new Mock<AppUserTripService>();
+            _profileService = new ProfileService(_mockLogger.Object, _mockProfileRepository.Object, _mockTripService.Object);
             _testUser = new AppUser
             {
                 Id = "1",
@@ -101,11 +102,13 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task UpdateProfileValidIdUpdatesProfile()
         {
-            _mockProfileRepository.Setup(repo => repo.UpdateProfileAsync(1))
-                .ReturnsAsync(_testProfileUpdated);
+            _mockProfileRepository.Setup(repo => repo.UpdateProfileAsync(_testProfile))
+                .ReturnsAsync(_testProfile);
+
+            var profileDto = await _testProfile.ConvertProfileObjectToResponseDto(_testProfile, _testUser);
 
             var expectedResult = Result<Profile>.Success(_testProfileUpdated);
-            var actualResult = await _profileService.UpdateProfileAsync(1);
+            var actualResult = await _profileService.UpdateProfileAsync(profileDto);
 
             Assert.AreEqual(expectedResult.Data, actualResult.Data);
             Assert.AreNotEqual(actualResult.Data, _testProfile);
