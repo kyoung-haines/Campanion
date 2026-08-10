@@ -33,6 +33,16 @@ namespace App.API.Data
                 .HasOne(aut => aut.Trip)
                 .WithMany(t => t.AppUserTrips)
                 .HasForeignKey(aut => aut.TripId);
+
+            modelBuilder.Entity<AppUserFavouriteCampground>()
+                .HasOne(afc => afc.AppUser)
+                .WithMany(u => u.AppUserFavouriteCampgrounds)
+                .HasForeignKey(afc => afc.AppUserId);
+
+            modelBuilder.Entity<AppUserFavouriteCampground>()
+                .HasOne(afc => afc.Campground)
+                .WithMany(c => c.FavouritedBy)
+                .HasForeignKey(afc => afc.CampgroundId);
         }
     }
 }
