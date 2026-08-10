@@ -1,6 +1,7 @@
 ﻿using App.API.Enums;
 using App.API.Models.Campgrounds;
 using App.API.Models.Trips;
+using Campanion.Shared.Dtos.AppUserDtos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -144,6 +145,25 @@ namespace App.API.Models.Identity
 
         // Navigational Properties
         public List<AppUserTrip> AppUserTrips { get; set; }
+
+        // Helper methods
+        public async Task<AppUserDto> ToDoAsync(AppUser appUser)
+        {
+            var appUserDto = new AppUserDto
+            {
+                AppUserEmail = appUser.Email,
+                AppUserType = appUser.AppUserType.ToString(),
+                AppUserFirstName = appUser.AppUserFirstName,
+                AppUserLastName = appUser.AppUserLastName,
+                AppUserPhone = appUser.PhoneNumber,
+                AppUserStreetAddress = appUser.AppUserStreetAddress,
+                AppUserCity = appUser.AppUserCity,
+                AppUserProvince = appUser.AppUserProvince,
+                AppUserCountry = appUser.AppUserCountry
+            };
+
+            return appUserDto;
+        }
     }
 }
 

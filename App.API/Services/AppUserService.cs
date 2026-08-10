@@ -2,6 +2,7 @@
 using App.API.Models.Identity;
 using App.API.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Campanion.Shared.Dtos.AppUserDtos;
 
 namespace App.API.Services
 {
@@ -16,14 +17,23 @@ namespace App.API.Services
             _repository = repo;
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAppUsersAsync()
+        public async Task<Result<List<AppUserDto>>> GetAllAppUsersAsync()
         {
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAllAppUsersAsync...");
                 var allUsers = await _repository.GetAllAppUsersAsync();
 
-                var allUsersResult = Result<List<AppUser>>.Success(allUsers);
+                var allUsersDtoList = new List<AppUserDto>();
+
+                foreach (var user in allUsers)
+                {
+                    var userDto = await user.ToDoAsync(user);
+
+                    allUsersDtoList.Add(userDto);
+                }
+
+                var allUsersResult = Result<List<AppUserDto>>.Success(allUsersDtoList);
 
                 _logger.LogInformation("AppUserService successfully retrieved all users from the repository layer...");
                 _logger.LogInformation("AppUserService sending users list...");
@@ -33,11 +43,11 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError("Failed to retrieve users...", ex.Message);
-                return Result<List<AppUser>>.Failure($"Failed to retrieve all users...\n{ex.Message}");
+                return Result<List<AppUserDto>>.Failure($"Failed to retrieve all users...\n{ex.Message}");
             }            
         }
 
-        public async Task<Result<List<AppUser>>> GetAllAppAdminsAsync()
+        public async Task<Result<List<AppUserDto>>> GetAllAppAdminsAsync()
         {
             try
             {
@@ -45,32 +55,46 @@ namespace App.API.Services
 
                 var allAdmins = await _repository.GetAllAdminAppUsersAsync();
 
-                var allAdminsResult = Result<List<AppUser>>.Success(allAdmins);
+                var allAdminsDtoList = new List<AppUserDto>();
+
+                foreach (var admin in allAdmins)
+                {
+                    var adminDto = await admin.ToDoAsync(admin);
+                    allAdminsDtoList.Add(adminDto);
+                }
+
+                var allAdminsResult = Result<List<AppUserDto>>.Success(allAdminsDtoList);
 
                 return allAdminsResult;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return Result<List<AppUser>>.Failure($"Failed to retrieve admins list...\n{ex.Message}...");
+                return Result<List<AppUserDto>>.Failure($"Failed to retrieve admins list...\n{ex.Message}...");
             }
         }
 
-        public async Task<Result<List<AppUser>>> GetAllRegularAppUsersAsync()
+        public async Task<Result<List<AppUserDto>>> GetAllRegularAppUsersAsync()
         {
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAllRegularAppUsersAsync...");
                 var allRegularUsers = await _repository.GetAllRegularAppUsersAsync();
 
-                var allRegularUsersResult = Result<List<AppUser>>.Success(allRegularUsers);
+                var allRegularUserDtosList = new List<AppUserDto>();
 
-                return allRegularUsersResult;
+                foreach (var user in allRegularUsers)
+                {
+                    var userDto = await user.ToDoAsync(user);
+                    allRegularUserDtosList.Add(userDto);
+                }
+
+                return Result<List<AppUserDto>>.Success(allRegularUserDtosList);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return Result<List<AppUser>>.Failure($"Failed to retrieve non-admin users list...\n{ex.Message}");
+                return Result<List<AppUserDto>>.Failure($"Failed to retrieve non-admin users list...\n{ex.Message}");
             }
         }
 
@@ -91,36 +115,41 @@ namespace App.API.Services
 
         }
 
-        public async Task<Result<AppUser>> GetAppUserByIdAsync(string id)
+        public async Task<Result<AppUserDto>> GetAppUserByIdAsync(string id)
         {
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAppUserByIdAsync...");
                 var appUser = await _repository.GetAppUserByIdAsync(id);
 
-                var appUserResult = Result<AppUser>.Success(appUser);
+                var appUserDto = await appUser.ToDoAsync(appUser);
 
-                return appUserResult;
+                return Result<AppUserDto>.Success(appUserDto);
             }
             catch (Exception ex)
             {
                 _logger.LogInformation($"Failed to get user with ID: {id}...\n{ex.Message}");
-                return Result<AppUser>.Failure(ex.Message);
+                return Result<AppUserDto>.Failure(ex.Message);
             }
         }
 
-        public async Task<Result<AppUser>> UpdateAppUserByIdAsync(string id)
+        public async Task<Result<AppUserDto>> UpdateAppUserByIdAsync(string id)
         {
             try
             {
                 _logger.LogInformation("AppUserService method called: UpdateAppUserByIdAsync...");
+
                 var appUser = await _repository.GetAppUserByIdAsync(id);
-                var updateUser = await _repository.UpdateAppUserAsync(appUser);
-                return Result<AppUser>.Success(updateUser);
+
+                await _repository.UpdateAppUserAsync(appUser);
+
+                var appUserDto = await appUser.ToDoAsync(appUser);
+
+                return Result<AppUserDto>.Success(appUserDto);
             }
             catch (Exception ex)
             {
-                return Result<AppUser>.Failure(ex.Message);
+                return Result<AppUserDto>.Failure(ex.Message);
             }
         }
 
@@ -138,19 +167,19 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<AppUser>> GetAppUserByEmailAsync(string userEmail)
+        public async Task<Result<AppUserDto>> GetAppUserByEmailAsync(string userEmail)
         {
             try
             {
                 _logger.LogInformation("AppUserService method called: GetAppUserByEmailAsync...");
 
-                var user = await _repository.GetAppUserByEmailAsync(userEmail);
+                var appUser = await _repository.GetAppUserByEmailAsync(userEmail);
 
-                var userResult = Result<AppUser>.Success(user);
+                var appUserDto = await appUser.ToDoAsync(appUser);
 
                 _logger.LogInformation($"Successfully retrieved user with email: {userEmail}...");
 
-                return userResult;
+                return Result<AppUserDto>.Success(appUserDto);
             }
             catch (Exception ex)
             {

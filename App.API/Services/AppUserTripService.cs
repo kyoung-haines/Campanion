@@ -11,6 +11,9 @@ namespace App.API.Services
         private readonly ILogger<IAppUserTripService> _logger;
         private readonly IAppUserService _appUserService;
         private readonly ITripService _tripService;
+
+        public AppUserTripService() { }
+
         public AppUserTripService(IAppUserTripRepository tripRepo, ILogger<IAppUserTripService> logger, IAppUserService appUserService, ITripService tripService)
         {
             _appUserTripRepository = tripRepo;
