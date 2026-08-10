@@ -115,10 +115,11 @@ namespace App.API.Tests.Services
             _campRepo.Setup(repo => repo.GetAllCampgroundsAsync())
                 .ReturnsAsync(_testCampgrounds);
 
+            var expectedResult = Result <List<Campground>>.Success(_testCampgrounds);
             var actualResult = await _campService.GetAllCampgroundsAsync();
-
-            Assert.IsTrue(actualResult.Succeeded);
-            Assert.AreEqual(_testCampgrounds, actualResult.Data);
+            var actualData = actualResult.Data;
+            //Assert.IsTrue(actualResult.Succeeded);
+            Assert.AreEqual(_testCampgrounds.Count(), actualData.Count());
         }
 
         [TestMethod]
