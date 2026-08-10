@@ -96,14 +96,14 @@ namespace App.API.Services
                     favCampgroundsDto.FavouriteCampgrounds.Add(newFavCampDto);
                 }
 
-                return Result<ListAppUserFavouriteCampgroundDto>>.Success(favCampgroundsDto);
+                return Result<List<AppUserFavouriteCampgroundDto>>.Success(favCampgroundsDtoList);
 
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Unable to retrieve user's favourite campgrounds. See exception for details...");
 
-                return Result<AppUserFavouriteCampgroundsDto>.Failure("Failed to retrieve user's favourite campgrounds.");
+                return Result<List<AppUserFavouriteCampgroundDto>>.Failure("Failed to retrieve user's favourite campgrounds.");
             }            
         }
 
