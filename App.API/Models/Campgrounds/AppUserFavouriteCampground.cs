@@ -9,7 +9,7 @@ namespace App.API.Models.Campgrounds
     {
         public string AppUserId { get; set; }
         public int CampgroundId { get; set; }
-        public DateTime FavouritedAt { get; set; }
+        public DateTime FavouritedAt { get; set; } = DateTime.Now;
 
         // Navigational Properties
         public AppUser AppUser { get; set; }
