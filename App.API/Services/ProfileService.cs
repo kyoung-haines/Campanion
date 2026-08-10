@@ -22,41 +22,47 @@ namespace App.API.Services
 
         }
 
-		public async Task<Result<Profile>> GetProfileByProfileIdAsync(int id)
+		public async Task<Result<ProfileResponseDto>> GetProfileByProfileIdAsync(int id)
 		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByIdAsync...");
 				var profile = await _profileRepository.GetProfileByIdAsync(id);
 
-				Result<Profile> profileResult = Result<Profile>.Success(profile);
+				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto(profile);
 
-				return profileResult;
+				Result<ProfileResponseDto> profileDtoResult = Result<ProfileResponseDto>.Success(profileResponseDto);
+
+				return profileDtoResult;
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to get profile by ID: {id}...");
-				return Result<Profile>.Failure($"An error occurred while retrieving the profile: {ex.Message}");
+				return Result<ProfileResponseDto>.Failure($"An error occurred while retrieving the profile: {ex.Message}");
 			}
 		}
 
-		public async Task<Result<Profile>> UpdateProfileAsync(ProfileResponseDto profileDto)
+		public async Task<Result<ProfileResponseDto>> UpdateProfileAsync(ProfileResponseDto profileDto)
 		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: UpdateProfileAsync...");
+				
 				var profileResult = await this.GetProfileByProfileIdAsync(Convert.ToInt32(profileDto.ProfileId));
 
-				Profile profile = profileResult.Data;
+				var profile = await _profileRepository.GetProfileByIdAsync(Convert.ToInt32(profileDto.ProfileId));
+				
+				await _profileRepository.UpdateProfileAsync(profile);
 
-				var profileUpdate = await _profileRepository.UpdateProfileAsync(profile);
+                // updating profileDto
+                profileDto = await profile.ConvertProfileObjectToResponseDto(profile);
 
-				return Result<Profile>.Success(profile);
+                return Result<ProfileResponseDto>.Success(profileDto);
 			}
 			catch (Exception ex)
 			{
 				_logger.LogError(ex, $"Failed to update profile with ID: {profileDto.ProfileId}...");
-				return Result<Profile>.Failure($"An error occurred while updating the profile: {ex.Message}");
+				return Result<ProfileResponseDto>.Failure($"An error occurred while updating the profile: {ex.Message}");
 			}
 		}
 
@@ -107,7 +113,7 @@ namespace App.API.Services
 
 				_logger.LogInformation("Profile retrieved...");
 
-				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto(profile, appUser);
+				var profileResponseDto = await profile.ConvertProfileObjectToResponseDto(profile);
 
 				return Result<ProfileResponseDto>.Success(profileResponseDto);
 			}

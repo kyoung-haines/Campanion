@@ -8,8 +8,8 @@ namespace App.API.Services
 {
     public interface IProfileService
     {
-        public Task<Result<Profile>> GetProfileByProfileIdAsync(int id);
-        public Task<Result<Profile>> UpdateProfileAsync(ProfileResponseDto profileDto);
+        public Task<Result<ProfileResponseDto>> GetProfileByProfileIdAsync(int id);
+        public Task<Result<ProfileResponseDto>> UpdateProfileAsync(ProfileResponseDto profileDto);
         public Task<Result<bool>> DeleteProfileAsync(int id);
         public Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser);
         public Task<Result<ProfileResponseDto>> GetProfileByAppUserIdAsync(AppUser user);
