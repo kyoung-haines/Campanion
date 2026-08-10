@@ -1,5 +1,5 @@
 ﻿using App.API.Enums;
-using App.API.Models.Identity;
+using App.API.Models.Campgrounds;
 using Campanion.Shared.Dtos.CampgroundDtos;
 namespace App.API.Models.Campgrounds
 {
@@ -71,7 +71,21 @@ namespace App.API.Models.Campgrounds
             }
 
             // FavouritedBy
+            foreach (var user in campground.FavouritedBy)
+            {
+                var userId = user.AppUserId;
+                var appUserUsername = user.AppUser.AppUserProfile.ProfileUsername;
 
+                //var campgroundName = user.Campground.CampgroundName;
+
+                //var appUserFavouriteCampground = new AppUserFavouriteCampground
+                //{
+                //    AppUserId = userId,
+                //    CampgroundId = campground.CampgroundId
+                //};
+
+                campgroundDto.FavouritedByDto.Add(appUserUsername);
+            }
 
             return campgroundDto;
         }
