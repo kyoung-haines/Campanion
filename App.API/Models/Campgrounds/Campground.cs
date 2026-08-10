@@ -30,7 +30,7 @@ namespace App.API.Models.Campgrounds
         public List<AppUserFavouriteCampground> FavouritedBy= new();
 
         // Helper methods
-        public Task<CampgroundDto> ToDtoAsync(Campground campground)
+        public async Task<CampgroundDto> ToDtoAsync(Campground campground)
         {
             var campgroundDto = new CampgroundDto
             {
@@ -47,27 +47,33 @@ namespace App.API.Models.Campgrounds
                 CampgroundOpenDateDto = campground.CampgroundOpenDate.ToString(),
                 CampgroundCloseDateDto = campground.CampgroundCloseDate.ToString(),
                 CampgroundHasFacilitiesDto = campground.CampgroundHasFacilities.ToString(),
-                CampgroundFacilitiesDto = campground.CampgroundFacilities.ToString(),
-                CampgroundHasActivitiesDto = campground.CampgroundHasActivities,
+                CampgroundFacilitiesDto = campground.CampgroundFacilities,
+                CampgroundHasActivitiesDto = campground.CampgroundHasActivities.ToString(),
                 CampgroundActivitiesDto = campground.CampgroundActivities,
                 CampgroundUrlDto = campground.CampgroundUrl
+            };
 
-            // CampgroundFacilitiesDto - List<string>
-
-            // CampgroundActivitiesDto - List<string>
-            
             // CampgroundType
             switch (campground.CampgroundType)
             {
                 case Enums.CampgroundType.PROVINCIAL:
-                    CampgroundType = "PROVINCIAL";
+                    campgroundDto.CampgroundTypeDto = "PROVINCIAL";
+                    break;
+                case Enums.CampgroundType.MUNICIPAL:
+                    campgroundDto.CampgroundTypeDto = "MUNICIPAL";
+                    break;
+                case Enums.CampgroundType.NATIONAL:
+                    campgroundDto.CampgroundTypeDto = "NATIONAL";
+                    break;
+                case Enums.CampgroundType.PRIVATE:
+                    campgroundDto.CampgroundTypeDto = "PRIVATE";
                     break;
             }
 
             // FavouritedBy
-        };
-            
 
+
+            return campgroundDto;
         }
     }
 }
