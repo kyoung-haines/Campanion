@@ -1,7 +1,8 @@
-﻿using App.API.Models.Campgrounds;
-using App.API.Repositories;
+﻿using App.API.Exceptions.CampgroundExceptions;
 using App.API.Exceptions.RepositoryExceptions;
-using App.API.Exceptions.CampgroundExceptions;
+using App.API.Models.Campgrounds;
+using App.API.Repositories;
+using Campanion.Shared.Dtos.CampgroundDtos;
 
 namespace App.API.Services
 {
@@ -50,7 +51,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<List<Campground>>> GetAllCampgroundsAsync()
+        public async Task<Result<List<CampgroundDto>>> GetAllCampgroundsAsync()
         {
             try
             {
@@ -59,18 +60,25 @@ namespace App.API.Services
 
                 var campgrounds = await _campgroundRepo.GetAllCampgroundsAsync();
 
-                Result<List<Campground>> campgroundResults = Result<List<Campground>>.Success(campgrounds.ToList<Campground>());
+                var campgroundDtosList = new List<CampgroundDto>();
+
+                foreach (var campground in campgrounds)
+                {
+                    var campgroudDto = 
+                }
+
+                Result<List<CampgroundDto>> campgroundResults = Result<List<CampgroundDto>>.Success(campgrounds.ToList<Campground>());
 
                 return campgroundResults;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error retrieving all campgrounds. See Exception.");
-                return Result<List<Campground>>.Failure("Failed to retrieve all campgrounds.");
+                return Result<List<CampgroundDto>>.Failure("Failed to retrieve all campgrounds.");
             }
         }
 
-        public async Task<Result<Campground>> GetCampgroundByIdAsync(int id)
+        public async Task<Result<CampgroundDto>> GetCampgroundByIdAsync(int id)
         {
             try
             {
@@ -78,18 +86,18 @@ namespace App.API.Services
                 _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
                 var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                Result<Campground> campgroundResult = Result<Campground>.Success(campground);
+                Result<CampgroundDto> campgroundResult = Result<CampgroundDto>.Success(campground);
 
                 return campgroundResult;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving campground with ID: {id}. See exception for details.");
-                return Result<Campground>.Failure("Failed to retrieve the campground.");
+                return Result<CampgroundDto>.Failure("Failed to retrieve the campground.");
             }
         }
 
-        public async Task<Result<Campground>> UpdateCampgroundAsync(Campground originalCampground)
+        public async Task<Result<CampgroundDto>> UpdateCampgroundAsync(CampgroundDto originalCampground)
         {
             try
             {
@@ -97,7 +105,7 @@ namespace App.API.Services
                 _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
 
                 var updatedCampground = await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
-                var updatedResult = Result<Campground>.Success(updatedCampground);
+                var updatedResult = Result<CampgroundDto>.Success(updatedCampground);
 
                 return updatedResult;
 
@@ -105,11 +113,11 @@ namespace App.API.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to update campground. See Exception");
-                return Result<Campground>.Failure("Failed to update the campground.");
+                return Result<CampgroundDto>.Failure("Failed to update the campground.");
             }
         }
 
-        public async Task<Result<Campground>> AddCampgroundAsync(Campground newCampground)
+        public async Task<Result<CampgroundDto>> AddCampgroundAsync(CampgroundDto newCampground)
         {
             try
             {
@@ -132,12 +140,12 @@ namespace App.API.Services
                     _logger.LogInformation("Campground has been added to the system...");
                 }
 
-                return Result<Campground>.Success(newCampground);
+                return Result<CampgroundDto>.Success(newCampground);
             }
             catch(Exception ex)
             {
                 _logger.LogError(ex, "Error adding campground. See exception.");
-                return Result<Campground>.Failure("Failed to add new campground.");
+                return Result<CampgroundDto>.Failure("Failed to add new campground.");
             }
         }
 
@@ -163,7 +171,7 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<bool>> IsCampgroundUpdatedAsync(Campground originalCampground, Campground updatedCampground)
+        public async Task<Result<bool>> IsCampgroundUpdatedAsync(CampgroundDto originalCampground, CampgroundDto updatedCampground)
         {
             try
             {
