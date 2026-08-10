@@ -63,7 +63,7 @@ namespace App.API.Models.Identity
 
 
         // HELPER METHOD(S)
-        public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile, AppUser user)
+        public async Task<ProfileResponseDto> ConvertProfileObjectToResponseDto(Profile profile)
         {
             ProfileResponseDto profileResponseDto = new ProfileResponseDto
             {
@@ -72,8 +72,8 @@ namespace App.API.Models.Identity
                 ProfileImagePath = this.ProfileImagePath,
                 ProfileCreatedAt = this.ProfileCreatedAt.ToString(),
                 AppUserId = this.AppUserId,
-                ProfileUserProvince = user.AppUserProvince,
-                ProfileUserCountry = user.AppUserCountry
+                ProfileUserProvince = this.ProfileOwner.AppUserProvince,
+                ProfileUserCountry = this.ProfileOwner.AppUserCountry
             };
 
             return profileResponseDto;

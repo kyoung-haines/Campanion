@@ -125,7 +125,7 @@ namespace App.API.Models.Identity
         /// Property <c>AppUserFavouriteCampgrounds</c> represents the navigational relationship that EF Core uses to associate a user
         /// with a list of their favourited campgrounds.
         /// </summary>
-        public List<Campground>? AppUserFavouriteCampgrounds { get; set; }
+        public List<AppUserFavouriteCampground>? AppUserFavouriteCampgrounds { get; set; }
 
         // Removed for circular FK reference
         /// <summary>
