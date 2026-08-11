@@ -75,15 +75,6 @@ namespace App.API.Models.Campgrounds
             {
                 var userId = user.AppUserId;
                 var appUserUsername = user.AppUser.AppUserProfile.ProfileUsername;
-
-                //var campgroundName = user.Campground.CampgroundName;
-
-                //var appUserFavouriteCampground = new AppUserFavouriteCampground
-                //{
-                //    AppUserId = userId,
-                //    CampgroundId = campground.CampgroundId
-                //};
-
                 campgroundDto.FavouritedByDto.Add(appUserUsername);
             }
 
