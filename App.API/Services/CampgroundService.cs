@@ -3,6 +3,7 @@ using App.API.Exceptions.RepositoryExceptions;
 using App.API.Models.Campgrounds;
 using App.API.Repositories;
 using Campanion.Shared.Dtos.CampgroundDtos;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace App.API.Services
 {
@@ -64,10 +65,11 @@ namespace App.API.Services
 
                 foreach (var campground in campgrounds)
                 {
-                    var campgroudDto = 
+                    var campgroundDto = await campground.ToDtoAsync(campground);
+                    campgroundDtosList.Add(campgroundDto);
                 }
 
-                Result<List<CampgroundDto>> campgroundResults = Result<List<CampgroundDto>>.Success(campgrounds.ToList<Campground>());
+                Result<List<CampgroundDto>> campgroundResults = Result<List<CampgroundDto>>.Success(campgroundDtosList);
 
                 return campgroundResults;
             }
@@ -84,9 +86,12 @@ namespace App.API.Services
             {
                 _logger.LogInformation("CampgroundService method called: GetCampgroundByIdAsync...");
                 _logger.LogInformation($"Attempting to retrieve Campground with ID: {id}...");
+
                 var campground = await _campgroundRepo.GetCampgroundByIdAsync(id);
 
-                Result<CampgroundDto> campgroundResult = Result<CampgroundDto>.Success(campground);
+                var campgroundDto = await campground.ToDtoAsync(campground);
+
+                Result<CampgroundDto> campgroundResult = Result<CampgroundDto>.Success(campgroundDto);
 
                 return campgroundResult;
             }
@@ -97,17 +102,20 @@ namespace App.API.Services
             }
         }
 
-        public async Task<Result<CampgroundDto>> UpdateCampgroundAsync(CampgroundDto originalCampground)
+        public async Task<Result<CampgroundDto>> UpdateCampgroundAsync(CampgroundDto originalCampgroundDto)
         {
             try
             {
                 _logger.LogInformation("CampgroundService method called: UpdateCampgroundAsync...");
-                _logger.LogInformation($"Attempting to update campground with ID: {originalCampground.CampgroundId}...");
+                _logger.LogInformation($"Attempting to update campground with ID: {originalCampgroundDto.CampgroundIdDto}...");
+                
+                var campground = await _campgroundRepo.GetCampgroundByIdAsync(Convert.ToInt32(originalCampgroundDto.CampgroundIdDto));
 
-                var updatedCampground = await _campgroundRepo.UpdateCampgroundAsync(originalCampground);
-                var updatedResult = Result<CampgroundDto>.Success(updatedCampground);
+                await _campgroundRepo.UpdateCampgroundAsync(campground);
 
-                return updatedResult;
+                var campgroundDto = await campground.ToDtoAsync(campground);
+
+                return Result<CampgroundDto>.Success(campgroundDto);
 
             }
             catch (Exception ex)
@@ -122,22 +130,37 @@ namespace App.API.Services
             try
             {
                 _logger.LogInformation("CampgroundService method called: AddCampgroundAsync...");
-                _logger.LogInformation($"Attempting to add new campground with ID: {newCampground.CampgroundId}...");
+                _logger.LogInformation($"Attempting to add new campground with ID: {newCampground.CampgroundIdDto}...");
                 _logger.LogInformation($"Checking if the campground already exists in the system...");
 
-                var isExists = await CampgroundIdIsExistsAsync(newCampground.CampgroundId);
-
+                var isExists = await CampgroundIdIsExistsAsync(Convert.ToInt32(newCampground.CampgroundIdDto));
+                
                 if(isExists.Succeeded == false)
                 {
                     _logger.LogInformation("Adding campground to the system...");
+
+                    var campground = new Campground
+                    {
+                        CampgroundName = newCampground.CampgroundNameDto,
+                        CampgroundImagePath = newCampground.CampgroundImagePathDto,
+                        CampgroundStreetName = newCampground.CampgroundStreetNameDto,
+                        CampgroundCity = newCampground.CampgroundCityDto,
+                        CampgroundProvince = newCampground.CampgroundProvinceDto,
+                        CampgroundCountry = newCampground.CampgroundCountryDto,
+                        CampgroundPostalCode = newCampground.CampgroundPostalCodeDto,
+                        CampgroundPhone = newCampground.CampgroundPhoneDto,
+                        CampgroundEmail = newCampground.CampgroundEmailDto,
+                        CampgroundType = newCampground.CampgroundTypeDto,
+                        CampgroundIsOpenYearRound = newCampground.CampgroundIsOpenYearRoundDto,
+                        CampgroundOpenDate = newCampground.CampgroundOpenDateDto,
+                        CampgroundCloseDate = newCampground.CampgroundCloseDateDto,
+                        CampgroundHasFacilities = newCampground.CampgroundHasFacilitiesDto,
+                        CampgroundFacilities = newCampground.CampgroundFacilitiesDto,
+                        CampgroundHasActivities = newCampground.CampgroundHasActivitiesDto,
+                        CampgroundActivities = newCampground.CampgroundActivitiesDto,
+                        CampgroundUrl = newCampground.CampgroundUrlDto
+                    };
                     var result = await _campgroundRepo.AddCampgroundAsync(newCampground);
-                }
-
-                var isCampgroundAdded = await IsCampgroundAddedAsync(newCampground.CampgroundId);
-
-                if(isCampgroundAdded.Data == true)
-                {
-                    _logger.LogInformation("Campground has been added to the system...");
                 }
 
                 return Result<CampgroundDto>.Success(newCampground);
