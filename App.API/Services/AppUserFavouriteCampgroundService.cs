@@ -136,15 +136,12 @@ namespace App.API.Services
         // HELPET METHOD TO BE MOVED - EITHER INTO MODEL OR INTO SHARED LIBRARY
         public async Task<AppUserFavouriteCampgroundDto> ToDtoAsync(AppUserFavouriteCampground favCampground)
         {
-            var campgroundResult = await _campgroundService.GetCampgroundByIdAsync(favCampground.CampgroundId);
-            var campground = campgroundResult.Data;
-
             var favCampgroundDto = new AppUserFavouriteCampgroundDto
             {
                 AppUserId = favCampground.AppUserId,
                 CampgroundId = favCampground.CampgroundId.ToString(),
-                CampgroundName = campground.CampgroundName,
-                CampgroundImagePath = campground.CampgroundImagePath
+                CampgroundName = favCampground.Campground.CampgroundName,
+                CampgroundImagePath = favCampground.Campground.CampgroundImagePath
             };
 
             return favCampgroundDto;
