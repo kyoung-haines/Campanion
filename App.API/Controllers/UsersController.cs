@@ -23,7 +23,7 @@ namespace App.API.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("allusers")]
-        public async Task<IEnumerable<AppUser>> GetAllAppUsersAsync()
+        public async Task<IEnumerable<AppUserDto>> GetAllAppUsersAsync()
         {
             var allAppUsersResult = await _userService.GetAllAppUsersAsync();
 
@@ -34,7 +34,7 @@ namespace App.API.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("alladminusers")]
-        public async Task<IEnumerable<AppUser>> GetAllAdminUsersAsync()
+        public async Task<IEnumerable<AppUserDto>> GetAllAdminUsersAsync()
         {
             var allAdminsResult = await _userService.GetAllAppAdminsAsync();
 
@@ -45,7 +45,7 @@ namespace App.API.Controllers
 
         [Authorize(Roles = Roles.Admin)]
         [HttpGet("allregularusers")]
-        public async Task<IEnumerable<AppUser>> GetAllRegularAppUsersAsync()
+        public async Task<IEnumerable<AppUserDto>> GetAllRegularAppUsersAsync()
         {
             var allRegularAppUsersResult = await _userService.GetAllRegularAppUsersAsync();
             var allRegularAppUsersList = allRegularAppUsersResult.Data;
@@ -62,8 +62,8 @@ namespace App.API.Controllers
 
             var userDto = new AppUserDto
             {
-                AppUserEmail = user.Email,
-                AppUserPhone = user.PhoneNumber,
+                AppUserEmail = user.AppUserEmail,
+                AppUserPhone = user.AppUserPhone,
                 AppUserType = Convert.ToString(user.AppUserType),
                 AppUserFirstName = user.AppUserFirstName,
                 AppUserLastName = user.AppUserLastName,
@@ -76,7 +76,7 @@ namespace App.API.Controllers
 
             foreach (var camp in user.AppUserFavouriteCampgrounds)
             {
-                userDto.AppUserFavouriteCampgrounds.Add(Convert.ToString(camp.CampgroundId));
+                userDto.AppUserFavouriteCampgrounds.Add(camp);
             }
 
             return userDto;
