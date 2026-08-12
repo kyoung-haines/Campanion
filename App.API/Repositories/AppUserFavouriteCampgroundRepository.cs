@@ -63,6 +63,8 @@ namespace App.API.Repositories
 
                     favCampgrounds = await _context.AppUserFavouriteCampgrounds
                         .Where(fav => fav.AppUserId == appUserId)
+                        .Include(fav => fav.AppUser)
+                        .Include(fav => fav.Campground)
                         .ToListAsync();
 
 
