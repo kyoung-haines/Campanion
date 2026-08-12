@@ -55,7 +55,7 @@ namespace App.API
 
             // Registering Service Class dependencies
             //AppUserService
-            builder.Services.AddScoped<IAppUserService, AppUserService>();
+            builder.Services.AddScoped<IAppUserTripService, AppUserTripService>();
 
             // ProfileService
             builder.Services.AddScoped<IProfileService, ProfileService>();
@@ -68,6 +68,9 @@ namespace App.API
 
             // TripService
             builder.Services.AddScoped<ITripService, TripService>();
+
+            // Register IAppUserService
+            builder.Services.AddScoped<IAppUserService, AppUserService>();
 
             // AuthService
             builder.Services.AddScoped<IAuthService, AuthService>();
