@@ -23,5 +23,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Enums\Enum Helpers\" />
+  </ItemGroup>
 	
 </Project>
