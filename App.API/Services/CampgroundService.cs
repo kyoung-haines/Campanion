@@ -1,8 +1,10 @@
-﻿using App.API.Exceptions.CampgroundExceptions;
+﻿using App.API.Enums;
+using App.API.Exceptions.CampgroundExceptions;
 using App.API.Exceptions.RepositoryExceptions;
 using App.API.Models.Campgrounds;
 using App.API.Repositories;
 using Campanion.Shared.Dtos.CampgroundDtos;
+using Campanion.Shared.Dtos.TripDtos;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 
 namespace App.API.Services
@@ -150,17 +152,19 @@ namespace App.API.Services
                         CampgroundPostalCode = newCampground.CampgroundPostalCodeDto,
                         CampgroundPhone = newCampground.CampgroundPhoneDto,
                         CampgroundEmail = newCampground.CampgroundEmailDto,
-                        CampgroundType = newCampground.CampgroundTypeDto,
-                        CampgroundIsOpenYearRound = newCampground.CampgroundIsOpenYearRoundDto,
-                        CampgroundOpenDate = newCampground.CampgroundOpenDateDto,
-                        CampgroundCloseDate = newCampground.CampgroundCloseDateDto,
-                        CampgroundHasFacilities = newCampground.CampgroundHasFacilitiesDto,
+                        CampgroundType = Enum.Parse<CampgroundType>(newCampground.CampgroundTypeDto, ignoreCase: true),
+                        CampgroundIsOpenYearRound = Convert.ToBoolean(newCampground.CampgroundIsOpenYearRoundDto),
+                        CampgroundOpenDate = DateOnly.Parse(newCampground.CampgroundOpenDateDto),
+                        CampgroundCloseDate = DateOnly.Parse(newCampground.CampgroundCloseDateDto),
+                        CampgroundHasFacilities = Convert.ToBoolean(newCampground.CampgroundHasFacilitiesDto),
                         CampgroundFacilities = newCampground.CampgroundFacilitiesDto,
-                        CampgroundHasActivities = newCampground.CampgroundHasActivitiesDto,
+                        CampgroundHasActivities = Convert.ToBoolean(newCampground.CampgroundHasActivitiesDto),
                         CampgroundActivities = newCampground.CampgroundActivitiesDto,
                         CampgroundUrl = newCampground.CampgroundUrlDto
                     };
-                    var result = await _campgroundRepo.AddCampgroundAsync(newCampground);
+
+                    await _campgroundRepo.AddCampgroundAsync(campground);
+ 
                 }
 
                 return Result<CampgroundDto>.Success(newCampground);
@@ -191,28 +195,6 @@ namespace App.API.Services
             {
                 _logger.LogError(ex, $"Campground with ID: {newCampgroundId} does not exist...");
                 return Result<bool>.Failure($"Campground with ID: {newCampgroundId} does not exist.");
-            }
-        }
-
-        public async Task<Result<bool>> IsCampgroundUpdatedAsync(CampgroundDto originalCampground, CampgroundDto updatedCampground)
-        {
-            try
-            {
-                _logger.LogInformation("CampgroundService method called: IsCampgroundUpdatedAsync...");
-                _logger.LogInformation($"Validating campground with ID: {originalCampground.CampgroundId} has been updated...");
-                var isEqual = originalCampground.Equals(updatedCampground);
-
-                if(isEqual == false)
-                {
-                    _logger.LogInformation($"Campground with ID: {originalCampground.CampgroundId} has been updated...");
-                }
-
-                return Result<bool>.Success(true);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Campground with ID: {originalCampground.CampgroundId} failed to update...");
-                return Result<bool>.Failure($"Failed to update campground with ID: {originalCampground.CampgroundId}.");
             }
         }
 
