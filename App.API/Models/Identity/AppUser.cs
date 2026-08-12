@@ -151,15 +151,16 @@ namespace App.API.Models.Identity
         {
             var appUserDto = new AppUserDto
             {
-                AppUserEmail = appUser.Email,
-                AppUserType = appUser.AppUserType.ToString(),
-                AppUserFirstName = appUser.AppUserFirstName,
-                AppUserLastName = appUser.AppUserLastName,
-                AppUserPhone = appUser.PhoneNumber,
-                AppUserStreetAddress = appUser.AppUserStreetAddress,
-                AppUserCity = appUser.AppUserCity,
-                AppUserProvince = appUser.AppUserProvince,
-                AppUserCountry = appUser.AppUserCountry
+                AppUserId = this.Id,
+                AppUserEmail = this.Email,
+                AppUserType = this.AppUserType.ToString(),
+                AppUserFirstName = this.AppUserFirstName,
+                AppUserLastName = this.AppUserLastName,
+                AppUserPhone = this.PhoneNumber,
+                AppUserStreetAddress = this.AppUserStreetAddress,
+                AppUserCity = this.AppUserCity,
+                AppUserProvince = this.AppUserProvince,
+                AppUserCountry = this.AppUserCountry
             };
 
             return appUserDto;
