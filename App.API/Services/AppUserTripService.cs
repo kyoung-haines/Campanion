@@ -56,7 +56,7 @@ namespace App.API.Services
                 var appUserResult = await _appUserService.GetAppUserByIdAsync(appUserId);
                 var appUser = appUserResult.Data;
 
-                _logger.LogInformation($"Attempting to retrieve all trips for user: {appUser.Id}...");
+                _logger.LogInformation($"Attempting to retrieve all trips for user: {appUserId}...");
 
                 var appUserTrips = await _appUserTripRepository.RetrieveAllAppUserTripsByUserIdAsync(appUserId);
                 List<AppUserTripDto> appUserTripsDto = new();
