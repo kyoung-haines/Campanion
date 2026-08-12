@@ -80,5 +80,56 @@ namespace App.API.Models.Campgrounds
 
             return campgroundDto;
         }
+
+        public CampgroundDto ToDto(Campground campground)
+        {
+            var campgroundDto = new CampgroundDto
+            {
+                CampgroundIdDto = campground.CampgroundId.ToString(),
+                CampgroundImagePathDto = campground.CampgroundImagePath,
+                CampgroundStreetNameDto = campground.CampgroundStreetName,
+                CampgroundCityDto = campground.CampgroundCity,
+                CampgroundProvinceDto = campground.CampgroundProvince,
+                CampgroundCountryDto = campground.CampgroundCountry,
+                CampgroundPostalCodeDto = campground.CampgroundPostalCode,
+                CampgroundPhoneDto = campground.CampgroundPhone,
+                CampgroundEmailDto = campground.CampgroundEmail,
+                CampgroundIsOpenYearRoundDto = campground.CampgroundIsOpenYearRound.ToString(),
+                CampgroundOpenDateDto = campground.CampgroundOpenDate.ToString(),
+                CampgroundCloseDateDto = campground.CampgroundCloseDate.ToString(),
+                CampgroundHasFacilitiesDto = campground.CampgroundHasFacilities.ToString(),
+                CampgroundFacilitiesDto = campground.CampgroundFacilities,
+                CampgroundHasActivitiesDto = campground.CampgroundHasActivities.ToString(),
+                CampgroundActivitiesDto = campground.CampgroundActivities,
+                CampgroundUrlDto = campground.CampgroundUrl
+            };
+
+            // CampgroundType
+            switch (campground.CampgroundType)
+            {
+                case Enums.CampgroundType.PROVINCIAL:
+                    campgroundDto.CampgroundTypeDto = "PROVINCIAL";
+                    break;
+                case Enums.CampgroundType.MUNICIPAL:
+                    campgroundDto.CampgroundTypeDto = "MUNICIPAL";
+                    break;
+                case Enums.CampgroundType.NATIONAL:
+                    campgroundDto.CampgroundTypeDto = "NATIONAL";
+                    break;
+                case Enums.CampgroundType.PRIVATE:
+                    campgroundDto.CampgroundTypeDto = "PRIVATE";
+                    break;
+            }
+
+            // FavouritedBy
+            foreach (var user in campground.FavouritedBy)
+            {
+                var userId = user.AppUserId;
+                var appUserUsername = user.AppUser.AppUserProfile.ProfileUsername;
+                campgroundDto.FavouritedByDto.Add(appUserUsername);
+            }
+
+            return campgroundDto;
+        }
     }
 }
