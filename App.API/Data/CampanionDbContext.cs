@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Data
 {
+    [Keyless]
     public class CampanionDbContext : IdentityDbContext<AppUser>
     {
         public CampanionDbContext(DbContextOptions<CampanionDbContext> options) : base(options) { }
@@ -24,6 +25,8 @@ namespace App.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<AppUserTrip>()
                 .HasOne(aut => aut.AppUser)
                 .WithMany(u => u.AppUserTrips)
