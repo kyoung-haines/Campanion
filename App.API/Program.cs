@@ -122,12 +122,13 @@ namespace App.API
             var context = scope.ServiceProvider.GetService<CampanionDbContext>();
             var profileService = scope.ServiceProvider.GetRequiredService<IProfileService>();
             var campgroundService = scope.ServiceProvider.GetRequiredService<ICampgroundService>();
+            var userService = scope.ServiceProvider.GetRequiredService<IAppUserService>();
 
             await RoleSeeder.SeedRolesAsync(roleManager);
             await UserSeeder.SeedUsersAsync(userManager, logger);
             await ProfileSeeder.SeedUserProfilesAsync(userManager, context, logger);
             await CampgroundSeeder.SeedCampgroundsAsync(context, campgroundService, logger);
-
+            await AppUserFavouriteCampgroundSeeder.SeedAppUserFavouriteCampgroundsAsync(context, logger, userService, campgroundService);
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
