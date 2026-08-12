@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enums\Enum Helpers\**" />
+    <Content Remove="Enums\Enum Helpers\**" />
+    <EmbeddedResource Remove="Enums\Enum Helpers\**" />
+    <None Remove="Enums\Enum Helpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Campanion.Shared" Version="1.1.17" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.9" />
@@ -22,10 +29,6 @@
     <PackageReference Include="Microsoft.OpenApi" Version="2.9.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     <PackageReference Include="NuGet.Protocol" Version="7.6.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enums\Enum Helpers\" />
   </ItemGroup>
 	
 </Project>
