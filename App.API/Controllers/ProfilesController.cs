@@ -39,7 +39,7 @@ namespace App.API.Controllers
                 return BadRequest(userResult.Error);
             }
 
-            var userProfileResult = await _profileService.GetProfileByAppUserIdAsync(userResult.Data);
+            var userProfileResult = await _profileService.GetProfileByAppUserIdAsync(appUserId);
 
             if (userProfileResult.Succeeded == false)
             {
