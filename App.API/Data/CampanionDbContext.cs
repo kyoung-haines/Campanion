@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.API.Data
 {
-    [Keyless]
     public class CampanionDbContext : IdentityDbContext<AppUser>
     {
         public CampanionDbContext(DbContextOptions<CampanionDbContext> options) : base(options) { }
