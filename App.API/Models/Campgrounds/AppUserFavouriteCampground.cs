@@ -20,9 +20,9 @@ namespace App.API.Models.Campgrounds
              
             var appUserFavouriteCampgroundDto = new AppUserFavouriteCampgroundDto
             {
-                AppUserId = favCampground.AppUserId,
-                CampgroundId = favCampground.CampgroundId.ToString(),
-                CampgroundName = favCampground.Campground.CampgroundName
+                AppUserId = this.AppUserId,
+                CampgroundId = this.CampgroundId.ToString(),
+                CampgroundName = this.Campground.CampgroundName
             };
 
             return appUserFavouriteCampgroundDto;
