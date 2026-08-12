@@ -13,13 +13,14 @@ namespace App.API.Services
 		private ILogger<ProfileService> _logger;
 		private IProfileRepository _profileRepository;
 		private IAppUserTripService _appUserTripService;
+		private IAppUserService _appUserService;
 
-		public ProfileService(ILogger<ProfileService> logger, IProfileRepository profileRepository, IAppUserTripService userTripService)
+		public ProfileService(ILogger<ProfileService> logger, IProfileRepository profileRepository, IAppUserTripService userTripService, IAppUserService appUserService)
 		{
 			_logger = logger;
 			_profileRepository = profileRepository;
 			_appUserTripService = userTripService;
-
+			_appUserService = appUserService;
         }
 
 		public async Task<Result<ProfileResponseDto>> GetProfileByProfileIdAsync(int id)
@@ -103,13 +104,13 @@ namespace App.API.Services
 			}
 		}
 
-		public async Task<Result<ProfileResponseDto>> GetProfileByAppUserIdAsync(AppUser appUser)
+		public async Task<Result<ProfileResponseDto>> GetProfileByAppUserIdAsync(string appUserId)
 		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: GetProfileByAppUserIdAsync...");
 
-				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUser.Id);
+				Profile profile = await _profileRepository.GetProfileByAppUserIdAsync(appUserId);
 
 				_logger.LogInformation("Profile retrieved...");
 
@@ -119,7 +120,7 @@ namespace App.API.Services
 			}
 			catch (Exception ex)
 			{
-				_logger.LogError(ex, $"Failed to retrieve profile by AppUserId: {appUser.Id}...");
+				_logger.LogError(ex, $"Failed to retrieve profile by AppUserId: {appUserId}...");
 				return Result<ProfileResponseDto>.Failure("Failed to retrieve the user profile. Try again.");
 			}
 		}
