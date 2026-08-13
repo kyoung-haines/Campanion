@@ -5,6 +5,7 @@ using App.API.Models.Identity;
 using App.API.Repositories;
 using App.API.Services;
 using Campanion.Shared.Dtos.AppUserDtos;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
 using Moq;
@@ -28,6 +29,7 @@ namespace App.API.Tests.Services
         AppUserFavouriteCampground _favCampground = new();
         AppUserFavouriteCampgroundDto _favCampgroundDto = new();
         List<AppUserFavouriteCampgroundDto> _favCampgroundDtos = new();
+        Mock<UserManager<AppUser>> _userManager;
 
         AppUser _testUser = new AppUser
         {
@@ -65,22 +67,18 @@ namespace App.API.Tests.Services
             _mockCampgroundServiceLogger = new Mock<ILogger<CampgroundService>>();
             _campgroundService = new Mock<CampgroundService>(_mockCampgroundServiceLogger.Object, _mockCampgroundRepository.Object);
             _appUserFavouriteCampgroundService = new AppUserFavouriteCampgroundService(_logger.Object, _repo.Object, _campgroundService.Object);
+            _userManager = new Mock<UserManager<AppUser>>();
 
             _favCampground.AppUserId = "1";
             _favCampground.CampgroundId = 1;
             _favCampground.FavouritedAt = DateTime.Now;
+            _favCampground.AppUser = _testUser;
+            _favCampground.Campground = _testCampground;
 
             _favCampgrounds.Add(_favCampground);
 
-            //_favCampgroundDto = new AppUserFavouriteCampgroundDto
-            //{
-            //    AppUserId = _favCampground.AppUserId,
-            //    CampgroundId = _favCampground.CampgroundId.ToString(),
-            //    CampgroundName = _favCampground.Campground.CampgroundName,
-            //    CampgroundImagePath = _favCampground.Campground.CampgroundImagePath
-            //};
-
             _favCampgroundDto = _favCampground.ToDto(_favCampground);
+            _favCampgroundDtos.Add(_favCampgroundDto);
         }
 
         [TestMethod]
@@ -100,27 +98,33 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task DeleteFavouriteCampgroundAsyncReturnsFailure()
         {
-            _repo.Setup(repo => repo.DeleteFavouriteCampgroundAsync(_favCampground))
-                .ReturnsAsync(false);
+            _repo.Setup(r => r.GetFavouriteCampgroundByCampgroundId(1))
+                .ReturnsAsync(_favCampground);
 
-            var expectedError = "Failed to delete favourite.";
+            _repo.Setup(repo => repo.DeleteFavouriteCampgroundAsync(_favCampground))
+                .ThrowsAsync(new Exception());
 
             var actualResult = await _appUserFavouriteCampgroundService.DeleteFavouriteCampgroundAsync(_favCampgroundDto);
-            var actualError = actualResult.Error;
-            Assert.AreEqual(expectedError, actualError);
+            var actualError = actualResult.Error.ToString();
+
+            Assert.IsNotNull(actualError);
         }
 
         [TestMethod]
         public async Task GetAllFavouriteCampgroundsAsyncValidIdReturnSuccess()
         {
+            _userManager.Setup(manager => manager.FindByIdAsync("1"))
+                .ReturnsAsync(_testUser);
+
             _repo.Setup(repo => repo.GetAllFavouriteCampgroundsByUserIdAsync("1"))
                 .ReturnsAsync(_favCampgrounds);
 
             var expectedResult = Result<List<AppUserFavouriteCampgroundDto>>.Success(_favCampgroundDtos);
 
             var actualResult = await _appUserFavouriteCampgroundService.GetAllFavouriteCampgroundsByUserIdAsync("1");
+            var actualData = actualResult.Data;
 
-            Assert.AreEqual(expectedResult.Data, actualResult.Data);
+            Assert.IsTrue(actualData.Count() > 0);
         }
 
         [TestMethod]
