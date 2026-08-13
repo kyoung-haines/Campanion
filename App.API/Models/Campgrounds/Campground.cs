@@ -32,6 +32,27 @@ namespace App.API.Models.Campgrounds
         // Helper methods
         public async Task<CampgroundDto> ToDtoAsync(Campground campground)
         {
+            if (campground == null)
+                return new CampgroundDto
+                {
+                    CampgroundIdDto = "",
+                    CampgroundImagePathDto = "",
+                    CampgroundStreetNameDto = "",
+                    CampgroundCityDto = "",
+                    CampgroundProvinceDto = "",
+                    CampgroundCountryDto = "",
+                    CampgroundPostalCodeDto = "",
+                    CampgroundPhoneDto = "",
+                    CampgroundEmailDto = "",
+                    CampgroundIsOpenYearRoundDto = "",
+                    CampgroundOpenDateDto = "",
+                    CampgroundCloseDateDto = "",
+                    CampgroundHasFacilitiesDto = "",
+                    CampgroundFacilitiesDto = new List<string>(),
+                    CampgroundHasActivitiesDto = "",
+                    CampgroundActivitiesDto = new List<string>(),
+                    CampgroundUrlDto = ""
+                };
             var campgroundDto = new CampgroundDto
             {
                 CampgroundIdDto = campground.CampgroundId.ToString(),
@@ -83,6 +104,27 @@ namespace App.API.Models.Campgrounds
 
         public CampgroundDto ToDto(Campground campground)
         {
+            if (campground == null)
+                return new CampgroundDto
+                {
+                    CampgroundIdDto = "",
+                    CampgroundImagePathDto = "",
+                    CampgroundStreetNameDto = "",
+                    CampgroundCityDto = "",
+                    CampgroundProvinceDto = "",
+                    CampgroundCountryDto = "",
+                    CampgroundPostalCodeDto = "",
+                    CampgroundPhoneDto = "",
+                    CampgroundEmailDto = "",
+                    CampgroundIsOpenYearRoundDto = "",
+                    CampgroundOpenDateDto = "",
+                    CampgroundCloseDateDto = "",
+                    CampgroundHasFacilitiesDto = "",
+                    CampgroundFacilitiesDto = new List<string>(),
+                    CampgroundHasActivitiesDto = "",
+                    CampgroundActivitiesDto = new List<string>(),
+                    CampgroundUrlDto = ""
+                };
             var campgroundDto = new CampgroundDto
             {
                 CampgroundIdDto = campground.CampgroundId.ToString(),
