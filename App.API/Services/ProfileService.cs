@@ -85,14 +85,15 @@ namespace App.API.Services
 			}
 		}
 
-		public async Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser)
+		public async Task<Result<ProfileResponseDto>> CreateNewProfileAsync(AppUser newUser)
 		{
 			try
 			{
 				_logger.LogInformation("ProfileService method called: CreateNewProfileAsync...");
 				var newProfile = await _profileRepository.CreateNewProfileAsync(newUser);
+				var newProfileDto = await newProfile.ConvertProfileObjectToResponseDto(newProfile);
 
-				var newProfileResult = Result<Profile>.Success(newProfile);
+				var newProfileResult = Result<ProfileResponseDto>.Success(newProfileDto);
 
 				return newProfileResult;
 			}
@@ -100,7 +101,7 @@ namespace App.API.Services
 			{
 				_logger.LogError(ex, $"Failed to create new profile in the system)");
 
-				return Result<Profile>.Failure($"Failed to create new profile in the system: {ex.Message}");
+				return Result<ProfileResponseDto>.Failure($"Failed to create new profile in the system: {ex.Message}");
 			}
 		}
 

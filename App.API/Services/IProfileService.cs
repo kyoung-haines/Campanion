@@ -11,7 +11,7 @@ namespace App.API.Services
         public Task<Result<ProfileResponseDto>> GetProfileByProfileIdAsync(int id);
         public Task<Result<ProfileResponseDto>> UpdateProfileAsync(ProfileResponseDto profileDto);
         public Task<Result<bool>> DeleteProfileAsync(int id);
-        public Task<Result<Profile>> CreateNewProfileAsync(AppUser newUser);
+        public Task<Result<ProfileResponseDto>> CreateNewProfileAsync(AppUser newUser);
         public Task<Result<ProfileResponseDto>> GetProfileByAppUserIdAsync(string appUserId);
         public Task<Result<List<AppUserFavouriteCampgroundDto>>> RetrieveProfileUserFavouriteCampgrounds(AppUserFavouriteCampgroundService appUserFavouriteCampgroundService);
         public Task<Result<List<AppUserTripDto>>> RetrieveProfileOwnerUpcomingTrips(AppUser appUser);
