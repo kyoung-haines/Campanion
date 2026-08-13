@@ -37,7 +37,7 @@ namespace App.API.Migrations
 
                     b.HasIndex("CampgroundId");
 
-                    b.ToTable("AppUserFavouriteCampgrounds");
+                    b.ToTable("AppUserFavouriteCampgrounds", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Campgrounds.Campground", b =>
@@ -113,7 +113,7 @@ namespace App.API.Migrations
 
                     b.HasKey("CampgroundId");
 
-                    b.ToTable("Campgrounds");
+                    b.ToTable("Campgrounds", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Identity.AppUser", b =>
@@ -242,7 +242,7 @@ namespace App.API.Migrations
                     b.HasIndex("AppUserId")
                         .IsUnique();
 
-                    b.ToTable("Profiles");
+                    b.ToTable("Profiles", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Social.FriendRequest", b =>
@@ -264,7 +264,7 @@ namespace App.API.Migrations
 
                     b.HasKey("SenderAppUserId", "ReceiverAppUserId");
 
-                    b.ToTable("FriendRequests");
+                    b.ToTable("FriendRequests", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Social.Friendship", b =>
@@ -277,7 +277,7 @@ namespace App.API.Migrations
 
                     b.HasKey("AppUserId1", "AppUserId2");
 
-                    b.ToTable("Friendships");
+                    b.ToTable("Friendships", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Trips.AppUserTrip", b =>
@@ -295,7 +295,7 @@ namespace App.API.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("AppUserTrips");
+                    b.ToTable("AppUserTrips", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Trips.Trip", b =>
@@ -323,7 +323,7 @@ namespace App.API.Migrations
 
                     b.HasKey("TripId");
 
-                    b.ToTable("Trips");
+                    b.ToTable("Trips", (string)null);
                 });
 
             modelBuilder.Entity("App.API.Models.Trips.TripCampground", b =>
@@ -339,7 +339,7 @@ namespace App.API.Migrations
 
                     b.HasKey("TripId", "CampgroundId");
 
-                    b.ToTable("TripCampgrounds");
+                    b.ToTable("TripCampgrounds", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
