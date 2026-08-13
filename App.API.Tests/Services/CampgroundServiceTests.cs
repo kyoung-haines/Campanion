@@ -187,6 +187,9 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task UpdateCampgroundAsyncValidCampgroundReturnsSuccess()
         {
+            _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
+                .ReturnsAsync(_testCampground1);
+
            _campRepo.Setup(repo => repo.UpdateCampgroundAsync(_testCampground1))
                 .ReturnsAsync(_testCampground1);
 
@@ -246,13 +249,13 @@ namespace App.API.Tests.Services
         [TestMethod]
         public async Task AddCampgroundAsyncReturnsFailure()
         {
-            Campground newCampground = null;
-            CampgroundDto newCampgroundDto = newCampground.ToDto(newCampground);
+            _campRepo.Setup(repo => repo.GetCampgroundByIdAsync(1))
+                .ReturnsAsync(_testCampground1);
 
-            _campRepo.Setup(repo => repo.AddCampgroundAsync(newCampground))
+            _campRepo.Setup(repo => repo.AddCampgroundAsync(_testCampground1))
                 .ThrowsAsync(new Exception());
 
-            var actualResult = await _campService.AddCampgroundAsync(newCampgroundDto);
+            var actualResult = await _campService.AddCampgroundAsync(_testCampgroundInvalidDto);
 
             Assert.IsFalse(actualResult.Succeeded);
         }
