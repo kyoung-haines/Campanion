@@ -1,5 +1,7 @@
 ﻿using App.API.Data;
+using App.API.Enums;
 using App.API.Models.Identity;
+using App.API.Models.Trips;
 using Campanion.Shared.Dtos.AuthDtos;
 using Campanion.Shared.Dtos.ProfileDtos;
 
@@ -14,14 +16,17 @@ namespace App.API.Services
         private readonly CampanionDbContext _dbContext;
         private AppUser _newUser = null;
         private Profile _profile = null;
+        private ProfileResponseDto _profileResponseDto = null;
+        private readonly IAppUserTripService _appUserTripService;
 
-        public AuthService(ILogger<AuthService> logger, IAppUserService userService, IProfileService profileService, ITokenService tokenService, CampanionDbContext dbContext)
+        public AuthService(ILogger<AuthService> logger, IAppUserService userService, IProfileService profileService, ITokenService tokenService, CampanionDbContext dbContext, IAppUserTripService userTripService)
         {
             _logger = logger;
             _userService = userService;
             _profileService = profileService;
             _tokenService = tokenService;
             _dbContext = dbContext;
+            _appUserTripService = userTripService;
         }
 
         public async Task<Result<RegisterResponseDto>> RegisterNewUserAsync(RegistrationDto regDto)
@@ -63,7 +68,46 @@ namespace App.API.Services
                     return Result<RegisterResponseDto>.Failure("Failed to register new user.");
                 }
 
-                _profile = newProfileResult.Data;
+                _profileResponseDto = newProfileResult.Data;
+
+                var appUserResult = await _userService.GetAppUserByIdAsync(_profileResponseDto.AppUserId);
+                var appUserDto = appUserResult.Data;
+                var appUserTripsResult = await _appUserTripService.RetrieveAllAppUserTripsByUserIdAsync(_profileResponseDto.AppUserId);
+                var appUserTrips = new List<AppUserTrip>();
+
+                foreach (var trip in appUserTripsResult.Data)
+                {
+                    var appUserTrip = new AppUserTrip
+                    {
+                        TripId = Convert.ToInt32(trip.TripIdDto),
+                        AppUserId = trip.AppUserIdDto,
+                        AppUser = _newUser,
+                        Trip = new Trip()
+                    };
+
+                    appUserTrips.Add(appUserTrip);
+                }
+
+                _newUser.AppUserType = Enum.Parse<Enums.AppUserType>(appUserDto.AppUserType);
+                _newUser.AppUserFirstName = appUserDto.AppUserFirstName;
+                _newUser.AppUserLastName = appUserDto.AppUserLastName;
+                _newUser.AppUserStreetAddress = appUserDto.AppUserStreetAddress;
+                _newUser.AppUserCity = appUserDto.AppUserCity;
+                _newUser.AppUserProvince = appUserDto.AppUserProvince;
+                _newUser.AppUserCountry = appUserDto.AppUserCountry;
+                _newUser.AppUserPostalCode = appUserDto.AppUserPostalCode;
+                _newUser.AppUserProfile = _profile;
+                _newUser.AppUserTrips = appUserTrips;
+
+                _profile = new Profile
+                {
+                    ProfileId = Convert.ToInt32(_profileResponseDto.ProfileId),
+                    ProfileUsername = _profileResponseDto.ProfileUsername,
+                    ProfileImagePath = _profileResponseDto.ProfileImagePath,
+                    ProfileCreatedAt = DateTime.Parse(_profileResponseDto.ProfileCreatedAt),
+                    AppUserId = _profileResponseDto.AppUserId,
+                    ProfileOwner = _newUser
+                };
 
                 await transaction.CommitAsync();
             }
@@ -89,6 +133,7 @@ namespace App.API.Services
             //    ProfileCreatedAt = Convert.ToString(_profile.ProfileCreatedAt),
             //    AppUserId = Convert.ToString(_newUser.Id)
             //};
+
             var regResponseDto = new RegisterResponseDto
             {
                 Token = token,
