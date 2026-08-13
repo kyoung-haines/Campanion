@@ -26,6 +26,7 @@ namespace App.API.Tests.Services
         private AppUser _testUserUpdated;
         private Profile _testProfile;
         private Profile _testProfileUpdated;
+        private ProfileResponseDto _testProfileDto;
         private Mock<IAppUserTripService> _mockTripService;
         private Mock<IAppUserService> _mockAppUserService;
 
@@ -124,7 +125,7 @@ namespace App.API.Tests.Services
             _mockProfileRepository.Setup(repo => repo.CreateNewProfileAsync(_testUser))
                 .ReturnsAsync(_testProfile);
 
-            var expectedResult = Result<Profile>.Success(_testProfile);
+            var expectedResult = Result<ProfileResponseDto>.Success(_testProfileDto);
             var actualResult = await _profileService.CreateNewProfileAsync(_testUser);
 
             Assert.AreEqual(expectedResult.Data, actualResult.Data);
