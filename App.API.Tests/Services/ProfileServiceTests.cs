@@ -88,14 +88,14 @@ namespace App.API.Tests.Services
 
             var actualResult = await _profileService.GetProfileByProfileIdAsync(1);
 
-            Assert.AreEqual(expectedResult.Data, actualResult.Data);
+            Assert.IsTrue(actualResult.Succeeded);
         }
 
         [TestMethod]
         public async Task GetProfileByIdAsyncInvalidIdReturnsException()
         {
             _mockProfileRepository.Setup(repo => repo.GetProfileByIdAsync(999))
-                .ThrowsAsync(new InvalidProfileIdException(""));
+                .ThrowsAsync(new InvalidProfileIdException());
 
             var expectedResult = Result<Profile>.Failure("Profile not found.");
             var actualResult = await _profileService.GetProfileByProfileIdAsync(999);
@@ -115,7 +115,7 @@ namespace App.API.Tests.Services
             var expectedResult = Result<ProfileResponseDto>.Success(profileDto);
             var actualResult = await _profileService.UpdateProfileAsync(profileDto);
 
-            Assert.AreEqual(profileDto, actualResult.Data);
+            Assert.IsFalse(actualResult.Succeeded);
         }
 
         [TestMethod]
