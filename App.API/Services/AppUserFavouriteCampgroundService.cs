@@ -33,6 +33,7 @@ namespace App.API.Services
                 if(favCampgroundDto == null)
                 {
                     _logger.LogWarning($"Favourite Campground cannot be deleted. Object is null...");
+                    return Result<bool>.Failure("Favourite Campground cannot be null.");
                 }
 
                 var favouriteCampground = await _favCampgroundRepo.GetFavouriteCampgroundByCampgroundId(Convert.ToInt32(favCampgroundDto.CampgroundId));
@@ -92,8 +93,8 @@ namespace App.API.Services
                 foreach (var fav in favCampgrounds)
                 {
                     var newFavCampDto = await this.ToDtoAsync(fav);
-                    
-                    favCampgroundsDto.FavouriteCampgrounds.Add(newFavCampDto);
+
+                    favCampgroundsDtoList.Add(newFavCampDto);
                 }
 
                 return Result<List<AppUserFavouriteCampgroundDto>>.Success(favCampgroundsDtoList);
