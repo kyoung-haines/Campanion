@@ -135,6 +135,11 @@ namespace App.API.Services
                 _logger.LogInformation($"Attempting to add new campground with ID: {newCampground.CampgroundIdDto}...");
                 _logger.LogInformation($"Checking if the campground already exists in the system...");
 
+                if (newCampground == null)
+                {
+                    return Result<CampgroundDto>.Failure("Failed to add new campground.");
+                }
+
                 var isExists = await CampgroundIdIsExistsAsync(Convert.ToInt32(newCampground.CampgroundIdDto));
                 
                 if(isExists.Succeeded == false)
