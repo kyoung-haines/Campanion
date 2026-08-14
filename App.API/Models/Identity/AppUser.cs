@@ -163,6 +163,20 @@ namespace App.API.Models.Identity
                 AppUserCountry = this.AppUserCountry
             };
 
+            foreach (var camp in this.AppUserFavouriteCampgrounds)
+            {
+                var appUserFavouriteCampgroundDto = camp.ToDto(camp);
+
+                appUserDto.AppUserFavouriteCampgrounds.Add(appUserFavouriteCampgroundDto);
+            }
+
+            foreach (var trip in this.AppUserTrips)
+            {
+                var appUserTripDto = await trip.AppUserTripToDTOAsync(trip);
+
+                appUserDto.AppUserTrips.Add(appUserTripDto);
+            }
+
             return appUserDto;
         }
     }
