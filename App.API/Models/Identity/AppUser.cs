@@ -163,20 +163,34 @@ namespace App.API.Models.Identity
                 AppUserCountry = this.AppUserCountry
             };
 
-            foreach (var camp in this.AppUserFavouriteCampgrounds)
+            if (this.AppUserFavouriteCampgrounds == null)
             {
-                var appUserFavouriteCampgroundDto = camp.ToDto(camp);
+                appUserDto.AppUserFavouriteCampgrounds = new List<AppUserFavouriteCampgroundDto>();
+            }
+            else
+            {
+                foreach (var camp in this.AppUserFavouriteCampgrounds)
+                {
+                    var appUserFavouriteCampgroundDto = camp.ToDto(camp);
 
-                appUserDto.AppUserFavouriteCampgrounds.Add(appUserFavouriteCampgroundDto);
+                    appUserDto.AppUserFavouriteCampgrounds.Add(appUserFavouriteCampgroundDto);
+                }
             }
 
-            foreach (var trip in this.AppUserTrips)
+            if (this.AppUserTrips == null)
             {
-                var appUserTripDto = await trip.AppUserTripToDTOAsync(trip);
-
-                appUserDto.AppUserTrips.Add(appUserTripDto);
+                appUserDto.AppUserTrips = new List<AppUserTripDto>();
             }
+            else
+            {
+                foreach (var trip in this.AppUserTrips)
+                {
+                    var appUserTripDto = await trip.AppUserTripToDTOAsync(trip);
 
+                    appUserDto.AppUserTrips.Add(appUserTripDto);
+                }
+            }
+     
             return appUserDto;
         }
     }
