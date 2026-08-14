@@ -81,5 +81,16 @@ namespace App.API.Controllers
 
             return userDto;
         }
+
+        [Authorize]
+        [HttpPost("users/{userId}/favouritecampgrounds")]
+        public async Task<List<AppUserFavouriteCampgroundDto>> GetCurrentUserFavouriteCampgrounds(string userId)
+        {
+            var userResult = await _userService.GetAppUserByIdAsync(userId);
+            var user = userResult.Data;
+            var userFavouriteCampgroundDtos = user.AppUserFavouriteCampgrounds;
+
+            return userFavouriteCampgroundDtos;
+        }
     }
 }
